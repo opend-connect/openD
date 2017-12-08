@@ -10,12 +10,7 @@ The repository contains a Doxygen documentation which is available here:
 
 [OpenD Doxygen Documentation](http://stackforce.github.io/openD-doc/index.html)
 
-The documentation contains the description of the API, source code examples and
-
-The following wiki pages are available:
-
-- [Building the openD targets](http://stackforce.github.io/openD-doc/index.html)
-- [Sample code description](http://stackforce.github.io/openD-doc/index.html)
+The documentation contains the description of the API, source code examples and information about the software architecture.
 
 # OpenD Community
 
