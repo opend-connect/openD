@@ -19,7 +19,7 @@ cmake_minimum_required(VERSION 3.6)
 # Project version
 #---------------------------------------------------------------------------------------
 project(openDUnifiedAPI VERSION 1.0.0)
-set(PROJECT_SEMVER_VERSION_SUFFIX "alpha.2")
+set(PROJECT_SEMVER_VERSION_SUFFIX "alpha.3")
 
 if(PROJECT_SEMVER_VERSION_SUFFIX)
   set(PROJECT_SEMVER_VERSION ${PROJECT_VERSION}-${PROJECT_SEMVER_VERSION_SUFFIX})
