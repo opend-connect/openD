@@ -8,7 +8,7 @@ The idea of the openD framework is to make the DECT ULE technology available to 
 
 The repository contains a Doxygen documentation which is available here:
 
-[OpenD Doxygen Documentation](http://stackforce.github.io/openD-doc/index.html)
+[OpenD Doxygen Documentation](http://stackforce.github.io/opend-doc/index.html)
 
 The documentation contains the description of the API, source code examples and information about the software architecture.
 
