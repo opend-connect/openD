@@ -1,0 +1,110 @@
+/**
+\page FRAMEWORK_ARCH Framework architecture
+
+@tableofcontents
+
+\section OVERVIEW General overview
+
+This wiki page provides a description of the framework architecture. In general,
+the framework differentiates between two different device types - the fixed part 
+(FP) and the portable part (PP). Furthermore, this page shows the elements of the 
+unified API. The fixed part is a stationary device which acts as a base station in 
+a wireless DECT network. In contrast, a portable part is a mobile device as a handheld DECT phone.
+The following chapters provide an introduction into the openD framework with 
+respect to the device types. The next chapter explains the common principle for all API calls of the framework.
+
+\section PRIMITIVE_ARCHITECTURE Primitive architecture
+
+\subsection PRIMITIVE_ARCHITECTURE_INTRO Introduction
+
+The architecture of the framework follows the Request-Confirm and Indication-Response principle. 
+In the figure below, a grey box represents the openD framework. The API to the upper layer is 
+specified according to this principle.
+
+\image html doc/doxygen/opendPrimitives.png
+
+\subsection PRIMITIVE_ARCHITECTURE_REQ_CONF Request and Confirm
+
+The Request primitive is responsible to perform operations on the openD framework. The
+openD framework processes the Request and notifies the upper layer with a Confirm primitive. 
+E.g.,a Request could be a management request to configure the openD framework into a 
+fixed or a portable part.
+
+The Confirm primitives contains information about the process status and in several cases, 
+information about important parameters which are related to the operation. The openD 
+framework calls the Confirm primitive when the Request has been processed completely.
+
+\subsection PRIMITIVE_ARCHITECTURE_IND_RESP Indication and Response
+
+The Indication primitive is a mechanism of the openD framework to inform the upper layer 
+of events. E.g., such an event could be the reception of a packet. The Indication 
+primitive includes status information and may contain further information,
+ depending on the Indication type. Further information might be applicative data or 
+ the quality of the connection.
+
+The Response primitive is a functionality for the upper layer to "answer" to an 
+Indication. This feature enables the upper layer to react to an Indication directly.
+
+\section UNIFIED_API Unified API
+
+\subsection UNIFIED_API_DEFINITION Definition
+
+The description of the unified API refers to the architectural overviews 
+of the fixed and the portable part in the following chapters. The unified API 
+consists of different sub APIs - the Management API (16), the Sub API (17), the Call 
+API (18), the Audio API (19) and the HAN FUN API (20). The Sixlowpan API (21) is not 
+available currently. Those element define the unified API of the openD framework.
+
+Both, the fixed and the portable part utilize the same openD framework. The difference 
+between the two implementation is an extension on the fixed part side - it contains 
+a UDP server as an interface for the upper layers. Please refer to the different 
+architectural overviews and the file references in the upcoming chapters.
+
+\subsection UNIFIED_API_HAN_FUN HAN FUN Library
+
+The framework integrates the open source HAN FUN library from 
+the ULE Alliance. Please find the implementation on GitHub here:
+
+<a href="https://github.com/ULE-Alliance/hanfun">HAN FUN Library</a> 
+
+\subsection UNIFIED_API_PP Portable part
+
+\image html doc/doxygen/opend_architecture_PP.png
+
+\subsection UNIFIED_API_FP Fixed part
+
+\image html doc/doxygen/opend_architecture_FP.png
+
+\subsection UNIFIED_API_FILE_REF File references
+
+This chapter lists the file references for the different elements of the fixed 
+and portable part elements of the architectures below.
+
+No. | Description | Files
+--- | ----------- | ------
+1 | Dialog stack implementation. | -
+2 | DSPG stack implementation. | -
+3 | Audio data stream. | -
+4-8 | Low level interfaces from the manufacturers stack implementation for the openD framework. | -
+9 | This wrapper adapts the Dialog stack subscription, call, audio and management control functions from element (1) to the openD framework. | -
+10 | Interworking unit (IWU) to connect Dialog stack with the ULE Alliance HAN-FUN control interface. | TBD
+11 | Interworking unit (IWU) to connect DSPG stack with the ULE Alliance HAN-FUN control interface. | TBD
+12 | This wrapper adapts the DSPG stack subscription, call, audio and management control functions from element (1) to the openD framework. | -
+13 | Interworking unit (IWU) to connect DSPG stack with the ULE Alliance 6LoWPAN control interface. | -
+14 | Open source HAN-FUN control interface from the ULE Alliance. | -
+15 | Open source 6LoWPAN control interface from the ULE Alliance. | -
+16 | Interface to provide management control functionalities that are adapted by (9) or (12). | opend_mgmt_api.*
+17 | Interface to provide subscription registration functionalities that are adapted by (9) or (12). | opend_sub_api.*
+18 | Interface to provide call control functionalities that are adapted by (9) or (12). | opend_call_api.*
+19 | Interface to provide audio control functionalities that are adapted by (9) or (12). | opend_audio_api.*
+20 | Interface to provide HAN-FUN functionalities from the ULE Alliance HAN-FUN (14). | opend_hanfun_api.*
+21 | Interface to provide HAN-FUN functionalities from the ULE Alliance 6LoWPAN (15). | opend_sixlowpan_api.*
+22 | This represents the unified openD API. | opend_api.*
+23 | Audio interface that provides the audio data. | -
+24 | UDP server to provide the access to the unified interfaces. | -
+25 | Inter-process communication by an UDP connection. | -
+26 | UDP client to get access to the UDP server. | -
+27 | A module which abstracts the protocol over the UDP connection. This protocol must be defined. A possible format could be JSON. | -
+28 | This is a customer/community application. | -
+
+*/

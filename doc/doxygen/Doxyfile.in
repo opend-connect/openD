@@ -1,0 +1,18 @@
+# Generic doxygen settings as input for cmake to generate a Doxyfile
+
+PROJECT_NAME            = "@DOXYGEN_PRODUCT_NAME@"
+PROJECT_NUMBER          = "@DOXYGEN_PROJECT_NUMBER@"
+INPUT                   = @DOXYGEN_INPUT@
+OUTPUT_DIRECTORY        = @DOXYGEN_OUTPUT_DIRECTORY@
+PROJECT_LOGO            = @DOXYGEN_CUSTOM_RESOURCES_DIR@/doxygen/openD_by_dectForum_stackforce_uleA.svg
+HTML_HEADER             = @DOXYGEN_CUSTOM_RESOURCES_DIR@/doxygen/sf_header.html
+HTML_FOOTER             = @DOXYGEN_CUSTOM_RESOURCES_DIR@/doxygen/sf_footer.html
+HTML_EXTRA_STYLESHEET   = @DOXYGEN_CUSTOM_RESOURCES_DIR@/doxygen/bootstrap.min.css \
+                          @DOXYGEN_CUSTOM_RESOURCES_DIR@/doxygen/openD_stylesheet.css
+IMAGE_PATH              = @DOXYGEN_IMAGE_PATH@
+DISABLE_INDEX           = NO
+GENERATE_TREEVIEW       = YES
+STRIP_FROM_PATH         = @CMAKE_SOURCE_DIR@
+INLINE_SIMPLE_STRUCTS   = YES
+HIDE_IN_BODY_DOCS       = YES
+GENERATE_LATEX          = NO
