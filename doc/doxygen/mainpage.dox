@@ -3,13 +3,13 @@
 
 @tableofcontents
 
-\section ABSTRACT Abstract 
+\section ABSTRACT Abstract
 
-This project is the open source openD framework. The purpose of this 
-project is to provide a framework which defines a <b>unified API</b> for DECT Ultra 
-Low Energy (ULE) fixed and portable part devices designed to support various hardware platforms.
-The idea of the openD framework is to make the DECT ULE technology available to 
-enable a fast and easy development of DECT ULE devices. The framework provides 
+This project is the open source openD framework. The purpose of this
+project is to provide a framework which defines a <b>unified API</b> for DECT and Ultra
+Low Energy (ULE) DECT fixed and portable part devices designed to support various hardware platforms.
+The idea of the openD framework is to make the DECT and ULE technology available to
+enable a fast and easy development of DECT and ULE devices. The framework provides
 sample codes, tutorials and documentation.
 
 This documentation is contains the definition and specification of the openD API. It also contains
@@ -32,9 +32,9 @@ For more information please also visit the wiki pages on GitHub:
 
 \section OPEND_COMMUNITY OpenD Community
 
-The openD community is the place where you can find all information around DECT 
-ULE and the openD framework. It is the place where developers come together to discuss 
-DECT ULE and openD related topics and to exchange information and know-how. You will 
+The openD community is the place where you can find all information around DECT
+ULE and the openD framework. It is the place where developers come together to discuss
+DECT ULE and openD related topics and to exchange information and know-how. You will
 also find much more:
 
 - News and events about openD and DECT ULE
