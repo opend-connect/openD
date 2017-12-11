@@ -2,9 +2,9 @@
 
 # Introduction
 
-This project is the open source openD developer's framework. The purpose of this project is to provide a framework which defines a **unified API** for DECT Ultra Low Energy (ULE) fixed and portable part devices designed to support various hardware platforms.
+This project is the open source openD developer's framework. The purpose of this project is to provide a framework which defines a **unified API** for DECT and Ultra Low Energy (ULE) DECT fixed and portable part devices designed to support various hardware platforms.
 
-The idea of the openD framework is to make the DECT ULE technology available to enable a fast and easy development of DECT ULE devices. The framework provides sample codes, tutorials and documentation.
+The idea of the openD framework is to make the DECT and ULE technology available to enable a fast and easy development of DECT and ULE devices. The framework provides sample codes, tutorials and documentation.
 
 The repository contains a Doxygen documentation which is available here:
 
