@@ -66,6 +66,49 @@ typedef struct openD_hanfun_address {
   uint8_t unit;
 } openD_hanfun_address_t;
 
+/**
+ * openD Hanfun address structure.
+ */
+typedef enum openD_hanfun_result
+{
+  /**
+   * Request OK.
+   */
+  OK = 0x00,
+  /**
+   * Fail - Not Authorized.
+   */
+  FAIL_AUTH = 0x01,
+  /**
+   * Fail - Invalid Argument.
+   */
+  FAIL_ARG = 0x02,
+  /**
+   * Fail - Not Supported.
+   */
+  FAIL_SUPPORT = 0x03,
+  /**
+   * Fail - Read only attribute.
+   */
+  FAIL_RO_ATTR = 0x04,
+  /**
+   * Fail - Read Session not established.
+   */
+  FAIL_READ_SESSION = 0x20,
+  /**
+   * Fail - Entries table modified.
+   */
+  FAIL_MODIFIED = 0x21,
+  /**
+   * Fail - Not enough resources.
+   */
+  FAIL_RESOURCES = 0xFE,
+  /**
+   * Fail - Unknown reason.
+   */
+  FAIL_UNKNOWN = 0xFF,
+} openD_hanfun_result_t;
+
 
 /*! @} defgroup OPEND_HANFUN_DATATYPES */
 

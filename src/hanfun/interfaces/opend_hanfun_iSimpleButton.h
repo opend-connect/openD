@@ -224,7 +224,7 @@ typedef struct openD_hanfun_iSimpleButtonServerReq {
   /**
    * Hanfun iSimpleButton server service.
    */
-  openD_hanfun_iSimpleAirPressureServer_service_t service;
+  openD_hanfun_iSimpleButtonServer_service_t service;
 
   /**
    * Hanfun iSimpleButton parameters.
@@ -251,7 +251,7 @@ typedef struct openD_hanfun_iSimpleButtonServerCfm {
   /**
    * Hanfun iSimpleButton server service.
    */
-  openD_hanfun_iSimpleAirPressureServer_service_t service;
+  openD_hanfun_iSimpleButtonServer_service_t service;
 
   /**
    * Hanfun iSimpleButton parameters.

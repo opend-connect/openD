@@ -32,12 +32,19 @@ extern "C"
 #include "hanfun/profiles/opend_hanfun_pAcOutlet.h"
 #include "hanfun/profiles/opend_hanfun_pAcOutletWithPowerMetering.h"
 #include "hanfun/profiles/opend_hanfun_pAlertable.h"
+#include "hanfun/profiles/opend_hanfun_pControlableThermostat.h"
 #include "hanfun/profiles/opend_hanfun_pDimmableLight.h"
 #include "hanfun/profiles/opend_hanfun_pDimmerSwitch.h"
 #include "hanfun/profiles/opend_hanfun_pDoorBell.h"
+#include "hanfun/profiles/opend_hanfun_pDoorOpenCloseDetector.h"
 #include "hanfun/profiles/opend_hanfun_pEnvironmentMonitor.h"
+#include "hanfun/profiles/opend_hanfun_pFloodDetector.h"
+#include "hanfun/profiles/opend_hanfun_pGasDetector.h"
+#include "hanfun/profiles/opend_hanfun_pGlassBreakDetector.h"
+#include "hanfun/profiles/opend_hanfun_pMotionDetector.h"
 #include "hanfun/profiles/opend_hanfun_pSimpleAirPressureSensor.h"
 #include "hanfun/profiles/opend_hanfun_pSimpleButton.h"
+#include "hanfun/profiles/opend_hanfun_pSimpleDetector.h"
 #include "hanfun/profiles/opend_hanfun_pSimpleDoorLock.h"
 #include "hanfun/profiles/opend_hanfun_pSimpleHumiditySensor.h"
 #include "hanfun/profiles/opend_hanfun_pSimpleLed.h"
@@ -49,8 +56,14 @@ extern "C"
 #include "hanfun/profiles/opend_hanfun_pSimpleLightSensor.h"
 #include "hanfun/profiles/opend_hanfun_pSimpleOnOffSwitch.h"
 #include "hanfun/profiles/opend_hanfun_pSimpleOnOffSwitchable.h"
+#include "hanfun/profiles/opend_hanfun_pSimplePendant.h"
 #include "hanfun/profiles/opend_hanfun_pSimplePowerMeter.h"
 #include "hanfun/profiles/opend_hanfun_pSimpleTemperatureSensor.h"
+#include "hanfun/profiles/opend_hanfun_pSiren.h"
+#include "hanfun/profiles/opend_hanfun_pSmokeDetector.h"
+#include "hanfun/profiles/opend_hanfun_pUserInterfaceLock.h"
+#include "hanfun/profiles/opend_hanfun_pVibrationDetector.h"
+#include "hanfun/profiles/opend_hanfun_pWindowOpenCloseDetector.h"
 
 /**
  * openD HanfunApi operation modes.
@@ -305,12 +318,19 @@ typedef struct openD_hanfunApiProfileReq {
   union {
     openD_hanfun_pAcOutletReq_t acOutlet;
     openD_hanfun_pAcOutletWithPowerMeteringReq_t acOutletWithPowerMetering;
+    openD_hanfun_pControlableThermostatReq_t controlableThermostat;
     openD_hanfun_pDimmableLightReq_t dimmableLight;
     openD_hanfun_pDimmerSwitchReq_t dimmerSwitch;
-    openD_hanfun_pAlertableReq_t alertable;
+    openD_hanfun_pDoorBellReq_t doorBell;
+    openD_hanfun_pDoorOpenCloseDetectorReq_t doorOpenCloseDetector;
     openD_hanfun_pEnvironmentMonitorReq_t environmentMonitor;
+    openD_hanfun_pFloodDetectorReq_t floodDetector;
+    openD_hanfun_pGasDetectorReq_t gasDetector;
+    openD_hanfun_pGlassBreakDetectorReq_t glassBreakDetector;
+    openD_hanfun_pMotionDetectorReq_t motionDetector;
     openD_hanfun_pSimpleAirPressureSensorReq_t simpleAirPressureSensor;
     openD_hanfun_pSimpleButtonReq_t simpleButton;
+    openD_hanfun_pSimpleDetectorReq_t simpleDetector;
     openD_hanfun_pSimpleDoorLockReq_t simpleDoorLock;
     openD_hanfun_pSimpleHumiditySensorReq_t simpleHumiditySensor;
     openD_hanfun_pSimpleLevelControlReq_t simpleLevelControl;
@@ -321,8 +341,14 @@ typedef struct openD_hanfunApiProfileReq {
     openD_hanfun_pSimpleLightSensorReq_t simpleLightSensor;
     openD_hanfun_pSimpleOnOffSwitchReq_t simpleOnOffSwitch;
     openD_hanfun_pSimpleOnOffSwitchableReq_t simpleOnOffSwitchable;
+    openD_hanfun_pSimplePendantReq_t simplePendant;
     openD_hanfun_pSimplePowerMeterReq_t simplePowerMeter;
     openD_hanfun_pSimpleTemperatureSensorReq_t simpleTemperatureSensor;
+    openD_hanfun_pSirenReq_t siren;
+    openD_hanfun_pSmokeDetectorReq_t smokeDetector;
+    openD_hanfun_pUserInterfaceLockReq_t userInterfaceLock;
+    openD_hanfun_pVibrationDetectorReq_t vibrationDetector;
+    openD_hanfun_pWindowOpenCloseDetectorReq_t windowOpenCloseDetector;
   };
 } openD_hanfunApiProfileReq_t;
 
@@ -341,8 +367,9 @@ typedef struct openD_hanfunApiProfileConfirm {
   union {
     openD_hanfun_pAcOutletCfm_t acOutlet;
     openD_hanfun_pAcOutletWithPowerMeteringCfm_t acOutletWithPowerMetering;
+    openD_hanfun_pControlableThermostatCfm_t controlableThermostat;
     openD_hanfun_pDimmableLightCfm_t dimmableLight;
-    openD_hanfun_pAlertableCfm_t alertable;
+    openD_hanfun_pDoorBellCfm_t doorBell;
     openD_hanfun_pEnvironmentMonitorCfm_t environmentMonitor;
     openD_hanfun_pSimpleAirPressureSensorCfm_t simpleAirPressureSensor;
     openD_hanfun_pSimpleButtonCfm_t simpleButton;
@@ -355,6 +382,8 @@ typedef struct openD_hanfunApiProfileConfirm {
     openD_hanfun_pSimpleOnOffSwitchableCfm_t simpleOnOffSwitchable;
     openD_hanfun_pSimplePowerMeterCfm_t simplePowerMeter;
     openD_hanfun_pSimpleTemperatureSensorCfm_t simpleTemperatureSensor;
+    openD_hanfun_pSirenCfm_t siren;
+    openD_hanfun_pUserInterfaceLockCfm_t userInterfaceLock;
   };
 } openD_hanfunApiProfileConfirm_t;
 
@@ -374,6 +403,7 @@ typedef struct openD_hanfunApiProfileIndication {
     openD_hanfun_pAcOutletInd_t acOutlet;
     openD_hanfun_pAcOutletWithPowerMeteringInd_t acOutletWithPowerMetering;
     openD_hanfun_pAlertableInd_t pAlertable;
+    openD_hanfun_pControlableThermostatInd_t  controlableThermostat;
     openD_hanfun_pDimmableLightInd_t dimmableLight;
     openD_hanfun_pSimpleDoorLockInd_t simpleDoorLock;
     openD_hanfun_pSimpleLedInd_t simpleLed;
@@ -381,6 +411,8 @@ typedef struct openD_hanfunApiProfileIndication {
     openD_hanfun_pSimpleLevelControllableSwitchableInd_t simpleLevelControllableSwitchable;
     openD_hanfun_pSimpleLightInd_t simpleLight;
     openD_hanfun_pSimpleOnOffSwitchableInd_t simpleOnOffSwitchable;
+    openD_hanfun_pSirenInd_t siren;
+    openD_hanfun_pUserInterfaceLockInd_t userInterfaceLock;
   };
 } openD_hanfunApiProfileIndication_t;
 

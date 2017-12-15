@@ -20,7 +20,7 @@ extern "C"
  * @{
  *
  * @defgroup   OPEND_HANFUN_PDOORBELL openD HAN-FUN pDoorBell
- *             This module specifies the HAN-FUN DoorBell profile.
+ *             This module specifies the HAN-FUN door bell profile.
  * @{
  */
 
@@ -32,12 +32,12 @@ extern "C"
 /**
  * openD Hanfun pDoorBell profile request structure.
  */
-typedef openD_hanfun_iAlertServerReq_t openD_hanfun_pAlertableReq_t;
+typedef openD_hanfun_iAlertServerReq_t openD_hanfun_pDoorBellReq_t;
 
 /**
  * openD Hanfun pDoorBell profile confirm structure.
  */
-typedef openD_hanfun_iAlertServerCfm_t openD_hanfun_pAlertableCfm_t;
+typedef openD_hanfun_iAlertServerCfm_t openD_hanfun_pDoorBellCfm_t;
 
 
 /*! @} defgroup OPEND_HANFUN_PDOORBELL */
