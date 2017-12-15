@@ -29,29 +29,29 @@ extern "C"
 /*
  * openD Hanfun broadcast - device address.
  */
-#define OPEND_HANFUNAPI_ADDRESS_BROADCAST_DEVICE = 0x7FFF;
+#define OPEND_HANFUN_ADDRESS_BROADCAST_DEVICE = 0x7FFF;
 /*
  * openD Hanfun broadcast - unit address.
  */
-#define OPEND_HANFUNAPI_ADDRESS_BROADCAST_UNIT = 0xFF;
+#define OPEND_HANFUN_ADDRESS_BROADCAST_UNIT = 0xFF;
 
 
-typedef enum openD_hanfunApi_address_modType
+typedef enum openD_hanfun_address_modType
 {
   /*
    * Destination address is for single device.
    */
-  OPEND_HANFUNAPI_ADDRESS_MODTYPE_DEVICE = 0,
+  OPEND_HANFUN_ADDRESS_MODTYPE_DEVICE = 0,
   /*
    * Destination address is for a group of devices.
    */
-  OPEND_HANFUNAPI_ADDRESS_MODTYPE_GROUP  = 1,
-} openD_hanfunApi_address_modType_t;
+  OPEND_HANFUN_ADDRESS_MODTYPE_GROUP  = 1,
+} openD_hanfun_address_modType_t;
 
 /**
- * openD HanfunApi address structure.
+ * openD Hanfun address structure.
  */
-typedef struct openD_hanfunApi_address {
+typedef struct openD_hanfun_address {
   /**
     * Address modifier.
     */
@@ -64,7 +64,7 @@ typedef struct openD_hanfunApi_address {
     * Unit.
     */
   uint8_t unit;
-} openD_hanfunApi_address_t;
+} openD_hanfun_address_t;
 
 
 /*! @} defgroup OPEND_HANFUN_DATATYPES */

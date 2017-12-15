@@ -14,37 +14,68 @@ extern "C"
  * @file       opend_hanfun_iOnOff.h
  * @copyright  STACKFORCE GmbH, Heitersheim, Germany, www.stackforce.de
  * @author     Patrick Weber
- * @brief      openD HAN-FUN API iOnOff.
+ * @brief      openD HAN-FUN iOnOff.
  *
  * @addtogroup OPEND_HANFUN_INTERFACE
  * @{
  *
- * @defgroup   OPEND_HANFUN_API_IONOFF openD HAN-FUN API iOnOff
+ * @defgroup   OPEND_HANFUN_IONOFF openD HAN-FUN iOnOff
  *             This module specifies the HAN-FUN OnOff interface.
  * @{
  */
 
-#ifndef __OPEND_HANFUN_API_IONOFF_H__
-#define __OPEND_HANFUN_API_IONOFF_H__
+#ifndef __OPEND_HANFUN_IONOFF_H__
+#define __OPEND_HANFUN_IONOFF_H__
 
 #include <stdbool.h>
 
 #include "../opend_hanfun_dataTypes.h"
 
 /**
- * openD HanfunApi iOnOff services.
+ * openD Hanfun iOnOff client services.
  */
-typedef enum openD_hanfunApi_iOnOff_service {
+typedef enum openD_hanfun_iOnOffClient_service {
   /**
-   * Send a ON message to the device at the given address @c openD_hanfunApi_address_t.
+   * Send a ON message to the device at the given address @c openD_hanfun_address_t.
+   */
+  OPEND_HANFUN_IONOFF_CLIENT_ON_ADDR,
+  /**
+   * Send a ON message to the broadcast address.
+   */
+  OPEND_HANFUN_IONOFF_CLIENT_ON,
+  /**
+   * Send a OFF message to the device at the given address @c openD_hanfun_address_t.
+   */
+  OPEND_HANFUN_IONOFF_CLIENT_OFF_ADDR,
+  /**
+   * Send a OFF message to the broadcast address.
+   */
+  OPEND_HANFUN_IONOFF_CLIENT_OFF,
+  /**
+   * Send a TOGGLE message to the device at the given address @c openD_hanfun_address_t.
+   */
+  OPEND_HANFUN_IONOFF_CLIENT_TOGGLE_ADDR,
+  /**
+   * Send a TOGGLE message to the broadcast address.
+   */
+  OPEND_HANFUN_IONOFF_CLIENT_TOGGLE,
+
+} openD_hanfun_iOnOffClient_service_t;
+
+/**
+ * openD Hanfun iOnOff server services.
+ */
+typedef enum openD_hanfun_iOnOffServer_service {
+  /**
+   * ON message is received from the address @c openD_hanfun_address_t.
    */
   OPEND_HANFUN_IONOFF_SERVER_ON_ADDR,
   /**
-   * Send a OFF message to the device at the given address @c openD_hanfunApi_address_t.
+   * OFF message is received from the address @c openD_hanfun_address_t.
    */
   OPEND_HANFUN_IONOFF_SERVER_OFF_ADDR,
   /**
-   * Send a TOGGLE message to the device at the given address @c openD_hanfunApi_address_t.
+   * TOGGLE message is received from the address @c openD_hanfun_address_t.
    */
   OPEND_HANFUN_IONOFF_SERVER_TOGGLE_ADDR,
   /**
@@ -55,58 +86,126 @@ typedef enum openD_hanfunApi_iOnOff_service {
    * Get the current state of the interface.
    */
   OPEND_HANFUN_IONOFF_SERVER_GET_STATE,
-
-  /**
-   * Send a ON message to the device at the given address @c openD_hanfunApi_address_t.
-   */
-  OPEND_HANFUN_IONOFF_CLIENT_ON_ADDR,
-  /**
-   * Send a ON message to the broadcast address.
-   */
-  OPEND_HANFUN_IONOFF_CLIENT_ON,
-  /**
-   * Send a OFF message to the device at the given address @c openD_hanfunApi_address_t.
-   */
-  OPEND_HANFUN_IONOFF_CLIENT_OFF_ADDR,
-  /**
-   * Send a OFF message to the broadcast address.
-   */
-  OPEND_HANFUN_IONOFF_CLIENT_OFF,
-  /**
-   * Send a TOGGLE message to the device at the given address @c openD_hanfunApi_address_t.
-   */
-  OPEND_HANFUN_IONOFF_CLIENT_TOGGLE_ADDR,
-  /**
-   * Send a TOGGLE message to the broadcast address.
-   */
-  OPEND_HANFUN_IONOFF_CLIENT_TOGGLE,
-
-} openD_hanfunApi_iOnOff_service_t;
+} openD_hanfun_iOnOffServer_service_t;
 
 /**
- * openD HanfunApi iOnOff structure.
+ * openD Hanfun iOnOff client request parameter structure of the @c ON_ADDR, @c OFF_ADDR and @c TOGGLE_ADDR service.
  */
-typedef struct openD_hanfunApi_iOnOff {
+typedef struct openD_hanfun_iOnOffClientReq_addr {
   /**
-   * HanfunApi iOnOff service.
+   * Hanfun address of the device to send the message to.
    */
-  openD_hanfunApi_iOnOff_service_t service;
+  openD_hanfun_address_t addr;
+} openD_hanfun_iOnOffClientReq_addr_t;
+
+/**
+ * openD Hanfun iOnOff server indication parameter structure of the @c ON_ADDR, @c OFF_ADDR and @c TOGGLE_ADDR service.
+ */
+typedef struct openD_hanfun_iOnOffServerInd_addr {
+  /**
+   * Hanfun address of the device to send the message to.
+   */
+  openD_hanfun_address_t addr;
+} openD_hanfun_iOnOffServerInd_addr_t;
+
+/**
+ * openD Hanfun iOnOff server request parameter structure of the @c SET_STATE service.
+ */
+typedef struct openD_hanfun_iOnOffServerReq_setState {
+  /**
+   * State of the interface to set.
+   */
+  bool state;
+} openD_hanfun_iOnOffServerReq_setState_t;
+
+/**
+ * openD Hanfun iOnOff server confirm parameter structure of the @c GET_STATE service.
+ */
+typedef struct openD_hanfun_iOnOffServerCfm_getState {
+  /**
+   * State of the interface.
+   */
+  bool state;
+} openD_hanfun_iOnOffServerCfm_getState_t;
+
+/**
+ * openD Hanfun iOnOff client request structure.
+ */
+typedef struct openD_hanfun_iOnOffClientReq {
+  /**
+   * Hanfun iOnOff client service.
+   */
+  openD_hanfun_iOnOffClient_service_t service;
 
   /**
-   * HanfunApi iOnOff parameters.
+   * Hanfun iOnOff parameters.
    */
   union {
-    openD_hanfunApi_address_t addr;
-    bool state;
+    openD_hanfun_iOnOffClientReq_addr_t onAddr;
+    openD_hanfun_iOnOffClientReq_addr_t offAddr;
+    openD_hanfun_iOnOffClientReq_addr_t toggleAddr;
   } param;
-} openD_hanfunApi_iOnOff_t;
+} openD_hanfun_iOnOffClientReq_t;
+
+/**
+ * openD Hanfun iOnOff server request structure.
+ */
+typedef struct openD_hanfun_iOnOffServerReq {
+  /**
+   * Hanfun iOnOff service.
+   */
+  openD_hanfun_iOnOffServer_service_t service;
+
+  /**
+   * Hanfun iOnOff server parameters.
+   */
+  union {
+    openD_hanfun_iOnOffServerReq_setState_t setState;
+  } param;
+} openD_hanfun_iOnOffServerReq_t;
+
+/**
+ * openD Hanfun iOnOff server confirm structure.
+ */
+typedef struct openD_hanfun_iOnOffServerCfm {
+  /**
+   * Hanfun iOnOff server service.
+   */
+  openD_hanfun_iOnOffServer_service_t service;
+
+  /**
+   * Hanfun iOnOff parameters.
+   */
+  union {
+    openD_hanfun_iOnOffServerCfm_getState_t getState;
+  } param;
+} openD_hanfun_iOnOffServerCfm_t;
+
+/**
+ * openD Hanfun iOnOff server indication structure.
+ */
+typedef struct openD_hanfun_iOnOffServerInd {
+  /**
+   * Hanfun iOnOff server service.
+   */
+  openD_hanfun_iOnOffServer_service_t service;
+
+  /**
+   * Hanfun iOnOff parameters.
+   */
+  union {
+    openD_hanfun_iOnOffServerInd_addr_t onAddr;
+    openD_hanfun_iOnOffServerInd_addr_t offAddr;
+    openD_hanfun_iOnOffServerInd_addr_t toggleAddr;
+  } param;
+} openD_hanfun_iOnOffServerInd_t;
 
 
-/*! @} defgroup OPEND_HANFUN_API_IONOFF */
+/*! @} defgroup OPEND_HANFUN_IONOFF */
 
 /*! @} addtogroup OPEND_HANFUN_INTERFACE */
 
-#endif /* __OPEND_HANFUN_API_IONOFF_H__ */
+#endif /* __OPEND_HANFUN_IONOFF_H__ */
 #ifdef __cplusplus
 }
 #endif
