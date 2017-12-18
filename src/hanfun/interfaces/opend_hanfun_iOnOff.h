@@ -20,7 +20,7 @@ extern "C"
  * @{
  *
  * @defgroup   OPEND_HANFUN_IONOFF openD HAN-FUN iOnOff
- *             This module specifies the HAN-FUN OnOff interface.
+ *             This module specifies the HAN-FUN on/off interface.
  * @{
  */
 

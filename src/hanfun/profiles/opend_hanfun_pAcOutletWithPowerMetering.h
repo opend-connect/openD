@@ -20,7 +20,7 @@ extern "C"
  * @{
  *
  * @defgroup   OPEND_HANFUN_PACOUTLETWITHPOWERMETERING openD HAN-FUN pAcOutletWithPowerMetering
- *             This module specifies the HAN-FUN AcOutletWithPowerMetering profile.
+ *             This module specifies the HAN-FUN AC outlet with power metering profile.
  * @{
  */
 

@@ -20,7 +20,7 @@ extern "C"
  * @{
  *
  * @defgroup   OPEND_HANFUN_ILEVELCONTROL openD HAN-FUN iLevelControl
- *             This module specifies the HAN-FUN LevelControl interface.
+ *             This module specifies the HAN-FUN level control interface.
  * @{
  */
 
@@ -38,62 +38,62 @@ extern "C"
 typedef enum openD_hanfun_iLevelControlClient_service {
   /**
    * Send a SET_LEVEL message to broadcast network address to set the level
-   * at @c levelInt.
+   * @c levelInt at @ref openD_hanfun_iLevelControlClientReq_levelInt_t.
    */
   OPEND_HANFUN_ILEVELCONTROL_CLIENT_SET_LEVEL_INT,
   /**
    * Send a SET_LEVEL message to the device at the given address
-   * @c addr to set the level @c new_level at @ref openD_hanfun_iLevelControl_levelIntAddr_t.
+   * @c addr to set the level @c new_level at @ref openD_hanfun_iLevelControlClientReq_levelIntAddr_t.
    */
   OPEND_HANFUN_ILEVELCONTROL_CLIENT_SET_LEVEL_INT_ADDR,
   /**
    * Send a SET_LEVEL message to broadcast network address to set the level
-   * at @c levelFloat.
+   * at @c levelFloat at @ref openD_hanfun_iLevelControlClientReq_levelFloat_t.
    */
   OPEND_HANFUN_ILEVELCONTROL_CLIENT_SET_LEVEL_FLOAT,
   /**
    * Send a SET_LEVEL message to the device at the given address
-   * @c addr to set the level @c new_level at @ref openD_hanfun_iLevelControl_levelFloatAddr_t.
+   * @c addr to set the level @c new_level at @ref openD_hanfun_iLevelControlClientReq_levelFloatAddr_t.
    */
   OPEND_HANFUN_ILEVELCONTROL_CLIENT_SET_LEVEL_FLOAT_ADDR,
   /**
    * Send a INCREASE_LEVEL message to broadcast network address to increase
-   * the level by @c levelInt.
+   * the level by @c levelInt at @ref openD_hanfun_iLevelControlClientReq_levelInt_t.
    */
   OPEND_HANFUN_ILEVELCONTROL_CLIENT_INCREASE_LEVEL_INT,
   /**
    * Send a INCREASE_LEVEL message to the device at the given address
-   * @c addr to increment the level by @c new_level at @ref openD_hanfun_iLevelControl_levelIntAddr_t.
+   * @c addr to increment the level by @c new_level at @ref openD_hanfun_iLevelControlClientReq_levelIntAddr_t.
    */
   OPEND_HANFUN_ILEVELCONTROL_CLIENT_INCREASE_LEVEL_INT_ADDR,
   /**
    * Send a INCREASE_LEVEL message to broadcast network address to increase
-   * the level by @c levelFloat.
+   * the level by @c levelFloat at @ref openD_hanfun_iLevelControlClientReq_levelFloat_t.
    */
   OPEND_HANFUN_ILEVELCONTROL_CLIENT_INCREASE_LEVEL_FLOAT,
   /**
    * Send a INCREASE_LEVEL message to the device at the given address
-   * @c addr to increment the level by @c new_level at @ref openD_hanfun_iLevelControl_levelFloatAddr_t.
+   * @c addr to increment the level by @c new_level at @ref openD_hanfun_iLevelControlClientReq_levelFloatAddr_t.
    */
   OPEND_HANFUN_ILEVELCONTROL_CLIENT_INCREASE_LEVEL_FLOAT_ADDR,
   /**
    * Send a INCREASE_LEVEL message to broadcast network address to decrease
-   * the level by @c levelInt.
+   * the level by @c levelInt at @ref openD_hanfun_iLevelControlClientReq_levelInt_t.
    */
   OPEND_HANFUN_ILEVELCONTROL_CLIENT_DECREASE_LEVEL_INT,
   /**
    * Send a INCREASE_LEVEL message to the device at the given address
-   * @c addr to decrement the level by @c new_level at @ref openD_hanfun_iLevelControl_levelIntAddr_t.
+   * @c addr to decrement the level by @c new_level at @ref openD_hanfun_iLevelControlClientReq_levelIntAddr_t.
    */
   OPEND_HANFUN_ILEVELCONTROL_CLIENT_DECREASE_LEVEL_INT_ADDR,
   /**
    * Send a INCREASE_LEVEL message to broadcast network address to decrease
-   * the level by @c levelFloat.
+   * the level by @c levelFloat at @ref openD_hanfun_iLevelControlClientReq_levelFloat_t.
    */
   OPEND_HANFUN_ILEVELCONTROL_CLIENT_DECREASE_LEVEL_FLOAT,
   /**
    * Send a INCREASE_LEVEL message to the device at the given address
-   * @c addr to decrement the level by @c new_level at @ref openD_hanfun_iLevelControl_levelFloatAddr_t.
+   * @c addr to decrement the level by @c new_level at @ref openD_hanfun_iLevelControlClientReq_levelFloatAddr_t.
    */
   OPEND_HANFUN_ILEVELCONTROL_CLIENT_DECREASE_LEVEL_FLOAT_ADDR,
 } openD_hanfun_iLevelControlClient_service_t;

@@ -20,7 +20,7 @@ extern "C"
  * @{
  *
  * @defgroup   OPEND_HANFUN_PSIMPLEONOFFSWITCH openD HAN-FUN pSimpleOnOffSwitch
- *             This module specifies the HAN-FUN simpleOnOffSwitch profile.
+ *             This module specifies the HAN-FUN simple on/off switch profile.
  * @{
  */
 

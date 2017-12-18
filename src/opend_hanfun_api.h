@@ -32,7 +32,9 @@ extern "C"
 #include "hanfun/profiles/opend_hanfun_pAcOutlet.h"
 #include "hanfun/profiles/opend_hanfun_pAcOutletWithPowerMetering.h"
 #include "hanfun/profiles/opend_hanfun_pAlertable.h"
+#include "hanfun/profiles/opend_hanfun_pColourBulb.h"
 #include "hanfun/profiles/opend_hanfun_pControlableThermostat.h"
+#include "hanfun/profiles/opend_hanfun_pDimmableColourBulb.h"
 #include "hanfun/profiles/opend_hanfun_pDimmableLight.h"
 #include "hanfun/profiles/opend_hanfun_pDimmerSwitch.h"
 #include "hanfun/profiles/opend_hanfun_pDoorBell.h"
@@ -318,7 +320,9 @@ typedef struct openD_hanfunApiProfileReq {
   union {
     openD_hanfun_pAcOutletReq_t acOutlet;
     openD_hanfun_pAcOutletWithPowerMeteringReq_t acOutletWithPowerMetering;
+    openD_hanfun_pColourBulbReq_t colourBulb;
     openD_hanfun_pControlableThermostatReq_t controlableThermostat;
+    openD_hanfun_pDimmableColourBulbReq_t dimmableColourBulb;
     openD_hanfun_pDimmableLightReq_t dimmableLight;
     openD_hanfun_pDimmerSwitchReq_t dimmerSwitch;
     openD_hanfun_pDoorBellReq_t doorBell;
@@ -367,7 +371,9 @@ typedef struct openD_hanfunApiProfileConfirm {
   union {
     openD_hanfun_pAcOutletCfm_t acOutlet;
     openD_hanfun_pAcOutletWithPowerMeteringCfm_t acOutletWithPowerMetering;
+    openD_hanfun_pColourBulbCfm_t colourBulb;
     openD_hanfun_pControlableThermostatCfm_t controlableThermostat;
+    openD_hanfun_pDimmableColourBulbCfm_t dimmableColourBulb;
     openD_hanfun_pDimmableLightCfm_t dimmableLight;
     openD_hanfun_pDoorBellCfm_t doorBell;
     openD_hanfun_pEnvironmentMonitorCfm_t environmentMonitor;
@@ -403,7 +409,9 @@ typedef struct openD_hanfunApiProfileIndication {
     openD_hanfun_pAcOutletInd_t acOutlet;
     openD_hanfun_pAcOutletWithPowerMeteringInd_t acOutletWithPowerMetering;
     openD_hanfun_pAlertableInd_t pAlertable;
+    openD_hanfun_pColourBulbInd_t colourBulb;
     openD_hanfun_pControlableThermostatInd_t  controlableThermostat;
+    openD_hanfun_pDimmableColourBulbInd_t dimmableColourBulb;
     openD_hanfun_pDimmableLightInd_t dimmableLight;
     openD_hanfun_pSimpleDoorLockInd_t simpleDoorLock;
     openD_hanfun_pSimpleLedInd_t simpleLed;

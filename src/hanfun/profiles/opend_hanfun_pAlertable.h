@@ -20,7 +20,7 @@ extern "C"
  * @{
  *
  * @defgroup   OPEND_HANFUN_PALERTABLE openD HAN-FUN pAlertable
- *             This module specifies the HAN-FUN Alertable profile.
+ *             This module specifies the HAN-FUN alertable profile.
  * @{
  */
 
