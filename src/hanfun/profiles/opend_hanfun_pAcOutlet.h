@@ -20,7 +20,7 @@ extern "C"
  * @{
  *
  * @defgroup   OPEND_HANFUN_PACOUTLET openD HAN-FUN pAcOutlet
- *             This module specifies the HAN-FUN acOutlet profile.
+ *             This module specifies the HAN-FUN AC outlet profile.
  * @{
  */
 

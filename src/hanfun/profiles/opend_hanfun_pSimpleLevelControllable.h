@@ -20,7 +20,7 @@ extern "C"
  * @{
  *
  * @defgroup   OPEND_HANFUN_PSIMPLELEVELCONTROLLABLE openD HAN-FUN pSimpleLevelControllable
- *             This module specifies the HAN-FUN SimpleLevelControllable profile.
+ *             This module specifies the HAN-FUN simple level controllable profile.
  * @{
  */
 

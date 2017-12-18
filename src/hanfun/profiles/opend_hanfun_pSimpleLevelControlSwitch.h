@@ -20,7 +20,7 @@ extern "C"
  * @{
  *
  * @defgroup   OPEND_HANFUN_PSIMPLELEVELCONTROLSWITCH openD HAN-FUN pSimpleLevelControlSwitch
- *             This module specifies the HAN-FUN SimpleLevelControlSwitch profile.
+ *             This module specifies the HAN-FUN simple level control switch profile.
  * @{
  */
 
