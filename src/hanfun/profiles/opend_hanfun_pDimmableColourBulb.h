@@ -83,7 +83,7 @@ typedef struct openD_hanfun_pDimmableColourBulbCfm {
   union {
     openD_hanfun_iOnOffServerCfm_t onOff;
     openD_hanfun_iColourControlServerCfm_t colourControl;
-    openD_hanfun_iLevelControlServerCfm_t ;
+    openD_hanfun_iLevelControlServerCfm_t levelControl;
   };
 } openD_hanfun_pDimmableColourBulbCfm_t;
 
