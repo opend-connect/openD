@@ -28,7 +28,7 @@ This project utilizes Doxygen as tool for specification and documentation. To bu
 
 * In your terminal go to the root directory of the project and create the build directory.
 
-      $ cd openD-unified-API
+      $ cd openD
       $ mkdir build
       $ cd build
 
