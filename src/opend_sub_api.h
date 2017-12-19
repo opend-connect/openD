@@ -30,24 +30,24 @@ extern "C"
 /**
  * openD SubApi services.
  */
-typedef enum openD_subApi {
+typedef enum openD_subApi_service {
   /**
    * Subscribe enable.
    */
-  SUBAPI_SUBSCRIBE_ENABLE,
+  OPEND_SUBAPI_SUBSCRIBE_ENABLE,
   /**
    * Subscribe.
    */
-  SUBAPI_SUBSCRIBE,
+  OPEND_SUBAPI_SUBSCRIBE,
   /**
    * Subscribe delete.
    */
-  SUBAPI_SUBSCRIPTION_DELETE,
+  OPEND_SUBAPI_SUBSCRIPTION_DELETE,
   /**
    * Set access code.
    */
-  SUBAPI_SET_AC,
-} openD_subApiServices_t;
+  OPEND_SUBAPI_SET_AC,
+} openD_subApi_service_t;
 
 /**
  * openD SubApi request subscribeEnable structure.
@@ -122,9 +122,9 @@ typedef struct subApiInd_subscriptionDelete {
  */
 typedef struct openD_subApiReq {
   /**
-   * SubApi request type.
+   * SubApi request service.
    */
-  openD_subApiServices_t type;
+  openD_subApi_service_t service;
 
   /**
    * openD SubApi request parameters.
@@ -152,25 +152,25 @@ typedef struct openD_subApiReq {
 /**
  * openD SubApi confirm structure.
  */
-typedef struct openD_subApiConfirm {
+typedef struct openD_subApiCfm {
   /**
-   * SubApi service type.
+   * SubApi confirm service.
    */
-  openD_subApiServices_t type;
+  openD_subApi_service_t service;
   /**
    * SubApi service status.
    */
   openD_status_t status;
-} openD_subApiConfirm_t;
+} openD_subApiCfm_t;
 
 /**
  * openD SubApi indication structure.
  */
-typedef struct openD_subApiIndication {
+typedef struct openD_subApiInd {
   /**
-   * SubApi service type.
+   * SubApi indication service.
    */
-  openD_subApiServices_t type;
+  openD_subApi_service_t service;
 
   /**
    * openD SubApi indication parameters.
@@ -185,7 +185,7 @@ typedef struct openD_subApiIndication {
      */
     subApiInd_subscriptionDelete_t subscriptionDelete;
   } param;
-} openD_subApiIndication_t;
+} openD_subApiInd_t;
 
 /**
  * openD SubApi primitives structure.
@@ -194,15 +194,15 @@ typedef struct openD_subApiPrimitives {
   /**
    * @brief   SubApi confirm primitive.
    *
-   * @param   sConfirm Pointer of the SubApi confirm structure (@ref openD_subApiConfirm_t).
+   * @param   sConfirm Pointer of the SubApi confirm structure (@ref openD_subApiCfm_t).
    */
-  void ( *openD_subApiConfirm )( openD_subApiConfirm_t *sConfirm );
+  void ( *openD_subApiCfm )( openD_subApiCfm_t *sConfirm );
   /**
    * @brief   SubApi indication primitive.
    *
-   * @param   sIndication Pointer of the SubApi indication structure (@ref openD_subApiIndication_t).
+   * @param   sIndication Pointer of the SubApi indication structure (@ref openD_subApiInd_t).
    */
-  void ( *openD_subApiIndication )( openD_subApiIndication_t *sIndication );
+  void ( *openD_subApiInd )( openD_subApiInd_t *sIndication );
 } openD_subApiPrimitives_t;
 
 /**

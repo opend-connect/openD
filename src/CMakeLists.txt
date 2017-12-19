@@ -29,6 +29,8 @@
 #---------------------------------------------------------------------------------------
 # Options
 #---------------------------------------------------------------------------------------
+set(CMAKE_C_STANDARD 99)
+set(CMAKE_C_STANDARD_REQUIRED ON)
 
 #---------------------------------------------------------------------------------------
 # Product info
@@ -40,26 +42,26 @@ set(PROJECT_PRODUCT_NAME    "openD unified API" CACHE STRING "product")
 # Headers and sources
 #---------------------------------------------------------------------------------------
 set(OPEND_SOURCES
-    ${CMAKE_CURRENT_LIST_DIR}/opend.c
-    ${CMAKE_CURRENT_LIST_DIR}/opend_audio.c
-    ${CMAKE_CURRENT_LIST_DIR}/opend_call.c
-    ${CMAKE_CURRENT_LIST_DIR}/opend_hanfun.c
-    ${CMAKE_CURRENT_LIST_DIR}/opend_mgmt.c
-    ${CMAKE_CURRENT_LIST_DIR}/opend_sixlowpan.c
-    ${CMAKE_CURRENT_LIST_DIR}/opend_sub.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/opend.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/opend_audio.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/opend_call.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/opend_hanfun.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/opend_mgmt.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/opend_sixlowpan.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/opend_sub.c
 )
 
 set(OPEND_DOXYGEN_INPUT
-    ${CMAKE_CURRENT_LIST_DIR} " "
-    ${CMAKE_CURRENT_LIST_DIR}/hanfun " "
-    ${CMAKE_CURRENT_LIST_DIR}/hanfun/interfaces " "
-    ${CMAKE_CURRENT_LIST_DIR}/hanfun/profiles " "
+    ${CMAKE_CURRENT_SOURCE_DIR} " "
+    ${CMAKE_CURRENT_SOURCE_DIR}/hanfun " "
+    ${CMAKE_CURRENT_SOURCE_DIR}/hanfun/interfaces " "
+    ${CMAKE_CURRENT_SOURCE_DIR}/hanfun/profiles " "
     PARENT_SCOPE
 )
 
 # configure version header
 configure_file(
-    ${CMAKE_CURRENT_LIST_DIR}/version.h.in
+    ${CMAKE_CURRENT_SOURCE_DIR}/version.h.in
     ${PROJECT_BINARY_DIR}/version.h
 )
 

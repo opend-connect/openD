@@ -14,33 +14,42 @@ extern "C"
  * @file       opend_hanfun_pSimpleOnOffSwitchable.h
  * @copyright  STACKFORCE GmbH, Heitersheim, Germany, www.stackforce.de
  * @author     Patrick Weber
- * @brief      openD HAN-FUN API pSimpleOnOffSwitchable.
+ * @brief      openD HAN-FUN pSimpleOnOffSwitchable.
  *
  * @addtogroup OPEND_HANFUN_PROFILE
  * @{
  *
- * @defgroup   OPEND_HANFUN_API_PSIMPLEONOFFSWITCHABLE openD HAN-FUN API pSimpleOnOffSwitchable
+ * @defgroup   OPEND_HANFUN_PSIMPLEONOFFSWITCHABLE openD HAN-FUN pSimpleOnOffSwitchable
  *             This module specifies the HAN-FUN SimpleOnOffSwitchable profile.
  * @{
  */
 
-#ifndef __OPEND_HANFUN_API_PSIMPLEONOFFSWITCHABLE_H__
-#define __OPEND_HANFUN_API_PSIMPLEONOFFSWITCHABLE_H__
+#ifndef __OPEND_HANFUN_PSIMPLEONOFFSWITCHABLE_H__
+#define __OPEND_HANFUN_PSIMPLEONOFFSWITCHABLE_H__
 
 #include "../interfaces/opend_hanfun_iOnOff.h"
 
 /**
- * openD HanfunApi pSimpleOnOffSwitchable profile structure.
+ * openD Hanfun pSimpleOnOffSwitchable profile request structure.
  */
-typedef openD_hanfunApi_iOnOff_t openD_hanfunApi_pSimpleOnOffSwitchable_t;
+typedef openD_hanfun_iOnOffServerReq_t openD_hanfun_pSimpleOnOffSwitchableReq_t;
+
+/**
+ * openD Hanfun pSimpleOnOffSwitchable profile confirm structure.
+ */
+typedef openD_hanfun_iOnOffServerCfm_t openD_hanfun_pSimpleOnOffSwitchableCfm_t;
+
+/**
+ * openD Hanfun pSimpleOnOffSwitchable profile indication structure.
+ */
+typedef openD_hanfun_iOnOffServerInd_t openD_hanfun_pSimpleOnOffSwitchableInd_t;
 
 
-
-/*! @} defgroup OPEND_HANFUN_API_PSIMPLEONOFFSWITCHABLE */
+/*! @} defgroup OPEND_HANFUN_PSIMPLEONOFFSWITCHABLE */
 
 /*! @} addtogroup OPEND_HANFUN_PROFILE */
 
-#endif /* __OPEND_HANFUN_API_PSIMPLEONOFFSWITCHABLE_H__ */
+#endif /* __OPEND_HANFUN_PSIMPLEONOFFSWITCHABLE_H__ */
 #ifdef __cplusplus
 }
 #endif

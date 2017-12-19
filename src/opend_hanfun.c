@@ -23,22 +23,22 @@ extern "C"
 
 
 
-openD_status_t openD_hanfunApi_init( openD_hanfunApiPrimitives_t *hPrimitives, openD_hanfunApiOperationMode_t operationMode )
+openD_status_t openD_hanfunApi_init( openD_hanfunApiPrimitives_t *hPrimitives, openD_hanfunApi_operationMode_t operationMode )
 {
     return OPEND_STATUS_SERVICE_UNKNOWN;
 }
 
-openD_status_t openD_hanfunApi_devMgmtRequest( openD_hanfunApiDevMgmtReq_t *hMgmtRequest )
+openD_status_t openD_hanfunApi_devMgmtRequest( openD_hanfunApi_devMgmtReq_t *hMgmtRequest )
 {
     return OPEND_STATUS_SERVICE_UNKNOWN;
 }
 
-openD_status_t openD_hanfunApi_bindMgmtRequest( openD_hanfunApiBindMgmtReq_t *hBindRequest )
+openD_status_t openD_hanfunApi_bindMgmtRequest( openD_hanfunApi_bindMgmtReq_t *hBindRequest )
 {
     return OPEND_STATUS_SERVICE_UNKNOWN;
 }
 
-openD_status_t openD_hanfunApi_profileRequest( openD_hanfunApiProfileReq_t *hProfileRequest )
+openD_status_t openD_hanfunApi_profileRequest( openD_hanfunApi_profileReq_t *hProfileRequest )
 {
     return OPEND_STATUS_SERVICE_UNKNOWN;
 }

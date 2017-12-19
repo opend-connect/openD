@@ -29,29 +29,29 @@ extern "C"
 /*
  * openD Hanfun broadcast - device address.
  */
-#define OPEND_HANFUNAPI_ADDRESS_BROADCAST_DEVICE = 0x7FFF;
+#define OPEND_HANFUN_ADDRESS_BROADCAST_DEVICE = 0x7FFF;
 /*
  * openD Hanfun broadcast - unit address.
  */
-#define OPEND_HANFUNAPI_ADDRESS_BROADCAST_UNIT = 0xFF;
+#define OPEND_HANFUN_ADDRESS_BROADCAST_UNIT = 0xFF;
 
 
-typedef enum openD_hanfunApi_address_modType
+typedef enum openD_hanfun_address_modType
 {
   /*
    * Destination address is for single device.
    */
-  OPEND_HANFUNAPI_ADDRESS_MODTYPE_DEVICE = 0,
+  OPEND_HANFUN_ADDRESS_MODTYPE_DEVICE = 0,
   /*
    * Destination address is for a group of devices.
    */
-  OPEND_HANFUNAPI_ADDRESS_MODTYPE_GROUP  = 1,
-} openD_hanfunApi_address_modType_t;
+  OPEND_HANFUN_ADDRESS_MODTYPE_GROUP  = 1,
+} openD_hanfun_address_modType_t;
 
 /**
- * openD HanfunApi address structure.
+ * openD Hanfun address structure.
  */
-typedef struct openD_hanfunApi_address {
+typedef struct openD_hanfun_address {
   /**
     * Address modifier.
     */
@@ -64,7 +64,50 @@ typedef struct openD_hanfunApi_address {
     * Unit.
     */
   uint8_t unit;
-} openD_hanfunApi_address_t;
+} openD_hanfun_address_t;
+
+/**
+ * openD Hanfun address structure.
+ */
+typedef enum openD_hanfun_result
+{
+  /**
+   * Request OK.
+   */
+  OK = 0x00,
+  /**
+   * Fail - Not Authorized.
+   */
+  FAIL_AUTH = 0x01,
+  /**
+   * Fail - Invalid Argument.
+   */
+  FAIL_ARG = 0x02,
+  /**
+   * Fail - Not Supported.
+   */
+  FAIL_SUPPORT = 0x03,
+  /**
+   * Fail - Read only attribute.
+   */
+  FAIL_RO_ATTR = 0x04,
+  /**
+   * Fail - Read Session not established.
+   */
+  FAIL_READ_SESSION = 0x20,
+  /**
+   * Fail - Entries table modified.
+   */
+  FAIL_MODIFIED = 0x21,
+  /**
+   * Fail - Not enough resources.
+   */
+  FAIL_RESOURCES = 0xFE,
+  /**
+   * Fail - Unknown reason.
+   */
+  FAIL_UNKNOWN = 0xFF,
+} openD_hanfun_result_t;
 
 
 /*! @} defgroup OPEND_HANFUN_DATATYPES */
