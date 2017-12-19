@@ -70,16 +70,16 @@ extern "C"
 /**
  * openD HanfunApi operation modes.
  */
-typedef enum openD_hanfunApiOperationMode {
+typedef enum openD_hanfunApi_operationMode {
   /**
    * HAN-FUN concentrator operation mode.
    */
-  HANFUNAPI_CONCENTRATOR,
+  OPEND_HANFUNAPI_CONCENTRATOR,
   /**
    * HAN-FUN node operation mode.
    */
-  HANFUNAPI_NODE,
-} openD_hanfunApiOperationMode_t;
+  OPEND_HANFUNAPI_NODE,
+} openD_hanfunApi_operationMode_t;
 
 
 /**
@@ -123,45 +123,45 @@ typedef struct hanfunApiDevMgmt_registrationElement {
 /**
  * openD HanfunApi device management services.
  */
-typedef enum openD_hanfunApiDevMgmtService {
+typedef enum openD_hanfunApi_devMgmt_service {
   /**
    * HAN-FUN device management enable or disable registration.
    */
-  HANFUNAPI_DEVICE_MANAGEMENT_REGISTER,
+  OPEND_HANFUNAPI_DEVICE_MANAGEMENT_REGISTER,
   /**
    * HAN-FUN device management de-register a device.
    */
-  HANFUNAPI_DEVICE_MANAGEMENT_DEREGISTER,
+  OPEND_HANFUNAPI_DEVICE_MANAGEMENT_DEREGISTER,
   /**
    * HAN-FUN device management register a device.
    */
-  HANFUNAPI_DEVICE_MANAGEMENT_REGISTER_DEVICE,
+  OPEND_HANFUNAPI_DEVICE_MANAGEMENT_REGISTER_DEVICE,
   /**
    * HAN-FUN device management get the first element of the registrations.
    */
-  HANFUNAPI_DEVICE_MANAGEMENT_GET_FIRST_REGISTRATION,
+  OPEND_HANFUNAPI_DEVICE_MANAGEMENT_GET_FIRST_REGISTRATION,
   /**
    * HAN-FUN device management get the next element of the registrations.
    */
-  HANFUNAPI_DEVICE_MANAGEMENT_GET_NEXT_REGISTRATION,
+  OPEND_HANFUNAPI_DEVICE_MANAGEMENT_GET_NEXT_REGISTRATION,
   /**
    * HAN-FUN device management no further elements of the registrations.
    */
-  HANFUNAPI_DEVICE_MANAGEMENT_NO_FURTHER_REGISTRATION,
+  OPEND_HANFUNAPI_DEVICE_MANAGEMENT_NO_FURTHER_REGISTRATION,
   /**
    * HAN-FUN device management get address.
    */
-  HANFUNAPI_DEVICE_MANAGEMENT_GET_ADDRESS,
-} openD_hanfunApiDevMgmtService_t;
+  OPEND_HANFUNAPI_DEVICE_MANAGEMENT_GET_ADDRESS,
+} openD_hanfunApi_devMgmt_service_t;
 
 /**
  * openD HanfunApi device management request structure.
  */
-typedef struct openD_hanfunApiDevMgmtReq {
+typedef struct openD_hanfunApi_devMgmtReq {
   /**
    * HanfunApi device management service.
    */
-  openD_hanfunApiDevMgmtService_t service;
+  openD_hanfunApi_devMgmt_service_t service;
 
   /**
    * openD HanfunApi device management parameters.
@@ -170,62 +170,62 @@ typedef struct openD_hanfunApiDevMgmtReq {
     hanfunApiDevMgmt_register_t dev_register;
     hanfunApiDevMgmt_deregister_t dev_deregister;
   } param;
-} openD_hanfunApiDevMgmtReq_t;
+} openD_hanfunApi_devMgmtReq_t;
 
 /**
  * openD HanfunApi device management confirm structure.
  */
-typedef struct openD_hanfunApiDevMgmtConfirm {
+typedef struct openD_hanfunApi_devMgmtCfm {
   /**
    * HanfunApi device management service.
    */
-  openD_hanfunApiDevMgmtService_t service;
+  openD_hanfunApi_devMgmt_service_t service;
   /**
    * openD HanfunApi device management parameters.
    */
   union {
     hanfunApiDevMgmt_registrationElement_t registrationElement;
   } param;
-} openD_hanfunApiDevMgmtConfirm_t;
+} openD_hanfunApi_devMgmtCfm_t;
 
 /**
  * openD HanfunApi device management indication structure.
  */
-typedef struct openD_hanfunApiDevMgmtIndication {
+typedef struct openD_hanfunApi_devMgmtInd {
   /**
    * HanfunApi device management service.
    */
-  openD_hanfunApiDevMgmtService_t service;
-} openD_hanfunApiDevMgmtIndication_t;
+  openD_hanfunApi_devMgmt_service_t service;
+} openD_hanfunApi_devMgmtInd_t;
 
 
 /**
  * openD HanfunApi bind management services.
  */
-typedef enum openD_hanfunApiBindMgmtService {
+typedef enum openD_hanfunApi_bindMgmt_service {
   /**
    * HAN-FUN bind management add.
    */
-  HANFUNAPI_BIND_MANAGEMENT_ADD,
+  OPEND_HANFUNAPI_BIND_MANAGEMENT_ADD,
   /**
    * HAN-FUN bind management remove.
    */
-  HANFUNAPI_BIND_MANAGEMENT_REMOVE,
+  OPEND_HANFUNAPI_BIND_MANAGEMENT_REMOVE,
   /**
    * HAN-FUN bind management get entries.
    */
-  HANFUNAPI_BIND_MANAGEMENT_ENTRIES,
+  OPEND_HANFUNAPI_BIND_MANAGEMENT_ENTRIES,
 
-} openD_hanfunApiBindMgmtService_t;
+} openD_hanfunApi_bindMgmt_service_t;
 
 /**
  * openD HanfunApi bind management request structure.
  */
-typedef struct openD_hanfunApiBindMgmtReq {
+typedef struct openD_hanfunApi_bindMgmtReq {
   /**
    * HanfunApi bind management service.
    */
-  openD_hanfunApiBindMgmtService_t service;
+  openD_hanfunApi_bindMgmt_service_t service;
 
   /**
    * openD HanfunApi bind management parameters.
@@ -233,86 +233,86 @@ typedef struct openD_hanfunApiBindMgmtReq {
   // union {
   // TBD;
   // } param;
-} openD_hanfunApiBindMgmtReq_t;
+} openD_hanfunApi_bindMgmtReq_t;
 
 /**
  * openD HanfunApi bind management confirm structure.
  */
-typedef struct openD_hanfunApiBindMgmtConfirm {
+typedef struct openD_hanfunApi_bindMgmtCfm {
   /**
    * HanfunApi bind management service.
    */
-  openD_hanfunApiBindMgmtService_t service;
-} openD_hanfunApiBindMgmtConfirm_t;
+  openD_hanfunApi_bindMgmt_service_t service;
+} openD_hanfunApi_bindMgmtCfm_t;
 
 /**
  * openD HanfunApi bind management indication structure.
  */
-typedef struct openD_hanfunApiBindMgmtIndication {
+typedef struct openD_hanfunApi_bindMgmtInd {
   /**
    * HanfunApi bind management service.
    */
-  openD_hanfunApiBindMgmtService_t service;
-} openD_hanfunApiBindMgmtIndication_t;
+  openD_hanfunApi_bindMgmt_service_t service;
+} openD_hanfunApi_bindMgmtInd_t;
 
 
 /**
  * openD HanfunApi profiles.
  */
-typedef enum openD_hanfunApiProfile {
+typedef enum openD_hanfunApi_profile {
   /**
    * HAN-FUN Profile SIMPLE_ONOFF_SWITCHABLE.
    */
-  HANFUNAPI_SIMPLE_ONOFF_SWITCHABLE,
+  OPEND_HANFUNAPI_SIMPLE_ONOFF_SWITCHABLE,
   /**
    * HAN-FUN Profile SIMPLE_ONOFF_SWITCH.
    */
-  HANFUNAPI_SIMPLE_ONOFF_SWITCH,
+  OPEND_HANFUNAPI_SIMPLE_ONOFF_SWITCH,
   /**
    * HAN-FUN Profile SIMPLE_LEVEL_CONTROLLABLE.
    */
-  HANFUNAPI_SIMPLE_LEVEL_CONTROLLABLE,
+  OPEND_HANFUNAPI_SIMPLE_LEVEL_CONTROLLABLE,
   /**
    * HAN-FUN Profile SIMPLE_LEVEL_CONTROL.
    */
-  HANFUNAPI_SIMPLE_LEVEL_CONTROL,
+  OPEND_HANFUNAPI_SIMPLE_LEVEL_CONTROL,
   /**
    * HAN-FUN Profile SIMPLE_LEVEL_CONTROLLABLE_SWITCHABLE.
    */
-  HANFUNAPI_SIMPLE_LEVEL_CONTROLLABLE_SWITCHABLE,
+  OPEND_HANFUNAPI_SIMPLE_LEVEL_CONTROLLABLE_SWITCHABLE,
   /**
    * HAN-FUN Profile SIMPLE_LEVEL_CONTROL_SWITCH.
    */
-  HANFUNAPI_SIMPLE_LEVEL_CONTROL_SWITCH,
+  OPEND_HANFUNAPI_SIMPLE_LEVEL_CONTROL_SWITCH,
   /**
    * HAN-FUN Profile AC_OUTLET.
    */
-  HANFUNAPI_AC_OUTLET,
+  OPEND_HANFUNAPI_AC_OUTLET,
   /**
    * HAN-FUN Profile AC_OUTLET_WITH_POWER_METERING.
    */
-  HANFUNAPI_AC_OUTLET_WITH_POWER_METERING,
+  OPEND_HANFUNAPI_AC_OUTLET_WITH_POWER_METERING,
   /**
    * HAN-FUN Profile SIMPLE_LIGHT.
    */
-  HANFUNAPI_SIMPLE_LIGHT,
+  OPEND_HANFUNAPI_SIMPLE_LIGHT,
   /**
    * HAN-FUN Profile DIMMABLE_LIGHT.
    */
-  HANFUNAPI_DIMMABLE_LIGHT,
+  OPEND_HANFUNAPI_DIMMABLE_LIGHT,
 
   /** Other HAN-FUN Profiles ... */
 
-} openD_hanfunApiProfile_t;
+} openD_hanfunApi_profile_t;
 
 /**
  * openD HanfunApi profile request structure.
  */
-typedef struct openD_hanfunApiProfileReq {
+typedef struct openD_hanfunApi_profileReq {
   /**
-   * HanfunApi profile.
+   * openD HanfunApi profile.
    */
-  openD_hanfunApiProfile_t profile;
+  openD_hanfunApi_profile_t profile;
 
   /**
    * openD HanfunApi profile structure.
@@ -354,16 +354,16 @@ typedef struct openD_hanfunApiProfileReq {
     openD_hanfun_pVibrationDetectorReq_t vibrationDetector;
     openD_hanfun_pWindowOpenCloseDetectorReq_t windowOpenCloseDetector;
   };
-} openD_hanfunApiProfileReq_t;
+} openD_hanfunApi_profileReq_t;
 
 /**
  * openD HanfunApi profile confirm structure.
  */
-typedef struct openD_hanfunApiProfileConfirm {
+typedef struct openD_hanfunApi_profileCfm {
   /**
    * openD HanfunApi profile.
    */
-  openD_hanfunApiProfile_t profile;
+  openD_hanfunApi_profile_t profile;
 
   /**
    * openD HanfunApi profile structure.
@@ -391,16 +391,16 @@ typedef struct openD_hanfunApiProfileConfirm {
     openD_hanfun_pSirenCfm_t siren;
     openD_hanfun_pUserInterfaceLockCfm_t userInterfaceLock;
   };
-} openD_hanfunApiProfileConfirm_t;
+} openD_hanfunApi_profileCfm_t;
 
 /**
  * openD HanfunApi profile indication structure.
  */
-typedef struct openD_hanfunApiProfileIndication {
+typedef struct openD_hanfunApi_profileInd {
   /**
    * openD HanfunApi profile.
    */
-  openD_hanfunApiProfile_t profile;
+  openD_hanfunApi_profile_t profile;
 
   /**
    * openD HanfunApi profile structure.
@@ -422,7 +422,7 @@ typedef struct openD_hanfunApiProfileIndication {
     openD_hanfun_pSirenInd_t siren;
     openD_hanfun_pUserInterfaceLockInd_t userInterfaceLock;
   };
-} openD_hanfunApiProfileIndication_t;
+} openD_hanfunApi_profileInd_t;
 
 
 /**
@@ -432,41 +432,41 @@ typedef struct openD_hanfunApiPrimitives {
   /**
    * @brief   HanfunApi device management confirm primitive.
    *
-   * @param   hDevMgmtConfirm Pointer of the HanfunApi confirm structure (@ref openD_hanfunApiDevMgmtConfirm_t).
+   * @param   hDevMgmtConfirm Pointer of the HanfunApi confirm structure (@ref openD_hanfunApi_devMgmtCfm_t).
    */
-  void ( *openD_hanfunApiMgmtConfirm )( openD_hanfunApiDevMgmtConfirm_t *hDevMgmtConfirm );
+  void ( *openD_hanfunApi_mgmtCfm )( openD_hanfunApi_devMgmtCfm_t *hDevMgmtConfirm );
   /**
    * @brief   HanfunApi device management indication primitive.
    *
-   * @param   hDevMgmtIndication Pointer of the HanfunApi indication structure (@ref openD_hanfunApiDevMgmtIndication_t).
+   * @param   hDevMgmtIndication Pointer of the HanfunApi indication structure (@ref openD_hanfunApi_devMgmtInd_t).
    */
-  void ( *openD_hanfunApiMgmtIndication )( openD_hanfunApiDevMgmtIndication_t *hDevMgmtIndication );
+  void ( *openD_hanfunApi_mgmtInd )( openD_hanfunApi_devMgmtInd_t *hDevMgmtIndication );
 
   /**
    * @brief   HanfunApi bind confirm primitive.
    *
-   * @param   hBindMgmtConfirm Pointer of the HanfunApi confirm structure (@ref openD_hanfunApiBindMgmtConfirm_t).
+   * @param   hBindMgmtConfirm Pointer of the HanfunApi confirm structure (@ref openD_hanfunApi_bindMgmtCfm_t).
    */
-  void ( *openD_hanfunApiBindConfirm )( openD_hanfunApiBindMgmtConfirm_t *hBindMgmtConfirm );
+  void ( *openD_hanfunApi_bindCfm )( openD_hanfunApi_bindMgmtCfm_t *hBindMgmtConfirm );
   /**
    * @brief   HanfunApi bind indication primitive.
    *
-   * @param   hBindMgmtIndication Pointer of the HanfunApi indication structure (@ref openD_hanfunApiBindMgmtIndication_t).
+   * @param   hBindMgmtIndication Pointer of the HanfunApi indication structure (@ref openD_hanfunApi_bindMgmtInd_t).
    */
-  void ( *openD_hanfunApiBindIndication )( openD_hanfunApiBindMgmtIndication_t *hBindMgmtIndication );
+  void ( *openD_hanfunApiBindInd )( openD_hanfunApi_bindMgmtInd_t *hBindMgmtIndication );
 
   /**
    * @brief   HanfunApi profile confirm primitive.
    *
-   * @param   hConfirm Pointer of the HanfunApi confirm structure (@ref openD_hanfunApiProfileConfirm_t).
+   * @param   hConfirm Pointer of the HanfunApi confirm structure (@ref openD_hanfunApi_profileCfm_t).
    */
-  void ( *openD_hanfunApiProfileConfirm )( openD_hanfunApiProfileConfirm_t *hProfileConfirm );
+  void ( *openD_hanfunApiProfileCfm )( openD_hanfunApi_profileCfm_t *hProfileConfirm );
   /**
    * @brief   HanfunApi profile indication primitive.
    *
-   * @param   hIndication Pointer of the HanfunApi indication structure (@ref openD_hanfunApiProfileIndication_t).
+   * @param   hIndication Pointer of the HanfunApi indication structure (@ref openD_hanfunApi_profileInd_t).
    */
-  void ( *openD_hanfunApiProfileIndication )( openD_hanfunApiProfileIndication_t *hProfileIndication );
+  void ( *openD_hanfunApiProfileInd )( openD_hanfunApi_profileInd_t *hProfileIndication );
 } openD_hanfunApiPrimitives_t;
 
 /**
@@ -475,44 +475,44 @@ typedef struct openD_hanfunApiPrimitives {
  * @details DETAILED DESCRIPTION HERE.
  *
  * @param   hPrimitives Pointer of the HAN-FUN API primitives structure (@ref openD_hanfunApiPrimitives_t).
- * @param   operationMode Operation mode of HAN-FUN (@ref openD_hanfunApiOperationMode_t).
+ * @param   operationMode Operation mode of HAN-FUN (@ref openD_hanfunApi_operationMode_t).
  *
  * @retval  openD_status_t Status of the operation (@ref openD_status_t).
  */
-openD_status_t openD_hanfunApi_init( openD_hanfunApiPrimitives_t *hPrimitives, openD_hanfunApiOperationMode_t operationMode );
+openD_status_t openD_hanfunApi_init( openD_hanfunApiPrimitives_t *hPrimitives, openD_hanfunApi_operationMode_t operationMode );
 
 /**
  * @brief   openD HAN-FUN API device management request.
  *
  * @details DETAILED DESCRIPTION HERE.
  *
- * @param   hMgmtRequest Pointer of the HAN-FUN API request structure (@ref openD_hanfunApiDevMgmtReq_t).
+ * @param   hMgmtRequest Pointer of the HAN-FUN API request structure (@ref openD_hanfunApi_devMgmtReq_t).
  *
  * @retval  openD_status_t Status of the operation (@ref openD_status_t).
  */
-openD_status_t openD_hanfunApi_devMgmtRequest( openD_hanfunApiDevMgmtReq_t *hMgmtRequest );
+openD_status_t openD_hanfunApi_devMgmtRequest( openD_hanfunApi_devMgmtReq_t *hMgmtRequest );
 
 /**
  * @brief   openD HAN-FUN API bind management request.
  *
  * @details DETAILED DESCRIPTION HERE.
  *
- * @param   hBindRequest Pointer of the HAN-FUN API request structure (@ref openD_hanfunApiBindMgmtReq_t).
+ * @param   hBindRequest Pointer of the HAN-FUN API request structure (@ref openD_hanfunApi_bindMgmtReq_t).
  *
  * @retval  openD_status_t Status of the operation (@ref openD_status_t).
  */
-openD_status_t openD_hanfunApi_bindMgmtRequest( openD_hanfunApiBindMgmtReq_t *hBindRequest );
+openD_status_t openD_hanfunApi_bindMgmtRequest( openD_hanfunApi_bindMgmtReq_t *hBindRequest );
 
 /**
  * @brief   openD HAN-FUN API profile request.
  *
  * @details DETAILED DESCRIPTION HERE.
  *
- * @param   hProfileRequest Pointer of the HAN-FUN API request structure (@ref openD_hanfunApiProfileReq_t).
+ * @param   hProfileRequest Pointer of the HAN-FUN API request structure (@ref openD_hanfunApi_profileReq_t).
  *
  * @retval  openD_status_t Status of the operation (@ref openD_status_t).
  */
-openD_status_t openD_hanfunApi_profileRequest( openD_hanfunApiProfileReq_t *hProfileRequest );
+openD_status_t openD_hanfunApi_profileRequest( openD_hanfunApi_profileReq_t *hProfileRequest );
 
 
 /*! @} defgroup OPEND_HANFUN_API */

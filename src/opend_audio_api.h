@@ -30,16 +30,16 @@ extern "C"
 /**
  * openD AudioApi services.
  */
-typedef enum openD_audioApi {
+typedef enum openD_audioApi_service {
   /**
    * Mute.
    */
-  AUDIOAPI_MUTE,
+  OPEND_AUDIOAPI_MUTE,
   /**
    * Volume.
    */
-  AUDIOAPI_VOLUME,
-} openD_audioApiServices_t;
+  OPEND_AUDIOAPI_VOLUME,
+} openD_audioApi_service_t;
 
 /**
  * openD AudioApi request mute structure.
@@ -74,9 +74,9 @@ typedef struct audioApiReq_volume {
  */
 typedef struct openD_audioApiReq {
   /**
-   * AudioApi request type.
+   * AudioApi request service.
    */
-  openD_audioApiServices_t type;
+  openD_audioApi_service_t service;
 
   /**
    * openD AudioApi request parameters.
@@ -96,26 +96,26 @@ typedef struct openD_audioApiReq {
 /**
  * openD AudioApi confirm structure.
  */
-typedef struct openD_audioApiConfirm {
+typedef struct openD_audioApiCfm {
   /**
-   * AudioApi service type.
+   * AudioApi confirm service.
    */
-  openD_audioApiServices_t type;
+  openD_audioApi_service_t service;
   /**
    * AudioApi service status.
    */
   openD_status_t status;
-} openD_audioApiConfirm_t;
+} openD_audioApiCfm_t;
 
 /**
  * openD AudioApi indication structure.
  */
-typedef struct openD_audioApiIndication {
+typedef struct openD_audioApiInd {
   /**
-   * AudioApi service type.
+   * AudioApi indication service.
    */
-  openD_audioApiServices_t type;
-} openD_audioApiIndication_t;
+  openD_audioApi_service_t service;
+} openD_audioApiInd_t;
 
 /**
  * openD AudioApi primitives structure.
@@ -124,15 +124,15 @@ typedef struct openD_audioApiPrimitives {
   /**
    * @brief   AudioApi confirm primitive.
    *
-   * @param   aConfirm Pointer to the AudioApi confirm structure (@ref openD_audioApiConfirm_t).
+   * @param   aConfirm Pointer to the AudioApi confirm structure (@ref openD_audioApiCfm_t).
    */
-  void ( *openD_audioApiConfirm )( openD_audioApiConfirm_t *aConfirm );
+  void ( *openD_audioApiCfm )( openD_audioApiCfm_t *aConfirm );
   /**
    * @brief   AudioApi indication primitive.
    *
-   * @param   aIndication Pointer to the AudioApi indication structure (@ref openD_audioApiIndication_t).
+   * @param   aIndication Pointer to the AudioApi indication structure (@ref openD_audioApiInd_t).
    */
-  void ( *openD_audioApiIndication )( openD_audioApiIndication_t *aIndication );
+  void ( *openD_audioApiInd )( openD_audioApiInd_t *aIndication );
 } openD_audioApiPrimitives_t;
 
 /**

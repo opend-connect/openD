@@ -29,24 +29,29 @@ extern "C"
 /**
  * openD CallApi services.
  */
-typedef enum openD_callApi {
+typedef enum openD_callApi_service {
   /**
    * Setup.
    */
-  CALLAPI_SETUP,
+  OPEND_CALLAPI_SETUP,
   /**
    * Release.
    */
-  CALLAPI_RELEASE,
+  OPEND_CALLAPI_RELEASE,
   /**
-   * ConnectionStatus.
+   * Connection status ringing.
    */
-  CALLAPI_CONNECTION_STATUS_RINGING,
+  OPEND_CALLAPI_CONNECTION_STATUS_RINGING,
+  /**
+   * Connection status connect.
+   */
+  OPEND_CALLAPI_CONNECTION_STATUS_CONNECT,
+  /**
+   * Connection status reject.
+   */
+  OPEND_CALLAPI_CONNECTION_STATUS_REJECT,
 
-  CALLAPI_CONNECTION_STATUS_CONNECT,
-
-  CALLAPI_CONNECTION_STATUS_REJECT,
-} openD_callApiServices_t;
+} openD_callApi_service_t;
 
 /**
  * openD SubApi request setup structure.
@@ -123,9 +128,9 @@ typedef struct callApiInd_connectionStatus_reject {
  */
 typedef struct openD_callApiReq {
   /**
-   * CallApi request type.
+   * CallApi request service.
    */
-  openD_callApiServices_t type;
+  openD_callApi_service_t service;
 
   /**
    * openD CallApi request parameters.
@@ -145,25 +150,25 @@ typedef struct openD_callApiReq {
 /**
  * openD CallApi confirm structure.
  */
-typedef struct openD_callApiConfirm {
+typedef struct openD_callApiCfm {
   /**
-   * CallApi service type.
+   * CallApi confirm service.
    */
-  openD_callApiServices_t type;
+  openD_callApi_service_t service;
   /**
    * CallApi service status.
    */
   openD_status_t status;
-} openD_callApiConfirm_t;
+} openD_callApiCfm_t;
 
 /**
  * openD CallApi indication structure.
  */
-typedef struct openD_callApiIndication {
+typedef struct openD_callApiInd {
   /**
-   * CallApi service type.
+   * CallApi indication service.
    */
-  openD_callApiServices_t type;
+  openD_callApi_service_t service;
 
   /**
    * openD CallApi indication parameters.
@@ -190,7 +195,7 @@ typedef struct openD_callApiIndication {
      */
     callApiInd_connectionStatus_reject_t connectionStatus_reject;
   } param;
-} openD_callApiIndication_t;
+} openD_callApiInd_t;
 
 /**
  * openD CallApi primitives structure.
@@ -199,15 +204,15 @@ typedef struct openD_callApiPrimitives {
   /**
    * @brief   CallApi confirm primitive.
    *
-   * @param   cConfirm Pointer of the CallApi confirm structure (@ref openD_callApiConfirm_t).
+   * @param   cConfirm Pointer of the CallApi confirm structure (@ref openD_callApiCfm_t).
    */
-  void ( *openD_callApiConfirm )( openD_callApiConfirm_t *cConfirm );
+  void ( *openD_callApiCfm )( openD_callApiCfm_t *cConfirm );
   /**
    * @brief   CallApi indication primitive.
    *
-   * @param   cIndication Pointer of the CallApi indication structure (@ref openD_callApiIndication_t).
+   * @param   cIndication Pointer of the CallApi indication structure (@ref openD_callApiInd_t).
    */
-  void ( *openD_callApiIndication )( openD_callApiIndication_t *cIndication );
+  void ( *openD_callApiInd )( openD_callApiInd_t *cIndication );
 } openD_callApiPrimitives_t;
 
 /**

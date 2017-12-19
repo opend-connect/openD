@@ -29,45 +29,45 @@ extern "C"
 /**
  * openD SixlowpanApi services.
  */
-typedef enum openD_sixlowpanApi {
+typedef enum openD_sixlowpanApi_service {
 
 /** TBD */
   TBD,
-} openD_sixlowpanApiServices_t;
+} openD_sixlowpanApi_service_t;
 
 /**
  * openD SixlowpanApi request structure.
  */
 typedef struct openD_sixlowpanApiReq {
   /**
-   * SixlowpanApi request type.
+   * SixlowpanApi request service.
    */
-  openD_sixlowpanApiServices_t type;
+  openD_sixlowpanApi_service_t service;
 } openD_sixlowpanApiReq_t;
 
 /**
  * openD SixlowpanApi confirm structure.
  */
-typedef struct openD_sixlowpanApiConfirm {
+typedef struct openD_sixlowpanApiCfm {
   /**
-   * SixlowpanApi service type.
+   * SixlowpanApi confirm service.
    */
-  openD_sixlowpanApiServices_t type;
+  openD_sixlowpanApi_service_t service;
   /**
    * SixlowpanApi service status.
    */
   openD_status_t status;
-} openD_sixlowpanApiConfirm_t;
+} openD_sixlowpanApiCfm_t;
 
 /**
  * openD SixlowpanApi indication structure.
  */
-typedef struct openD_sixlowpanApiIndication {
+typedef struct openD_sixlowpanApiInd {
   /**
-   * SixlowpanApi service type.
+   * SixlowpanApi indication service.
    */
-  openD_sixlowpanApiServices_t type;
-} openD_sixlowpanApiIndication_t;
+  openD_sixlowpanApi_service_t service;
+} openD_sixlowpanApiInd_t;
 
 /**
  * openD SixlowpanApi primitives structure.
@@ -76,15 +76,15 @@ typedef struct openD_sixlowpanApiPrimitives {
   /**
    * @brief   SixlowpanApi confirm primitive.
    *
-   * @param   sixConfirm Pointer of the SixlowpanApi confirm structure (@ref openD_sixlowpanApiConfirm_t).
+   * @param   sixConfirm Pointer of the SixlowpanApi confirm structure (@ref openD_sixlowpanApiCfm_t).
    */
-  void ( *openD_sixlowpanApiConfirm )( openD_sixlowpanApiConfirm_t *sixConfirm );
+  void ( *openD_sixlowpanApiCfm )( openD_sixlowpanApiCfm_t *sixConfirm );
   /**
    * @brief   SixlowpanApi indication primitive.
    *
-   * @param   sixIndication Pointer of the SixlowpanApi indication structure (@ref openD_sixlowpanApiIndication_t).
+   * @param   sixIndication Pointer of the SixlowpanApi indication structure (@ref openD_sixlowpanApiInd_t).
    */
-  void ( *openD_sixlowpanApiIndication )( openD_sixlowpanApiIndication_t *sixIndication );
+  void ( *openD_sixlowpanApiInd )( openD_sixlowpanApiInd_t *sixIndication );
 } openD_sixlowpanApiPrimitives_t;
 
 /**

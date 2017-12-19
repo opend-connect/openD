@@ -29,24 +29,24 @@ extern "C"
 /**
  * openD MgmtApi services.
  */
-typedef enum openD_mgmtApi {
+typedef enum openD_mgmtApi_service {
   /**
    * DectMode.
    */
-  MGMTAPI_DECTMODE,
+  OPEND_MGMTAPI_DECTMODE,
   /**
    * Power down control.
    */
-  MGMTAPI_POWER_DOWN_CTRL,
+  OPEND_MGMTAPI_POWER_DOWN_CTRL,
   /**
    * Wake up.
    */
-  MGMTAPI_WAKE_UP,
+  OPEND_MGMTAPI_WAKE_UP,
   /**
    * Keep alive indication.
    */
-  MGMTAPI_KEEP_ALIVE,
-} openD_mgmtApiServices_t;
+  OPEND_MGMTAPI_KEEP_ALIVE,
+} openD_mgmtApi_service_t;
 
 /**
  * openD MgmtApi DectModes.
@@ -55,19 +55,19 @@ typedef enum openD_mgmtApi_dectMode {
   /**
    * DectMode fix part.
    */
-  MGMTAPI_DECTMODE_FP,
+  OPEND_MGMTAPI_DECTMODE_FP,
   /**
    * DectMode portable part.
    */
-  MGMTAPI_DECTMODE_PP,
+  OPEND_MGMTAPI_DECTMODE_PP,
   /**
    * DectMode HAN-FUN.
    */
-  MGMTAPI_DECTMODE_HF,
+  OPEND_MGMTAPI_DECTMODE_HF,
   /**
    * DectMode 6LoWPAN.
    */
-  MGMTAPI_DECTMODE_SIXLOWPAN,
+  OPEND_MGMTAPI_DECTMODE_SIXLOWPAN,
 } openD_mgmtApi_dectMode_t;
 
 /**
@@ -85,9 +85,9 @@ typedef struct mgmtApiInd_keepAlive {
  */
 typedef struct openD_mgmtApiReq {
   /**
-   * MgmtApi service type.
+   * MgmtApi request service.
    */
-  openD_mgmtApiServices_t type;
+  openD_mgmtApi_service_t service;
   /**
    * openD MgmtApi request parameters.
    */
@@ -102,25 +102,25 @@ typedef struct openD_mgmtApiReq {
 /**
  * openD MgmtApi confirm structure.
  */
-typedef struct openD_mgmtApiConfirm {
+typedef struct openD_mgmtApiCfm {
   /**
-   * MgmtApi service type.
+   * MgmtApi confirm service.
    */
-  openD_mgmtApiServices_t type;
+  openD_mgmtApi_service_t service;
   /**
    * MgmtApi service status.
    */
   openD_status_t status;
-} openD_mgmtApiConfirm_t;
+} openD_mgmtApiCfm_t;
 
 /**
  * openD MgmtApi indication structure.
  */
-typedef struct openD_mgmtApiIndication {
+typedef struct openD_mgmtApiInd {
   /**
-   * MgmtApi service type.
+   * MgmtApi indication service.
    */
-  openD_mgmtApiServices_t type;
+  openD_mgmtApi_service_t service;
 
   /**
    * openD MgmtApi indication parameters.
@@ -131,7 +131,7 @@ typedef struct openD_mgmtApiIndication {
      */
     mgmtApiInd_keepAlive_t keepAlive;
   } param;
-} openD_mgmtApiIndication_t;
+} openD_mgmtApiInd_t;
 
 /**
  * openD MgmtApi primitives structure.
@@ -140,15 +140,15 @@ typedef struct openD_mgmtApiPrimitives {
   /**
    * @brief   MgmtApi confirm primitive.
    *
-   * @param   mConfirm Pointer of the management API confirm structure (@ref openD_mgmtApiConfirm_t).
+   * @param   mConfirm Pointer of the management API confirm structure (@ref openD_mgmtApiCfm_t).
    */
-  void ( *openD_mgmtApiConfirm )( openD_mgmtApiConfirm_t *mConfirm );
+  void ( *openD_mgmtApiCfm )( openD_mgmtApiCfm_t *mConfirm );
   /**
    * @brief   MgmtApi indication primitive.
    *
-   * @param   mIndication Pointer of the management API indication structure (@ref openD_mgmtApiIndication_t).
+   * @param   mIndication Pointer of the management API indication structure (@ref openD_mgmtApiInd_t).
    */
-  void ( *openD_mgmtApiIndication )( openD_mgmtApiIndication_t *mIndication );
+  void ( *openD_mgmtApiInd )( openD_mgmtApiInd_t *mIndication );
 } openD_mgmtApiPrimitives_t;
 
 /**
