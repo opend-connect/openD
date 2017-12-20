@@ -100,7 +100,7 @@ No. | Description | Files
 20 | Interface to provide HAN-FUN functionalities from the ULE Alliance HAN-FUN (14). | opend_hanfun_api.*
 21 | Interface to provide HAN-FUN functionalities from the ULE Alliance 6LoWPAN (15). | opend_sixlowpan_api.*
 22 | This represents the unified openD API. | opend_api.*
-23 | Audio interface that provides the audio data. | -
+23 | Audio interface that provides the audio data. Please refer to: \ref AUDIO | -
 24 | UDP server to provide the access to the unified interfaces. | -
 25 | Inter-process communication by an UDP connection. | -
 26 | UDP client to get access to the UDP server. | -

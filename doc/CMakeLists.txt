@@ -35,6 +35,7 @@ if(BUILD_DOC)
     string(APPEND DOXYGEN_INPUT ${DOXYGEN_CUSTOM_RESOURCES_DIR}/doxygen/mainpage.dox " ")
     string(APPEND DOXYGEN_INPUT ${DOXYGEN_CUSTOM_RESOURCES_DIR}/doxygen/architecture.dox " ")
     string(APPEND DOXYGEN_INPUT ${DOXYGEN_CUSTOM_RESOURCES_DIR}/doxygen/protocol.dox " ")
+    string(APPEND DOXYGEN_INPUT ${DOXYGEN_CUSTOM_RESOURCES_DIR}/doxygen/audio.dox " ")
 
     string(APPEND DOXYGEN_INPUT ${OPEND_DOXYGEN_INPUT} " ")
     string(APPEND DOXYGEN_INPUT ${PROJECT_BINARY_DIR})
