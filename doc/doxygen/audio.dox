@@ -5,10 +5,10 @@
 
 \section AUDIO_OVERVIEW Audio overview
 
-This page describes the audio handling in combination with the openD framework. The figure below shows the architecture of the fixed part. On the audio side the framework differentiates between the audio data (23) and the audio management (19). The audio data is out of scope of this project and is provided by the DECT module manufactures. It is usually available as an PCM audio interface on the fixed part side. In addition, there is usually the possibility of an analog interface on the DECT modules.
-The audio management can be controlled via the openD audio API (19).
+This page describes the audio handling in combination with the openD framework. The figure below shows the architecture of the fixed part. On the audio side the framework differentiates between the audio data (25) and the audio management (21). The audio data is out of scope of this project and is provided by the DECT module manufactures. It is usually available as an PCM audio interface on the fixed part side. In addition, there is usually the possibility of an analog interface on the DECT modules.
+The audio management can be controlled via the openD audio API (21).
 
-\subsection UNIFIED_API_FP Fixed part
+\subsection AUDIO_UNIFIED_API_FP Fixed part
 
 \image html doc/doxygen/opend_architecture_FP.png
 
