@@ -3,7 +3,7 @@
 
 \section PROTOCOL_ABSTRACT Abstract
 
-This page defines the protocol which is used to control the openD framework with a UDP client server
-infrastructure.
+The protocol which is used to control the openD framework with a UDP client server infrastructure is defined on <a href="https://github.com/opend-connect/openD/wiki/Udp-message-format">this</a> GitHub Wiki page.
 
+Link: <a href="https://github.com/opend-connect/openD/wiki/Udp-message-format">https://github.com/opend-connect/openD/wiki/Udp-message-format</a>
 */
