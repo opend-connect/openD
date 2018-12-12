@@ -223,8 +223,8 @@ To use the openD framework and its features, other hardware pieces are necessary
 
 | **Shield** | **Manufacturer** | **Reference** |
 |:-:|:-:|:-:|
-| Dialog Shield | Dialog Semiconductor | ![Link](https://www.dialog-semiconductor.com/opend) |
-| DSPG Shield | DSP Group | ![Link](https://www.dspg.com/) |
+| Dialog Shield | Dialog Semiconductor | [Link](https://www.dialog-semiconductor.com/opend) |
+| DSPG Shield | DSP Group | [Link](https://www.dspg.com/) |
 
 Please refer to the following images of the supported hardwares:
 
