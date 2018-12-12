@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioPropertySheet
+	ProjectType="Visual C++"
+	Version="8.00"
+	Name="Win32Rsx"
+	>
+	<Tool
+		Name="VCCLCompilerTool"
+		AdditionalIncludeDirectories="&quot;$(SolutionDir)\..\Include&quot;;&quot;$(SolutionDir)\..\Components&quot;;&quot;$(SolutionDir)\..\&quot;;&quot;$(SolutionDir)\..\Config&quot;"
+		PreprocessorDefinitions="RSX;PCCOMPILE;DISREGARD_NON_STANDARD_RTXDEF_EXTENSIONS;NDEBUG;LOG_DDUOS_SIGNALS;WIN32;WIN32_SIM;_WINDOWS;REPSCLIENT_DLL;WIN32_CTU_TEST;WIN32_NSC_VOICE;WIN32_RSSI_AS_ADC;WIN32_CS_INTERPRETATION;_CRT_SECURE_NO_DEPRECATE;RSX_A_TRACE_EXTENDED_FREQ;RS_RTOS_ID=RSTS_NONE;RC_HEAP_IMPLEMENTATION=RHI_USER;RTXDEF_INCLUDE;WIN32_CMD_LINE_OPTIONS"
+		ProgramDataBaseFileName="$(TargetDir)$(TargetName).pdb"
+		BrowseInformation="1"
+		BrowseInformationFile="$(OutDir)\"
+	/>
+	<Tool
+		Name="VCResourceCompilerTool"
+		PreprocessorDefinitions="WIN32_CTU_TEST,WIN32_NSC_VOICE,WIN32_RSSI_AS_ADC,WIN32_CS_INTERPRETATION"
+		Culture="1033"
+		AdditionalIncludeDirectories="&quot;$(SolutionDir)\..\..\..\..\&quot;"
+	/>
+</VisualStudioPropertySheet>

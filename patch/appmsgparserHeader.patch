@@ -1,0 +1,33 @@
+diff --git a/src/opend/dspg/cmbs/test/appcmbs/appmsgparser.h b/sw_package_host/test/appcmbs/appmsgparser.h
+index 09b3e63..90da869 100644
+--- a/src/opend/dspg/cmbs/test/appcmbs/appmsgparser.h
++++ b/sw_package_host/test/appcmbs/appmsgparser.h
+@@ -13,7 +13,7 @@
+ *  ----------------------------------------------------------------------------\n
+ * 02-Nov-10    podolskiy   1       Initial creation                             \n
+ *******************************************************************************/
+-#ifndef	APP_MSG_PARSER
++#ifndef	APP_MSG_PARSER 
+ #define APP_MSG_PARSER
+ 
+ void    app_IEToString(void *pv_IE, u16 u16_IE);
+@@ -30,19 +30,4 @@ char * app_GetOKStatus(E_CMBS_LINE_DIAG_OK_STATUS e_OKStatus);
+ char * app_GetErrorType(E_CMBS_LINE_DIAG_ERROR_TYPE e_ErrorType);
+ char * app_GetLocalErrorNumber(E_CMBS_LINE_DIAG_LOCAL_ERROR_NUMBER e_LocalErrorNumber);
+ 
+-/* Callback to inform the openD API that a device is successfully registered. */
+-typedef void (*hsSuccessfullyRegistered)(u16 address, u8 handsetId);
+-/* Callback to inform the openD API that a call is successfully connected. */
+-typedef void (*hsSuccessfullyConnected)(u8 callId);
+-/* Callback to inform the openD API that a call is successfully released. */
+-typedef void (*hsSuccessfullyReleased)();
+-/* Callback to inform the openD API that a device is successfully deregistered. */
+-typedef void (*hsSuccessfullyDeregistered)();
+-/* Initialization of the callback to inform the openD API that a device is successfully registered. */
+-void initMsgParserSub(hsSuccessfullyRegistered registeredClb);
+-/* Initialization of the callback to inform the openD API that a device is successfully de-/connected. */
+-void initMsgParserCall(hsSuccessfullyConnected connectedClb, hsSuccessfullyReleased releasedClb);
+-/* Initialization of the callback to inform the openD API that a device is successfully deregistered. */
+-void initMsgParserDeSub(hsSuccessfullyDeregistered deregisteredClb);
+-
+ #endif //APP_MSG_PARSER

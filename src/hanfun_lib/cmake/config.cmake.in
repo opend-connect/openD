@@ -1,0 +1,31 @@
+#
+# Package configuration file for the HAN-FUN library
+#
+# It defines the following variables
+#
+#  HANFUN_INCLUDE_DIRS - include directories for HAN-FUN
+#  HANFUN_LIBRARIES    - libraries to link against
+#  HANFUN_BASE_LIB     - example base application library.
+#  HANFUN_NODE_LIB     - example node application library.
+#
+
+# Compute paths
+get_filename_component(HANFUN_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+
+# Include folders
+set(HANFUN_INCLUDE_DIRS "@CONF_INCLUDE_DIRS@")
+
+# Our library dependencies (contains definitions for IMPORTED targets)
+if(NOT TARGET hanfun)
+  include("${HANFUN_CMAKE_DIR}/hanfun-targets.cmake")
+  set(HANFUN_LIBRARIES hanfun)
+
+  if(TARGET hf_base_app)
+    set(HANFUN_BASE_LIB hf_base_app)
+  endif()
+
+  if(TARGET hf_node_app)
+    set(HANFUN_NODE_LIB hf_node_app)
+  endif()
+
+endif()

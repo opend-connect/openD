@@ -1,0 +1,30 @@
+{
+    // Verwendet IntelliSense zum Ermitteln möglicher Attribute.
+    // Zeigen Sie auf vorhandene Attribute, um die zugehörigen Beschreibungen anzuzeigen.
+    // Weitere Informationen finden Sie unter https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "(gdb) Launch Remote Debugging of file1",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": "${workspaceRoot}/build/FP_Host_Hanfun",
+        "args": [],
+        "stopAtEntry": true,
+        "cwd": "${workspaceRoot}",
+        "environment": [],
+        "externalConsole": true,
+        "MIMode": "gdb",
+        "miDebuggerPath": "C:/SysGCC/raspberry/bin/arm-linux-gnueabihf-gdb-7.10.exe",
+        "miDebuggerServerAddress": "10.10.112.20:1234",
+        "setupCommands": [
+          {
+            "description": "Enable pretty-printing for gdb",
+            "text": "-exec info registers -enable-pretty-printing",
+            "text": "handle SIG34 nostop noprint pass",
+            "ignoreFailures": false
+          }
+        ],
+      }
+    ]
+}

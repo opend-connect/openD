@@ -1,0 +1,34 @@
+#ifndef HF_CONFIG_H
+#define HF_CONFIG_H
+
+// =============================================================================
+// Common
+// =============================================================================
+
+#define OFF     0
+#define ON      1
+
+// =============================================================================
+// SimplePowerMeter Configuration
+// =============================================================================
+
+// In testing mode support all attributes.
+
+#define HF_ITF_SPM_ENERGY_ATTR                  @HF_ITF_SPM_ENERGY_ATTR@
+#define HF_ITF_SPM_POWER_ATTR                   @HF_ITF_SPM_POWER_ATTR@
+#define HF_ITF_SPM_ENERGY_AT_RESET_ATTR         @HF_ITF_SPM_ENERGY_AT_RESET_ATTR@
+#define HF_ITF_SPM_TIME_AT_RESET_ATTR           @HF_ITF_SPM_TIME_AT_RESET_ATTR@
+#define HF_ITF_SPM_AVG_POWER_ATTR               @HF_ITF_SPM_AVG_POWER_ATTR@
+#define HF_ITF_SPM_AVG_POWER_INTERVAL_ATTR      @HF_ITF_SPM_AVG_POWER_INTERVAL_ATTR@
+#define HF_ITF_SPM_VOLTAGE_ATTR                 @HF_ITF_SPM_VOLTAGE_ATTR@
+#define HF_ITF_SPM_CURRENT_ATTR                 @HF_ITF_SPM_CURRENT_ATTR@
+#define HF_ITF_SPM_FREQUENCY_ATTR               @HF_ITF_SPM_FREQUENCY_ATTR@
+#define HF_ITF_SPM_POWER_FACTOR_ATTR            @HF_ITF_SPM_POWER_FACTOR_ATTR@
+#define HF_ITF_SPM_REPORT_INTERVAL_ATTR         @HF_ITF_SPM_REPORT_INTERVAL_ATTR@
+
+// In testing mode support all commands.
+
+#define HF_ITF_SPM_REPORT_CMD                   @HF_ITF_SPM_REPORT_CMD@
+#define HF_ITF_SPM_RESET_CMD                    @HF_ITF_SPM_RESET_CMD@
+
+#endif  /* HF_CONFIG_H */
