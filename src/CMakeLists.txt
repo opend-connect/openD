@@ -1,80 +1,56 @@
-##
-## @code
-##  ___ _____ _   ___ _  _____ ___  ___  ___ ___
-## / __|_   _/_\ / __| |/ / __/ _ \| _ \/ __| __|
-## \__ \ | |/ _ \ (__| ' <| _| (_) |   / (__| _|
-## |___/ |_/_/ \_\___|_|\_\_| \___/|_|_\\___|___|
-## embedded.connectivity.solutions.==============
-## @endcode
-##
-## @file
-## @copyright  STACKFORCE GmbH, Heitersheim, Germany, www.stackforce.de
-## @author     Patrick Weber
-## @author     Adrian Antonana
-## @brief      openD unified API
-##
+#  ___ _____ _   ___ _  _____ ___  ___  ___ ___
+# / __|_   _/_\ / __| |/ / __/ _ \| _ \/ __| __|
+# \__ \ | |/ _ \ (__| ' <| _| (_) |   / (__| _|
+# |___/ |_/_/ \_\___|_|\_\_| \___/|_|_\\___|___|
+# embedded.connectivity.solutions.==============
+#
+# copyright  STACKFORCE GmbH, Heitersheim, Germany, http://www.stackforce.de
+# author     Heiko Berger (STACKFORCE)
+# brief      Choose different options
+#
+# This work is dual-licensed under Apache 2.0 and GPL 2.0. You can choose between one of them if you use this work.
+# For further details, please refer to the project home: https://github.com/opend-connect/openD
+#
+# SPDX-License-Identifier: Apache-2.0 OR GPL-2.0-only
 
-#---------------------------------------------------------------------------------------
-# Include required modules
-#---------------------------------------------------------------------------------------
-
-#---------------------------------------------------------------------------------------
-# Required dependencies versions
-#---------------------------------------------------------------------------------------
-
-#---------------------------------------------------------------------------------------
-# Find required packages
-#---------------------------------------------------------------------------------------
+cmake_minimum_required(VERSION 3.6)
 
 #---------------------------------------------------------------------------------------
 # Options
 #---------------------------------------------------------------------------------------
-set(CMAKE_C_STANDARD 99)
-set(CMAKE_C_STANDARD_REQUIRED ON)
+
+# Allow switching of targets
+set(BOARD_LIST DialogMmiRpi DialogMmiNucleo DspgDectNucleo DspgDectRpi None)
+set(BOARD DialogMmiRpi CACHE STRING "Default target platform is DialogMmiRpi")
+set_property(CACHE BOARD PROPERTY STRINGS ${BOARD_LIST})
+
+# Allow switching of applications
+set(APPLICATION_LIST HANFUN_SimpleSwitch_FP HANFUN_SimpleLight_PP UDP_Client_Hanfun UDP_Client_Legacy LEGACY_PP LEGACY_FP LEGACY_FP_SERVER LEGACY_PP_INTERCOM)
+set(APPLICATION LEGACY_PP CACHE STRING "Default application is HANFUN_SimpleSwitch_FP")
+set_property(CACHE APPLICATION PROPERTY STRINGS ${APPLICATION_LIST})
 
 #---------------------------------------------------------------------------------------
-# Product info
-#---------------------------------------------------------------------------------------
-set(PROJECT_PRODUCT_COMPANY "STACKFORCE & DECT Forum" CACHE STRING "company")
-set(PROJECT_PRODUCT_NAME    "openD unified API" CACHE STRING "product")
-
-#---------------------------------------------------------------------------------------
-# Headers and sources
-#---------------------------------------------------------------------------------------
-set(OPEND_SOURCES
-    ${CMAKE_CURRENT_SOURCE_DIR}/opend.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/opend_audio.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/opend_call.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/opend_hanfun.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/opend_mgmt.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/opend_sixlowpan.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/opend_sub.c
-)
-
-set(OPEND_DOXYGEN_INPUT
-    ${CMAKE_CURRENT_SOURCE_DIR} " "
-    ${CMAKE_CURRENT_SOURCE_DIR}/hanfun " "
-    ${CMAKE_CURRENT_SOURCE_DIR}/hanfun/interfaces " "
-    ${CMAKE_CURRENT_SOURCE_DIR}/hanfun/profiles " "
-    PARENT_SCOPE
-)
-
-# configure version header
-configure_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/version.h.in
-    ${PROJECT_BINARY_DIR}/version.h
-)
-
-#---------------------------------------------------------------------------------------
-# Targets
-#---------------------------------------------------------------------------------------
-add_library( libOpenD ${OPEND_SOURCES} )
-
-#---------------------------------------------------------------------------------------
-# Install/export targets and files
+# Add subdirectories
 #---------------------------------------------------------------------------------------
 
-#---------------------------------------------------------------------------------------
-# Create release packages
-#---------------------------------------------------------------------------------------
+if(APPLICATION STREQUAL UDP_Client_Hanfun OR APPLICATION STREQUAL UDP_Client_Legacy)
 
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/exampleApps)
+
+elseif(NOT APPLICATION STREQUAL UDP_Client)
+
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/opend)
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/exampleApps)
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/hardware)
+
+    if(APPLICATION STREQUAL HANFUN_SimpleSwitch_FP OR APPLICATION STREQUAL HANFUN_SimpleLight_PP)
+
+        add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/hanfun_lib)
+
+    else()
+
+        add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/utils)
+
+    endif()
+
+endif()

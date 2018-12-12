@@ -1,0 +1,695 @@
+// =============================================================================
+// Tutorials
+// =============================================================================
+/*!
+@page tutorials Getting Started
+
+- @subpage preliminaries   "Preliminaries"
+- @subpage example_01      "Example 01 : Basic registration"
+- @subpage example_02      "Example 02 : Handing registration events"
+- @subpage example_03      "Example 03 : Alert interface usage"
+- @subpage example_04      "Example 04 : On-Off interface usage"
+- @subpage example_05      "Example 05 : Level Control interface usage"
+- @subpage example_06      "Example 06 : Device Information (advanced)"
+- @subpage example_07      "Example 07 : Attribute Reporting (advanced)"
+- @subpage example_08      "Example 08 : Bind Management (advanced)"
+*/
+
+// =============================================================================
+// Preliminaries
+// =============================================================================
+
+/*!
+@page preliminaries Preliminaries
+
+A HAN-FUN network is composed of a concentrator and one or more nodes. Normally the code
+for the node runs on the node's hardware and the code for the concentrator runs on the
+concentrator's hardware. However in the following examples the code for both is run o the same
+application.
+
+A dummy transport layer handles the packet sending and delivery so the behavior of the node's
+and concentrator's application is the same as if we where using DECT ULE or TCP/IP, for example
+as the transport layer.
+
+@section node Creating a node.
+
+@dontinclude example_01.cpp
+
+To create a node, using the default implementation first extend the class that represent a node
+in the HAN-FUN library.
+
+@skipline Node
+@until }
+
+And then create a new object instance that represents the node.
+
+@skipline node1;
+
+@section base Creating a concentrator
+
+@dontinclude example_01.cpp
+
+To create a node, using the default implementation first extend the class that represents a
+concentrator in the HAN-FUN library.
+
+@skipline Base
+@until }
+
+And then create a new object instance that represents the concentrator.
+
+@skipline base;
+
+@section network Creating the network.
+
+After having created the object instances we can add them to the transport layer so the
+devices can talk to each other.
+
+@dontinclude example_01.cpp
+
+@skipline include
+@until UNUSED
+@line UNUSED
+@skip LOG (INFO)
+@line /
+@until "node_2"
+@skip size () == 2
+@line return
+@until }
+
+*/
+
+// =============================================================================
+// Example 01 : Basic registration
+// =============================================================================
+
+/*!
+@page example_01 Basic registration
+
+This example shows the API used by the nodes to register to a concentrator.
+
+We build on top of the code created in the @ref preliminaries page.
+
+@dontinclude example_01.cpp
+@skipline include
+@until "node_2"
+
+After a node connects to a concentrator it must register it self with the
+concentrator, using the HF::Core::DeviceManagement::Client::register_device method.
+
+This interface is a core service so it's located in unit 0 of the node.
+
+@skipline node1.unit0 ()
+
+Registering the two declared nodes is then given by
+
+@dontinclude example_01.cpp
+
+@skipline Register
+@until node2.address () == 2
+
+At this point the concentrator should have two registration entries in it's database.
+The registration database can be query using the methods of the class
+HF::Core::DeviceManagement::Entries.
+
+To get the database associated with the device management service on a concentrator use
+the HF::Core::DeviceManagement::IServer::entries method, as demonstrated below.
+
+@skipline LOG
+@until }
+
+<b>Full code listing</b>
+
+@dontinclude example_01.cpp
+@skipline include
+@until return
+@line }
+
+*/
+
+// =============================================================================
+// Example 02 : Handing registration events
+// =============================================================================
+
+/*!
+@page example_02 Handing registration events
+
+In the @ref example_01 "previous" example, we have seen the API used to send the
+registration message from the node to the concentrator and that the concentrator sends
+a response back, giving the node its HAN-FUN Address.
+
+However in order to accomplish something useful, normally what both the concentrator
+and node applications need is to be able to inject custom code into the events generated
+by the registration procedure.
+
+This can be accomplished by providing a custom class that inherits from the default
+implementation in the HAN-FUN library and that overrides the methods for the events
+we are interested in.
+
+@note The procedure described here is used throughout the HAN-FUN library.
+The normal operation is to inherit from the needed parent class and then inject
+that custom code into the library functionality. Directly changing the code of
+the library provided classes should be done as a last resort.
+
+<b>In the node</b>
+
+@snippet example_02.cpp Node custom code
+
+Because we are overriding a class in unit 0 some boiler plate code is needed.
+
+@dontinclude example_02.cpp
+
+First we create a custom class from the default implementation of the device management
+client role.
+
+@skipline DeviceManagementClient
+@until };
+
+Then we have to create a custom unit 0 class that uses our custom device management class.
+
+@skipline NodeUnit0
+@until };
+
+Finally create a %Node class that uses our custom Unit 0 class.
+
+@skipline Node
+@until };
+
+<b>In the concentrator</b>
+
+For the concentrator the process is the same as above the only change is the parent
+classes that are extended.
+
+@snippet example_02.cpp Concentrator custom code
+
+<b>Full code listing</b>
+
+@dontinclude example_02.cpp
+@skipline include
+@until return
+@line }
+
+*/
+
+// =============================================================================
+// Example 03 : Alert interface usage
+// =============================================================================
+
+/*!
+@page example_03 %Alert interface usage
+
+This example demonstrates the usage of %Alert interface API.
+
+We again create two nodes, one will contain a unit that will generate Alert
+events (the server) and the other will have a unit that receives those events
+(the client).
+
+The above units are created by extending the HF::Units::Unit with the correct
+profile.
+
+@dontinclude example_03.cpp
+
+For the server side we can use the HF::Profiles::SimpleDetector profile.
+
+@skipline SimpleDetector
+@until };
+
+For the client side the HF::Profiles::Alertable profile.
+
+@skipline AlertSink
+@until };
+
+Then the unit for each device must be declared. %Node 1 will have the server side
+unit and node 2 the client side unit.
+
+@skipline node1
+@until node2);
+
+With this in place and after the devices are connected and registered node 1 can send
+alert events to node 2.
+
+@dontinclude example_03.cpp
+@skipline include
+@until false
+
+However having an hard coded address in a device is not very useful, as we would need to
+have a way to configure this address to make the device work well in any network is
+inserted into. For this purpose, packets can be sent to the broadcast address, being the
+responsibility of the concentrator to route them to the correct device.
+
+In order to route a packet from one device/unit pair to another device/unit pair,
+for a given interface we need to create a binding rule on the concentrator.
+
+@skipline Create a bind entry
+@until assert
+
+@note the interface parameter is that of the receiving the packet.
+
+Now we can send the alert events to the broadcast address and they will be delivered
+to the correct device.
+
+@skipline Send alert on
+@until }
+
+<b>Full code listing</b>
+
+@dontinclude example_03.cpp
+@skipline include
+@until main
+@until }
+
+*/
+
+// =============================================================================
+// Example 04 : On-Off interface usage
+// =============================================================================
+
+/*!
+@page example_04 On-Off interface usage
+
+This example demonstrates the usage of On-Off interface API.
+
+We again create two nodes, one will contain a unit that will generate On-Off
+commands (on/off/toggle), the client and the other will have a unit that
+receives those commands, the server.
+
+@note This is the opposed to what we have seen in the @ref example_03 "alert example".
+
+We again create the necessary units by extending the HF::Units::Unit with the
+correct profile.
+
+@dontinclude example_04.cpp
+
+For the client side we can use the HF::Profiles::SimpleOnOffSwitch profile.
+
+@skipline SimpleOnOffSwitch
+@until };
+
+For the server side the HF::Profiles::SimpleOnOffSwitchable profile.
+
+@skipline SimpleOnOffSwitchable
+@until };
+
+Then the unit for each device must be declared. %Node 1 will have the client side
+unit and node 2 the server side unit.
+
+@skipline node1
+@until node2);
+
+With this in place and after the devices are connected and registered node 1 can send
+commands to node 2.
+
+@dontinclude example_04.cpp
+@skipline include
+@until second TOGGLE
+@until assert
+
+Again an hard coded address in a device is not very useful, so we create the necessary
+bind entry on the concentrator.
+
+@skipline Create a bind entry
+@until assert
+
+@note the interface parameter is that of the receiving the packet.
+
+Now we can send the on-off commands to the broadcast address and they will be
+delivered to the correct device.
+
+@skipline On Command.
+@until }
+
+<b>Full code listing</b>
+
+@dontinclude example_04.cpp
+@skipline include
+@until main
+@until }
+
+*/
+
+// =============================================================================
+// Example 05 : Level Control interface usage
+// =============================================================================
+
+/*!
+@page example_05 Level Control interface usage
+
+This example demonstrates the usage of Level Control interface API.
+
+We again create two nodes, one will contain a unit that will generate Level Control
+commands (the client) and the other will have a unit that receives those commands (the server).
+
+We again create the necessary units by extending the HF::Units::Unit with the
+correct profile.
+
+@dontinclude example_05.cpp
+
+For the client side we can use the HF::Profiles::SimpleLevelControl profile.
+
+@skipline SimpleLevelControl
+@until };
+
+For the server side the HF::Profiles::SimpleLevelControllable profile.
+
+@skipline SimpleLevelControllable
+@until };
+
+Then the unit for each device must be declared. %Node 1 will have the client side
+unit and node 2 the server side unit.
+
+@skipline node1
+@until node2);
+
+With this in place and after the devices are connected and registered node 1 can send
+commands to node 2.
+
+@dontinclude example_05.cpp
+@skipline include
+@until initial level
+@until assert
+
+As before in order to have commands sent to the broadcast address be delivered to the
+correct device we create the necessary bind entry on the concentrator.
+
+@skipline Create a bind entry
+@until assert
+
+@note the interface parameter is that of the receiving the packet.
+
+Now we can send the level control commands to the broadcast address and they will be
+delivered to the correct device.
+
+@skipline Change level
+@until }
+
+<b>Full code listing</b>
+
+@dontinclude example_05.cpp
+@skipline include
+@until main
+@until }
+
+*/
+
+// =============================================================================
+// Example 06 : Device Information (advanced)
+// =============================================================================
+
+/*!
+@page example_06 Device Information (advanced)
+
+In this example we are going to show how to add support for an optional attribute
+on the Device Information service and how this attribute can be read by a remote
+device.
+
+We have already seen in the @ref example_02 "Handing registration events" example the
+way custom functionality is inserted into unit 0.
+
+In this case we are changing the code that provides the Device Information service.
+So we create a new class to provide this new custom functionality.
+
+@dontinclude example_06.cpp
+@skipline DeviceInformation
+@until };
+
+@dontinclude example_06.cpp
+
+In this class we override the attribute method in HF::Core::DeviceInformation::Server,
+that is called when a HF::Protocol::Message::GET_ATTR_REQ is received to create
+an instance that represents the requested attribute.
+
+@skip DeviceInformation
+@skipline attribute
+@until }
+@until }
+@until }
+
+If the attribute %UID requested matches the optional attribute create a new instance
+that represents this attribute, otherwise call parent's implementation.
+
+We add our custom class into a custom class implementing the unit 0 functionality and
+then configure our node class to use the unit 0 custom class.
+
+@dontinclude example_06.cpp
+@skipline NodeUnit0
+@until Node
+@until }
+
+In order to keep the example simple we will using the concentrator's unit 0 to
+send the message to read the attribute. However given that responses to read
+attribute requests are sent to the device/unit pair that requested them, we need to
+create a custom unit 0 class for our concentrator so that we can receive the response.
+
+@skipline BaseUnit0
+@until };
+
+As before we need to setup the nodes and the concentrator, add them to the transport
+layer and register the nodes to the concentrator.
+
+@dontinclude example_06.cpp
+@skipline include
+@until size () == 2
+
+We can now create a message that can be used to read the attribute.
+
+@skipline auto message
+
+We set the attribute on the nodes before sending the message to read it, receiving
+the response back with the correct value.
+
+@until }
+
+<b>Full code listing</b>
+
+@dontinclude example_06.cpp
+@skipline include
+@until main
+@until }
+
+*/
+
+// =============================================================================
+// Example 07 : Attribute Reporting (advanced)
+// =============================================================================
+
+/*!
+@page example_07 Attribute Reporting (advanced)
+
+This example takes the code presented for @ref example_05 "Level Control interface",
+to demostrate Attribute Reporting service.
+
+We have two nodes, one with the %Level Control server side where the attribute
+reporting rule will be created. And another with the Level Control client side
+that will issue commands to change the level on the server and received the
+attribute reporting notifications.
+
+
+For the server side the code is the same as before.
+
+@dontinclude example_07.cpp
+@skipline SimpleLevelControllable
+@until };
+
+For the client side the code is almost the same execpt that the unit now
+has also an optional interface to receive the attribute reporting events.
+
+@dontinclude example_07.cpp
+@skipline SimpleLevelControl
+@until };
+
+The AttributeReporting class used to receive the attribute reporting events. It looks
+big but is essentially only printing the data in the events received.
+
+@dontinclude example_07.cpp
+@skipline AttributeReporting
+@until };
+
+The attribute reporting service has to types of reports periodic or due to some event,
+i.e., the value is equal/greater/lesser that another value or has change by a given
+precentage.
+
+The periodic reports are processed by the code.
+
+@snippet example_07.cpp Periodic event processing
+
+And the event reports by this code.
+
+@snippet example_07.cpp Event event processing
+
+We start by the normal setup for the examples.
+
+@dontinclude example_07.cpp
+@skipline main
+@until 15.0f
+
+@section periodic  Periodic Reports
+
+We create two rules, one to send a report every 6 seconds
+
+@skipline Address
+@until 6
+
+and the other for a report every 15 seconds.
+
+@skipline 15
+
+We then add an entry to each rule so that the report sends the mandatory attributes for
+the Level Control server side, i.e., the level value.
+
+@skipline vector
+@until rule 2
+@until );
+
+Now we simulate the passage of time in the remote device.
+
+@skipline Simulate
+@until periodic (time)
+
+At 10 seconds a remote node changes the level value
+
+@skipline time == 10
+@until }
+
+and at 25 seconds the level is change in the actual device.
+
+@skipline time == 25
+@until }
+@until }
+
+@section event  Event Reports
+
+Again we create two rules.
+
+@skipline LOG
+@until create
+@until create
+
+For the first entry we create the following events.
+
+@skipline Event::Entry
+@until Event::Field
+
+  - Value is less that 5%
+
+@until push_back
+
+  - Value is equal to 60%
+
+@until push_back
+
+  - Value is greater that to 85%
+
+@until push_back
+
+Finally add the entries to the rule on the remote device.
+
+@until add
+@until end
+
+For the second rule we have,
+
+  - Value is less that 10%
+
+@skipline 10%
+@until push_back
+
+  - Value is equal to 40%
+
+@until push_back
+
+  - Value is greater that to 75%
+
+@until push_back
+
+Adding the event entries to the rule at the end.
+
+@until add
+@until end
+
+Now we can simulate different level changes to see the messages generated by
+the event entries in the Attribute Reporting service.
+
+@until }
+
+<b>Full code listing</b>
+
+@dontinclude example_07.cpp
+@skipline include
+@until main
+@until return
+@until }
+
+*/
+
+// =============================================================================
+// Example 08 : Bind Management (advanced)
+// =============================================================================
+
+/*!
+@page example_08 Bind Management (advanced)
+
+In this example we demostrate how an concentrator application can receive events from an
+alert interface and send commands from the On-Off interface when those events happen.
+
+@dontinclude example_08.cpp
+
+In this case we will have two different types of nodes, one type implements a simple
+detector profile, i.e. the server role of alert interface.
+
+@skipline namespace
+@until };
+@until };
+
+And the other a simple light profile, i.e. the server role of the On-Off interface
+so it can receive the commands sent by the base.
+
+@skipline // ===
+@until };
+@until };
+
+On the concentrator we will need a custom implementation of the client role of the %Alert
+interface in order to react to events comming in from the network.
+
+@skipline // ===
+@until };
+
+We then add this custom implementation to a unit as an optional interface. The unit is
+created with a profile that can support the client role of the On-Off interface.
+
+@until };
+
+Finnaly we use the unit in the concentrator.
+
+@until namespace
+
+For this example we will create 6 nodes, 3 alarms and 3 lights.
+
+@until light_6;
+
+%Alert events comming in from <tt>alarm_01</tt> will create a toggle command sent
+to <tt>light_4</tt>, <tt>alarm_02</tt> to <tt>light_5</tt> and <tt>alarm_03</tt>
+to <tt>light_6</tt>.
+
+As with previous examples we need an instance of the concentrator, to setup the
+network and register the nodes into the HAN-FUN network.
+
+@until size () == 6
+
+Next we need to create a binding rule in the Binding Management service that will
+route all messages for the client role of the %Alert interface into the unit at the
+concentrator that contains our custom code.
+
+@until size () == 1
+
+Now we are ready to simulate alert event on the alarm nodes and see these being translated
+to events on the light nodes.
+
+@until }
+
+<b>Full code listing</b>
+
+@dontinclude example_08.cpp
+@skipline include
+@until main
+@until return
+@until }
+*/

@@ -1,0 +1,192 @@
+[
+{
+  "directory": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/build",
+  "command": "C:\\SysGCC\\raspberry\\bin\\arm-linux-gnueabihf-g++.exe   -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\inc -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\apps  -g   -std=gnu++11 -o CMakeFiles\\hanfunLib.dir\\src\\attributes.cpp.o -c D:\\DOWNLOAD\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakePW\\hanfun_lib\\src\\attributes.cpp",
+  "file": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/src/attributes.cpp"
+},
+{
+  "directory": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/build",
+  "command": "C:\\SysGCC\\raspberry\\bin\\arm-linux-gnueabihf-g++.exe   -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\inc -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\apps  -g   -std=gnu++11 -o CMakeFiles\\hanfunLib.dir\\src\\common.cpp.o -c D:\\DOWNLOAD\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakePW\\hanfun_lib\\src\\common.cpp",
+  "file": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/src/common.cpp"
+},
+{
+  "directory": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/build",
+  "command": "C:\\SysGCC\\raspberry\\bin\\arm-linux-gnueabihf-g++.exe   -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\inc -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\apps  -g   -std=gnu++11 -o CMakeFiles\\hanfunLib.dir\\src\\debug.cpp.o -c D:\\DOWNLOAD\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakePW\\hanfun_lib\\src\\debug.cpp",
+  "file": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/src/debug.cpp"
+},
+{
+  "directory": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/build",
+  "command": "C:\\SysGCC\\raspberry\\bin\\arm-linux-gnueabihf-g++.exe   -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\inc -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\apps  -g   -std=gnu++11 -o CMakeFiles\\hanfunLib.dir\\src\\devices.cpp.o -c D:\\DOWNLOAD\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakePW\\hanfun_lib\\src\\devices.cpp",
+  "file": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/src/devices.cpp"
+},
+{
+  "directory": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/build",
+  "command": "C:\\SysGCC\\raspberry\\bin\\arm-linux-gnueabihf-g++.exe   -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\inc -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\apps  -g   -std=gnu++11 -o CMakeFiles\\hanfunLib.dir\\src\\dlg_extra.cpp.o -c D:\\DOWNLOAD\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakePW\\hanfun_lib\\src\\dlg_extra.cpp",
+  "file": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/src/dlg_extra.cpp"
+},
+{
+  "directory": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/build",
+  "command": "C:\\SysGCC\\raspberry\\bin\\arm-linux-gnueabihf-g++.exe   -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\inc -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\apps  -g   -std=gnu++11 -o CMakeFiles\\hanfunLib.dir\\src\\interfaces.cpp.o -c D:\\DOWNLOAD\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakePW\\hanfun_lib\\src\\interfaces.cpp",
+  "file": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/src/interfaces.cpp"
+},
+{
+  "directory": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/build",
+  "command": "C:\\SysGCC\\raspberry\\bin\\arm-linux-gnueabihf-g++.exe   -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\inc -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\apps  -g   -std=gnu++11 -o CMakeFiles\\hanfunLib.dir\\src\\profiles.cpp.o -c D:\\DOWNLOAD\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakePW\\hanfun_lib\\src\\profiles.cpp",
+  "file": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/src/profiles.cpp"
+},
+{
+  "directory": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/build",
+  "command": "C:\\SysGCC\\raspberry\\bin\\arm-linux-gnueabihf-g++.exe   -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\inc -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\apps  -g   -std=gnu++11 -o CMakeFiles\\hanfunLib.dir\\src\\protocol.cpp.o -c D:\\DOWNLOAD\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakePW\\hanfun_lib\\src\\protocol.cpp",
+  "file": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/src/protocol.cpp"
+},
+{
+  "directory": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/build",
+  "command": "C:\\SysGCC\\raspberry\\bin\\arm-linux-gnueabihf-g++.exe   -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\inc -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\apps  -g   -std=gnu++11 -o CMakeFiles\\hanfunLib.dir\\src\\uids.cpp.o -c D:\\DOWNLOAD\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakePW\\hanfun_lib\\src\\uids.cpp",
+  "file": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/src/uids.cpp"
+},
+{
+  "directory": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/build",
+  "command": "C:\\SysGCC\\raspberry\\bin\\arm-linux-gnueabihf-g++.exe   -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\inc -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\apps  -g   -std=gnu++11 -o CMakeFiles\\hanfunLib.dir\\src\\units.cpp.o -c D:\\DOWNLOAD\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakePW\\hanfun_lib\\src\\units.cpp",
+  "file": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/src/units.cpp"
+},
+{
+  "directory": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/build",
+  "command": "C:\\SysGCC\\raspberry\\bin\\arm-linux-gnueabihf-g++.exe   -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\inc -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\apps  -g   -std=gnu++11 -o CMakeFiles\\hanfunLib.dir\\src\\core\\attribute_reporting.cpp.o -c D:\\DOWNLOAD\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakePW\\hanfun_lib\\src\\core\\attribute_reporting.cpp",
+  "file": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/src/core/attribute_reporting.cpp"
+},
+{
+  "directory": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/build",
+  "command": "C:\\SysGCC\\raspberry\\bin\\arm-linux-gnueabihf-g++.exe   -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\inc -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\apps  -g   -std=gnu++11 -o CMakeFiles\\hanfunLib.dir\\src\\core\\attribute_reporting_client.cpp.o -c D:\\DOWNLOAD\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakePW\\hanfun_lib\\src\\core\\attribute_reporting_client.cpp",
+  "file": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/src/core/attribute_reporting_client.cpp"
+},
+{
+  "directory": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/build",
+  "command": "C:\\SysGCC\\raspberry\\bin\\arm-linux-gnueabihf-g++.exe   -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\inc -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\apps  -g   -std=gnu++11 -o CMakeFiles\\hanfunLib.dir\\src\\core\\attribute_reporting_server.cpp.o -c D:\\DOWNLOAD\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakePW\\hanfun_lib\\src\\core\\attribute_reporting_server.cpp",
+  "file": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/src/core/attribute_reporting_server.cpp"
+},
+{
+  "directory": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/build",
+  "command": "C:\\SysGCC\\raspberry\\bin\\arm-linux-gnueabihf-g++.exe   -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\inc -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\apps  -g   -std=gnu++11 -o CMakeFiles\\hanfunLib.dir\\src\\core\\bind_management.cpp.o -c D:\\DOWNLOAD\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakePW\\hanfun_lib\\src\\core\\bind_management.cpp",
+  "file": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/src/core/bind_management.cpp"
+},
+{
+  "directory": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/build",
+  "command": "C:\\SysGCC\\raspberry\\bin\\arm-linux-gnueabihf-g++.exe   -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\inc -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\apps  -g   -std=gnu++11 -o CMakeFiles\\hanfunLib.dir\\src\\core\\bind_management_client.cpp.o -c D:\\DOWNLOAD\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakePW\\hanfun_lib\\src\\core\\bind_management_client.cpp",
+  "file": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/src/core/bind_management_client.cpp"
+},
+{
+  "directory": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/build",
+  "command": "C:\\SysGCC\\raspberry\\bin\\arm-linux-gnueabihf-g++.exe   -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\inc -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\apps  -g   -std=gnu++11 -o CMakeFiles\\hanfunLib.dir\\src\\core\\bind_management_server.cpp.o -c D:\\DOWNLOAD\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakePW\\hanfun_lib\\src\\core\\bind_management_server.cpp",
+  "file": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/src/core/bind_management_server.cpp"
+},
+{
+  "directory": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/build",
+  "command": "C:\\SysGCC\\raspberry\\bin\\arm-linux-gnueabihf-g++.exe   -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\inc -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\apps  -g   -std=gnu++11 -o CMakeFiles\\hanfunLib.dir\\src\\core\\device_information.cpp.o -c D:\\DOWNLOAD\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakePW\\hanfun_lib\\src\\core\\device_information.cpp",
+  "file": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/src/core/device_information.cpp"
+},
+{
+  "directory": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/build",
+  "command": "C:\\SysGCC\\raspberry\\bin\\arm-linux-gnueabihf-g++.exe   -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\inc -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\apps  -g   -std=gnu++11 -o CMakeFiles\\hanfunLib.dir\\src\\core\\device_management.cpp.o -c D:\\DOWNLOAD\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakePW\\hanfun_lib\\src\\core\\device_management.cpp",
+  "file": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/src/core/device_management.cpp"
+},
+{
+  "directory": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/build",
+  "command": "C:\\SysGCC\\raspberry\\bin\\arm-linux-gnueabihf-g++.exe   -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\inc -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\apps  -g   -std=gnu++11 -o CMakeFiles\\hanfunLib.dir\\src\\core\\device_management_client.cpp.o -c D:\\DOWNLOAD\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakePW\\hanfun_lib\\src\\core\\device_management_client.cpp",
+  "file": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/src/core/device_management_client.cpp"
+},
+{
+  "directory": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/build",
+  "command": "C:\\SysGCC\\raspberry\\bin\\arm-linux-gnueabihf-g++.exe   -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\inc -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\apps  -g   -std=gnu++11 -o CMakeFiles\\hanfunLib.dir\\src\\core\\device_management_server.cpp.o -c D:\\DOWNLOAD\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakePW\\hanfun_lib\\src\\core\\device_management_server.cpp",
+  "file": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/src/core/device_management_server.cpp"
+},
+{
+  "directory": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/build",
+  "command": "C:\\SysGCC\\raspberry\\bin\\arm-linux-gnueabihf-g++.exe   -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\inc -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\apps  -g   -std=gnu++11 -o CMakeFiles\\hanfunLib.dir\\src\\core\\session_management_client.cpp.o -c D:\\DOWNLOAD\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakePW\\hanfun_lib\\src\\core\\session_management_client.cpp",
+  "file": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/src/core/session_management_client.cpp"
+},
+{
+  "directory": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/build",
+  "command": "C:\\SysGCC\\raspberry\\bin\\arm-linux-gnueabihf-g++.exe   -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\inc -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\apps  -g   -std=gnu++11 -o CMakeFiles\\hanfunLib.dir\\src\\core\\session_management_server.cpp.o -c D:\\DOWNLOAD\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakePW\\hanfun_lib\\src\\core\\session_management_server.cpp",
+  "file": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/src/core/session_management_server.cpp"
+},
+{
+  "directory": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/build",
+  "command": "C:\\SysGCC\\raspberry\\bin\\arm-linux-gnueabihf-g++.exe   -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\inc -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\apps  -g   -std=gnu++11 -o CMakeFiles\\hanfunLib.dir\\src\\interfaces\\alert.cpp.o -c D:\\DOWNLOAD\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakePW\\hanfun_lib\\src\\interfaces\\alert.cpp",
+  "file": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/src/interfaces/alert.cpp"
+},
+{
+  "directory": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/build",
+  "command": "C:\\SysGCC\\raspberry\\bin\\arm-linux-gnueabihf-g++.exe   -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\inc -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\apps  -g   -std=gnu++11 -o CMakeFiles\\hanfunLib.dir\\src\\interfaces\\alert_client.cpp.o -c D:\\DOWNLOAD\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakePW\\hanfun_lib\\src\\interfaces\\alert_client.cpp",
+  "file": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/src/interfaces/alert_client.cpp"
+},
+{
+  "directory": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/build",
+  "command": "C:\\SysGCC\\raspberry\\bin\\arm-linux-gnueabihf-g++.exe   -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\inc -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\apps  -g   -std=gnu++11 -o CMakeFiles\\hanfunLib.dir\\src\\interfaces\\alert_server.cpp.o -c D:\\DOWNLOAD\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakePW\\hanfun_lib\\src\\interfaces\\alert_server.cpp",
+  "file": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/src/interfaces/alert_server.cpp"
+},
+{
+  "directory": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/build",
+  "command": "C:\\SysGCC\\raspberry\\bin\\arm-linux-gnueabihf-g++.exe   -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\inc -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\apps  -g   -std=gnu++11 -o CMakeFiles\\hanfunLib.dir\\src\\interfaces\\level_control.cpp.o -c D:\\DOWNLOAD\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakePW\\hanfun_lib\\src\\interfaces\\level_control.cpp",
+  "file": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/src/interfaces/level_control.cpp"
+},
+{
+  "directory": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/build",
+  "command": "C:\\SysGCC\\raspberry\\bin\\arm-linux-gnueabihf-g++.exe   -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\inc -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\apps  -g   -std=gnu++11 -o CMakeFiles\\hanfunLib.dir\\src\\interfaces\\level_control_client.cpp.o -c D:\\DOWNLOAD\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakePW\\hanfun_lib\\src\\interfaces\\level_control_client.cpp",
+  "file": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/src/interfaces/level_control_client.cpp"
+},
+{
+  "directory": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/build",
+  "command": "C:\\SysGCC\\raspberry\\bin\\arm-linux-gnueabihf-g++.exe   -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\inc -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\apps  -g   -std=gnu++11 -o CMakeFiles\\hanfunLib.dir\\src\\interfaces\\level_control_server.cpp.o -c D:\\DOWNLOAD\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakePW\\hanfun_lib\\src\\interfaces\\level_control_server.cpp",
+  "file": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/src/interfaces/level_control_server.cpp"
+},
+{
+  "directory": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/build",
+  "command": "C:\\SysGCC\\raspberry\\bin\\arm-linux-gnueabihf-g++.exe   -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\inc -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\apps  -g   -std=gnu++11 -o CMakeFiles\\hanfunLib.dir\\src\\interfaces\\on_off.cpp.o -c D:\\DOWNLOAD\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakePW\\hanfun_lib\\src\\interfaces\\on_off.cpp",
+  "file": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/src/interfaces/on_off.cpp"
+},
+{
+  "directory": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/build",
+  "command": "C:\\SysGCC\\raspberry\\bin\\arm-linux-gnueabihf-g++.exe   -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\inc -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\apps  -g   -std=gnu++11 -o CMakeFiles\\hanfunLib.dir\\src\\interfaces\\on_off_client.cpp.o -c D:\\DOWNLOAD\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakePW\\hanfun_lib\\src\\interfaces\\on_off_client.cpp",
+  "file": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/src/interfaces/on_off_client.cpp"
+},
+{
+  "directory": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/build",
+  "command": "C:\\SysGCC\\raspberry\\bin\\arm-linux-gnueabihf-g++.exe   -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\inc -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\apps  -g   -std=gnu++11 -o CMakeFiles\\hanfunLib.dir\\src\\interfaces\\on_off_server.cpp.o -c D:\\DOWNLOAD\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakePW\\hanfun_lib\\src\\interfaces\\on_off_server.cpp",
+  "file": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/src/interfaces/on_off_server.cpp"
+},
+{
+  "directory": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/build",
+  "command": "C:\\SysGCC\\raspberry\\bin\\arm-linux-gnueabihf-g++.exe   -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\inc -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\apps  -g   -std=gnu++11 -o CMakeFiles\\hanfunLib.dir\\src\\interfaces\\simple_humidity_client.cpp.o -c D:\\DOWNLOAD\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakePW\\hanfun_lib\\src\\interfaces\\simple_humidity_client.cpp",
+  "file": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/src/interfaces/simple_humidity_client.cpp"
+},
+{
+  "directory": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/build",
+  "command": "C:\\SysGCC\\raspberry\\bin\\arm-linux-gnueabihf-g++.exe   -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\inc -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\apps  -g   -std=gnu++11 -o CMakeFiles\\hanfunLib.dir\\src\\interfaces\\simple_humidity_server.cpp.o -c D:\\DOWNLOAD\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakePW\\hanfun_lib\\src\\interfaces\\simple_humidity_server.cpp",
+  "file": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/src/interfaces/simple_humidity_server.cpp"
+},
+{
+  "directory": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/build",
+  "command": "C:\\SysGCC\\raspberry\\bin\\arm-linux-gnueabihf-g++.exe   -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\inc -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\apps  -g   -std=gnu++11 -o CMakeFiles\\hanfunLib.dir\\src\\interfaces\\simple_power_meter.cpp.o -c D:\\DOWNLOAD\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakePW\\hanfun_lib\\src\\interfaces\\simple_power_meter.cpp",
+  "file": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/src/interfaces/simple_power_meter.cpp"
+},
+{
+  "directory": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/build",
+  "command": "C:\\SysGCC\\raspberry\\bin\\arm-linux-gnueabihf-g++.exe   -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\inc -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\apps  -g   -std=gnu++11 -o CMakeFiles\\hanfunLib.dir\\src\\interfaces\\simple_power_meter_client.cpp.o -c D:\\DOWNLOAD\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakePW\\hanfun_lib\\src\\interfaces\\simple_power_meter_client.cpp",
+  "file": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/src/interfaces/simple_power_meter_client.cpp"
+},
+{
+  "directory": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/build",
+  "command": "C:\\SysGCC\\raspberry\\bin\\arm-linux-gnueabihf-g++.exe   -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\inc -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\apps  -g   -std=gnu++11 -o CMakeFiles\\hanfunLib.dir\\src\\interfaces\\simple_power_meter_server.cpp.o -c D:\\DOWNLOAD\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakePW\\hanfun_lib\\src\\interfaces\\simple_power_meter_server.cpp",
+  "file": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/src/interfaces/simple_power_meter_server.cpp"
+},
+{
+  "directory": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/build",
+  "command": "C:\\SysGCC\\raspberry\\bin\\arm-linux-gnueabihf-g++.exe   -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\inc -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\apps  -g   -std=gnu++11 -o CMakeFiles\\hanfunLib.dir\\src\\interfaces\\simple_temperature_client.cpp.o -c D:\\DOWNLOAD\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakePW\\hanfun_lib\\src\\interfaces\\simple_temperature_client.cpp",
+  "file": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/src/interfaces/simple_temperature_client.cpp"
+},
+{
+  "directory": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/build",
+  "command": "C:\\SysGCC\\raspberry\\bin\\arm-linux-gnueabihf-g++.exe   -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\inc -Id:\\download\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakepw\\hanfun_lib\\apps  -g   -std=gnu++11 -o CMakeFiles\\hanfunLib.dir\\src\\interfaces\\simple_temperature_server.cpp.o -c D:\\DOWNLOAD\\dlg_ule_demo-cmake\\dlg_ule_demo-cmakePW\\hanfun_lib\\src\\interfaces\\simple_temperature_server.cpp",
+  "file": "D:/DOWNLOAD/dlg_ule_demo-cmake/dlg_ule_demo-cmakePW/hanfun_lib/src/interfaces/simple_temperature_server.cpp"
+}
+]

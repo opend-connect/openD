@@ -1,0 +1,17 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+    "cmake.configureSettings": {
+
+        // Specifies the path to the CMAKE toolchain file.
+        //"CMAKE_TOOLCHAIN_FILE":"cmake/toolchain-arm-none-eabi.cmake"
+        "CMAKE_TOOLCHAIN_FILE":"cmake/arm-linux-gnueabihf.cmake",
+
+        // Determines the application. You can choose between:
+        // FP_Host_Hanfun, FP_Host_Legacy
+        // "APPLICATION":"FP_Host_Hanfun"
+    },
+    "files.associations": {
+        "random": "cpp",
+        "iostream": "cpp"
+    }
+}

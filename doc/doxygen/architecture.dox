@@ -80,32 +80,32 @@ the ULE Alliance. Please find the implementation on GitHub here:
 This chapter lists the file references for the different elements of the fixed
 and portable part elements of the architectures below.
 
-No. | Description | Files
---- | ----------- | ------
-1 | Dialog stack implementation. | -
-2 | DSPG stack implementation. | -
-3 | Audio data stream. | -
-4-9 | Low level interfaces from the manufacturers stack implementation for the openD framework. | -
-10 | Interworking unit (IWU) to connect Dialog stack with the ULE Alliance 6LoWPAN control interface. | -
-11 | This wrapper adapts the Dialog stack subscription, call, audio and management control functions from element (1) to the openD framework. | -
-12 | Interworking unit (IWU) to connect Dialog stack with the ULE Alliance HAN-FUN control interface. | TBD
-13 | Interworking unit (IWU) to connect DSPG stack with the ULE Alliance HAN-FUN control interface. | TBD
-14 | This wrapper adapts the DSPG stack subscription, call, audio and management control functions from element (2) to the openD framework. | -
-15 | Interworking unit (IWU) to connect DSPG stack with the ULE Alliance 6LoWPAN control interface. | -
-16 | Open source 6LoWPAN control interface from the ULE Alliance. | -
-17 | Open source HAN-FUN control interface from the ULE Alliance. | -
-18 | Interface to provide management control functionalities that are adapted by (11) or (14). | opend_mgmt_api.*
-19 | Interface to provide subscription registration functionalities that are adapted by (11) or (14). | opend_sub_api.*
-20 | Interface to provide call control functionalities that are adapted by (11) or (14). | opend_call_api.*
-21 | Interface to provide audio control functionalities that are adapted by (11) or (14). | opend_audio_api.*
-22 | Interface to provide HAN-FUN functionalities from the ULE Alliance HAN-FUN (17). | opend_hanfun_api.*
-23 | Interface to provide HAN-FUN functionalities from the ULE Alliance 6LoWPAN (16). | opend_sixlowpan_api.*
-24 | This represents the unified openD API. | opend_api.*
-25 | Audio interface that provides the audio data. Please refer to: \ref AUDIO | -
-26 | UDP server to provide the access to the unified interfaces. | -
-27 | Inter-process communication by an UDP connection. | -
-28 | UDP client to get access to the UDP server. | -
-29 | A module which abstracts the protocol over the UDP connection. This protocol must be defined. A possible format could be JSON. | -
-30 | This is a customer/community application. | -
+No. | Description |
+--- | ----------- |
+1 | Dialog stack implementation. |
+2 | DSPG stack implementation. |
+3 | Audio data stream. |
+4-9 | Low level interfaces from the manufacturers stack implementation for the openD framework. |
+10 | Interworking unit (IWU) to connect Dialog stack with the ULE Alliance 6LoWPAN control interface. |
+11 | This wrapper adapts the Dialog stack subscription, call, audio and management control functions from element (1) to the openD framework. |
+12 | Interworking unit (IWU) to connect Dialog stack with the ULE Alliance HAN-FUN control interface. |
+13 | Interworking unit (IWU) to connect DSPG stack with the ULE Alliance HAN-FUN control interface. |
+14 | This wrapper adapts the DSPG stack subscription, call, audio and management control functions from element (2) to the openD framework. |
+15 | Interworking unit (IWU) to connect DSPG stack with the ULE Alliance 6LoWPAN control interface. |
+16 | Open source 6LoWPAN control interface from the ULE Alliance. |
+17 | Open source HAN-FUN control interface from the ULE Alliance. |
+18 | Interface to provide management control functionalities that are adapted by (11) or (14). |
+19 | Interface to provide subscription registration functionalities that are adapted by (11) or (14). |
+20 | Interface to provide call control functionalities that are adapted by (11) or (14). |
+21 | Interface to provide audio control functionalities that are adapted by (11) or (14). |
+22 | Interface to provide HAN-FUN functionalities from the ULE Alliance HAN-FUN (17). |
+23 | Interface to provide HAN-FUN functionalities from the ULE Alliance 6LoWPAN (16). |
+24 | This represents the unified openD API. |
+25 | Audio interface that provides the audio data. Please refer to: \ref AUDIO |
+26 | UDP server to provide the access to the unified interfaces. |
+27 | Inter-process communication by an UDP connection. |
+28 | UDP client to get access to the UDP server. |
+29 | A module which abstracts the protocol over the UDP connection. This protocol must be defined. A possible format could be JSON. |
+30 | This is a customer/community application. |
 
 */

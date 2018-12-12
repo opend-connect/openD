@@ -17,19 +17,14 @@ a description of the overall architecture of the framework and a definition of t
 which is used to control especially the fixed part over UDP. Please refer to:
 
 - \ref FRAMEWORK_ARCH
-- \ref PROTOCOL
 - \ref AUDIO
 
 \section GITHUBWIKI GitHub
 
-The source code is available on GitHub:
+The source code and all related information are available on GitHub:
+
 
 <a href="https://github.com/opend-connect/openD">OpenD on GitHub</a>
-
-For more information please also visit the wiki pages on GitHub:
-
-- <a href="https://github.com/opend-connect/openD/wiki/Build-system">Build system</a>
-- <a href="https://github.com/opend-connect/openD/wiki/Code-examples">Code examples</a>
 
 \section OPEND_COMMUNITY OpenD Community
 

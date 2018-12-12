@@ -1,0 +1,29 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+    "cmake.configureSettings": {
+
+        // Toolchain file definition. You can choose between:
+        // arm-linux-gnueabihf, toolchain-cortex-M4
+        "CMAKE_TOOLCHAIN_FILE":"cmake/toolchains/arm-linux-gnueabihf.cmake",
+        //"CMAKE_TOOLCHAIN_FILE":"cmake/toolchains/toolchain-cortex-M4.cmake",
+
+        // Toolchain prefix definition for toolchain-cortex-M4.
+        //"TOOLCHAIN_PREFIX":"C:/Program Files/GNU Tools ARM Embedded/7 2018-q2-update",
+        "TOOLCHAIN_PREFIX":"C:/SysGCC/Raspberry",
+
+        // Determines the application. You can choose between:
+        // HANFUN_SimpleSwitch_FP, HANFUN_SimpleLight_PP, UDP_Client_Hanfun,
+        // UDP_Client_Legacy, LEGACY_PP, LEGACY_FP, LEGACY_FP_SERVER, LEGACY_PP_INTERCOM
+        "APPLICATION":"UDP_Client_Legacy",
+
+        // Target board. You can choose between:
+        // DialogMmiRpi, DialogMmiNucleo, DspgDectNucleo, DspgDectRpi
+        "BOARD":"DialogMmiRpi",
+
+        // Doxygen build. You can choose between:
+        // ON, OFF
+        "BUILD_DOC":"OFF",
+
+    },
+    "cmake.configureOnOpen": false
+}
