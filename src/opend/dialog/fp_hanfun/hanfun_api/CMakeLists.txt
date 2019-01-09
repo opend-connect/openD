@@ -47,7 +47,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 #---------------------------------------------------------------------------------------
 
 target_link_libraries(${PROJECT_NAME}
-    dialog-hdlc-wsmdata
+    dialog-hdlc-cvmdect
     hanfunLib
     dialog-board-rpi
 )
