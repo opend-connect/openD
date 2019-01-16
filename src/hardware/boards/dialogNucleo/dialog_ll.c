@@ -42,7 +42,9 @@ int8_t openD_ll_init( openD_serialPort_rxCallback_t serialPort_rxCallback ) {
   openD_ll_serial_init( 0U, 115200U, serialPort_rxCallback );
 
   openD_ll_gpio_init( OPEND_LL_GPIO_PIN_USER_BUTTON_01, NULL );
+  openD_ll_gpio_init( OPEND_LL_GPIO_PIN_USER_BUTTON_02, NULL );
   openD_ll_gpio_init( OPEND_LL_GPIO_PIN_USER_LED_01, NULL );
+  openD_ll_gpio_init( OPEND_LL_GPIO_PIN_USER_LED_02, NULL );
 
   return 0;
 }
