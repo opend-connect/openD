@@ -241,7 +241,7 @@ Please refer to the following images of the supported hardwares:
 
 ### Build System
 
-This project uses CMake as build system. A user is able to build the firmware with a terminal or with an IDE on Windows, Linux and OSX. The project requires a CMake version >= v3.6.
+This project uses CMake as build system. A user is able to build the firmware with a terminal or with an IDE on Windows, Linux and OSX. The project requires a **CMake version >= v3.6**. Example installations are:
 
 * Windows
   * [CMake Download](https://cmake.org/download/) from the official homepage.
@@ -257,25 +257,20 @@ This project uses CMake as build system. A user is able to build the firmware wi
 This project uses two different toolchains to build the firmware. The GNU Arm Embedded Toolchain (arm-none-eabi) builds the firmware for the Nucleo-L476RG board with ARM Cortex M4. The GNU Arm Linux Toolchain (arm-linux) builds the firmware for the Raspberry Pi.
 
 * GNU Arm Embedded Toolchain
-  * Windows
-     * Please install the gcc-arm-none-eabi toolchain, e.g. here [Download](https://developer.arm.com/open-source/gnu-toolchain/gnu-rm/downloads)
-     * The tool *Make* is also required. E.g., the MSYS2 includes it [MSYS2](http://www.msys2.org/).
+  * Windows / Linux / OSX
+     * Please install the gcc-arm-none-eabi toolchain, version **7-2018-q2-update**. E.g. a download is available [here](https://developer.arm.com/open-source/gnu-toolchain/gnu-rm/downloads).
+     * For windows, the tool *Make* is also required. E.g., the MSYS2 includes it [MSYS2](http://www.msys2.org/).
        **Note:** Add both path to the environment `Path` variable.
-       For example, add `C:\msys64\mingw64\bin` and `C:\Program Files (x86)\GNU Tools ARM Embedded\6 2017-q2-update\bin`.
-  * Linux
-     * Ubuntu/Linux Mint: `sudo apt-get install gcc-arm-none-eabi`
-  * OSX
-     * [Download](https://developer.arm.com/open-source/gnu-toolchain/gnu-rm/downloads)
+       For example, add `C:\msys64\mingw64\bin` and `C:\Program Files (x86)\GNU Tools ARM Embedded\7 2018-q2-update\bin`.
 
 * GNU Arm Linux Toolchain
   * Windows
-     * Please install the gcc-arm-linux-gnueabihf toolchain, e.g. here [Download](http://gnutoolchains.com/raspberry/tutorial/)
+     * Please install the gcc-arm-linux-gnueabihf toolchain, version **raspberry-gcc6.3.0-r3.exe**. E.g. a download is available [here](http://gnutoolchains.com/raspberry/)
      * Make is also required, you can download and install [MSYS2](http://www.msys2.org/).
        **Note:** Add both path to the environment `Path` variable.
        For example, add `C:\msys64\mingw64\bin` and `C:\SysGCC\Raspberry\bin`.
   * Linux
-     * gcc: `apt-get install gcc-arm-linux-gnueabihf`
-     * g++: `apt-get install g++-arm-linux-gnueabihf`
+     * Please install the gcc-arm-linux-gnueabihf toolchain, version **linaro-1.13.1+bzr2650 - Linaro GCC 2014.03 4.8.3**. E.g. a download is available [here](https://github.com/raspberrypi/tools/tree/master/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64 )
   * OSX
      * [Download](https://github.com/asymptotik/crosstool-arm-osx)
 
@@ -372,7 +367,7 @@ This project supports VS Code as IDE [VSCode](https://code.visualstudio.com/). T
 
 **Installation**
 
-* GNU/Linux, Windows and OSX
+* GNU/Linux, Windows and OSX - (**latest tested version: v1.30.2**)
     * [VSCode Download](https://code.visualstudio.com/Download)
 * VSCode extensions
     * Open VSCode and search `(Crtl+Shift+x)` the following extensions:
@@ -470,7 +465,7 @@ You can read [Description of how to connect and flash](#flash) for detailed info
 
 * GNU Debugger (gdb)
     * Supplied by the toolchain.
-* Open On-Chip Debugger (OpenOCD)
+* Open On-Chip Debugger (OpenOCD) - **Version 0.10.0**
     * Windows
         * [OpenOCD Download] (http://openocd.org/getting-openocd/)
     * Linux
