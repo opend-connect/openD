@@ -265,14 +265,14 @@ This project uses two different toolchains to build the firmware. The GNU Arm Em
 
 * GNU Arm Linux Toolchain
   * Windows
-     * Please install the gcc-arm-linux-gnueabihf toolchain, version **raspberry-gcc6.3.0-r3.exe**. E.g. a download is available [here](http://gnutoolchains.com/raspberry/)
+     * Please install the gcc-arm-linux-gnueabihf toolchain, version **raspberry-gcc6.3.0-r3.exe**. E.g. a download is available [here](http://gnutoolchains.com/raspberry/).
      * Make is also required, you can download and install [MSYS2](http://www.msys2.org/).
        **Note:** Add both path to the environment `Path` variable.
        For example, add `C:\msys64\mingw64\bin` and `C:\SysGCC\Raspberry\bin`.
   * Linux
-     * Please install the gcc-arm-linux-gnueabihf toolchain, version **linaro-1.13.1+bzr2650 - Linaro GCC 2014.03 4.8.3**. E.g. a download is available [here](https://github.com/raspberrypi/tools/tree/master/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64 )
+     * Please install the gcc-arm-linux-gnueabihf toolchain, version **linaro-1.13.1+bzr2650 - Linaro GCC 2014.03 4.8.3**. E.g. a download is available [here](https://github.com/raspberrypi/tools/tree/master/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64 ).
   * OSX
-     * [Download](https://github.com/asymptotik/crosstool-arm-osx)
+     * E.g. a download is available [here](https://github.com/asymptotik/crosstool-arm-osx).
 
 
 <a name="buildinstructions_app"/>
