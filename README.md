@@ -320,7 +320,7 @@ According to step 4, the project provides several options to define which demons
 | **CMAKE_TOOLCHAIN_FILE** | **Description** |
 |-|-|
 | cmake/toolchains/arm-linux-gnueabihf.cmake | Use this path if you want to build an application for the RaspberryPI |
-| cmake/toolchains//toolchain-cortex-M4.cmake | Use this path if you want to build an application for the Nucleo |
+| cmake/toolchains/toolchain-cortex-M4.cmake | Use this path if you want to build an application for the Nucleo |
 
 | **BOARD** | **Description** |
 |-|-|
