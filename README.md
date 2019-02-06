@@ -10,6 +10,7 @@ The idea of the openD framework is to make the DECT and ULE technology available
   - [Introduction](#quickstartguide_intro)
   - [Demonstration Applications](#demonstrationapplications)
   - [Hardware Platforms](#hardware_platforms)
+      - [Raspberry Pi Configuration](#raspberryPiConfiguration)
   - [Build Instructions](#buildinstructions)
       - [Build System](#buildinstructions_sys)
       - [Toolchains](#buildinstructions_tool)
@@ -232,6 +233,21 @@ Please refer to the following images of the supported hardwares:
 |:-:|:-:|:-:|
 |Dialog Semiconductor|![Fixed Part - Dialog Semiconductor](/doc/pics/Dialog_FP.png)|![Portable Part - Dialog Semiconductor](/doc/pics/Dialog_PP.png)|
 |DSPG|![Fixed Part - DSPG](/doc/pics/DSPG_FP.png)|![Portable Part - DSPG](/doc/pics/DSPG_PP.png)|
+
+<a name="raspberryPiConfiguration"/>
+
+### Raspberry Pi configuration
+
+In case of using Dialog FP hardware the serial port has to be enabled. In order to enable it edit the /boot/config.txt file and add following line at the end of the file.
+
+```
+enable_uart=1
+```
+Please also make sure that you have removed following characters in the /boot/cmdline.txt file. This will disable the console via the GPIO UART of the Raspberry Pi.
+
+```
+console=serial0,115200
+```
 
 <a name="buildinstructions"/>
 
