@@ -50,7 +50,7 @@ extern "C"
 
 ApiCallReferenceType HsId;
 ApiTerminalIdType terminalId;
-uint8_t ac[3];
+uint8_t ac[4];
 
 bool _message_primitive_user_sub( void *param );
 bool _message_primitive_user_call( void *param );
