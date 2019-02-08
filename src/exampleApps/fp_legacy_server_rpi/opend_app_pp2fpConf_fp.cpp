@@ -273,6 +273,40 @@ static void openD_callApiInd_callback( openD_callApiInd_t *cIndication ) {
       printf("Connection status: ringing!\n");
       break;
 
+    case OPEND_CALLAPI_RELEASE:
+      {
+        printf("Call APP released!\n");
+        j["version"] = "1.0.0";
+        j["module"] = "legacy";
+        j["primitive"] = "indication";
+        j["service"] = "releaseCall";
+        j["status"] = "OK";
+        j["param1"] = "0";
+        j["param2"] = "0";
+        j["param3"] = "0";
+        size_t len = strlen((j.dump()).c_str())+1;
+        udp_send((j.dump()).c_str(), len);
+        msManager_changeState( &appStateCtxt, APP_STATE_STANDBY );
+      }
+      break;
+
+    case OPEND_CALLAPI_SETUP:
+      {
+        printf("Call setup APP succesfully!\n");
+        j["version"] = "1.0.0";
+        j["module"] = "legacy";
+        j["primitive"] = "indication";
+        j["service"] = "setupCall";
+        j["status"] = "OK";
+        j["param1"] = std::to_string( static_cast<int>( cIndication->param.setup.pmid[0]) );
+        j["param2"] = "0";
+        j["param3"] = "0";
+        size_t len = strlen((j.dump()).c_str())+1;
+        udp_send((j.dump()).c_str(), len);
+        msManager_changeState( &appStateCtxt, APP_STATE_CONNECTED );
+      }
+      break;
+
     default:
       break;
   }

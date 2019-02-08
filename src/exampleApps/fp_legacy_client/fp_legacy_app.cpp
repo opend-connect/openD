@@ -46,6 +46,12 @@ struct Command_Registration:public Command
   void run (std::vector <std::string> &args);
 }command_Registration;
 
+struct Command_Delete:public Command
+{
+  Command_Delete ():Command ("e", "e:Deletes all registered hansets.") {}
+  void run (std::vector <std::string> &args);
+}command_Delete;
+
 struct Command_SetupCall:public Command
 {
   Command_SetupCall ():Command ("r", "r <h>:Setup a call with handset id h.") {}
@@ -96,6 +102,23 @@ void Command_Registration::run (std::vector <std::string> &args)
   udp_send((j.dump()).c_str(), len);
 
   std::cout.clear (); std::cout << "Registration window open until timeout!" <<
+  std::endl; std::cout.clear (); std::cerr.clear ();
+}
+
+void Command_Delete::run (std::vector <std::string> &args)
+{
+  j["version"] = "1.0.0";
+  j["module"] = "legacy";
+  j["primitive"] = "request";
+  j["service"] = "subscriptionDelete";
+  j["status"] = "OK";
+  j["param1"] = "e";
+  j["param2"] = "0";
+  j["param3"] = "0";
+  size_t len = strlen((j.dump()).c_str())+1;
+  udp_send((j.dump()).c_str(), len);
+
+  std::cout.clear (); std::cout << "Deletes all registered handsets!" <<
   std::endl; std::cout.clear (); std::cerr.clear ();
 }
 
@@ -205,6 +228,7 @@ void HF::Application::Initialize (receiveUdpData rxUdpData)
   udp_init(rxUdpData);
 
   Command::add(&command_Registration);
+  Command::add(&command_Delete);
   Command::add(&command_SetupCall);
   Command::add(&command_ReleaseCall);
   Command::add(&command_Mute);
