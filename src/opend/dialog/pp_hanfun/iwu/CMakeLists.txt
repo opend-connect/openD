@@ -24,7 +24,6 @@ cmake_minimum_required(VERSION 3.6)
 file(GLOB ${PROJECT_NAME}_SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/fws.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/mmi.c"
-    "${CMAKE_CURRENT_SOURCE_DIR}/log.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/UserTaskWsm.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/transport.cpp"
 )

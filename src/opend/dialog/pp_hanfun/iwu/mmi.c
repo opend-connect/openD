@@ -28,7 +28,6 @@
  *
  */
 
-
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -374,13 +373,11 @@ void RosTimerStop(RosTimerIdType TimerId)
 
 
 void mmi_SoftResetModule(void) {
-	LogString("\r\n Soft resetting the module...\n");
 	SendApiProdTestReq(COLA_TASK, PT_CMD_SW_RESET, 0, NULL);
 }
 
 void mmi_SetModuleNvsDefault(void) {
     uint8_t params = 1;
-    LogString("TEST...\n");
     SendApiProdTestReq(COLA_TASK, PT_CMD_NVS_DEFAULT, 1, &params);
 }
 
@@ -404,9 +401,6 @@ static void s_mmi_default(const RosMailType* p_mail)
 	 * General
 	 **************************************************************************/
 	case 0xF0F4:	/* RTX_EAP_TARGET_RESET_IND */
-		LogString("\n############################\n");
-		LogString("######  TARGET RESET  ######\n");
-		LogString("############################\n");
         if(MmiCtrl.isRegistered)
 		{
 		  break;
@@ -420,7 +414,6 @@ static void s_mmi_default(const RosMailType* p_mail)
 #endif
          if (g_state.going_to_sleep)
          {
-			LogString("########## Unexpected INITTASK #############");
 			return;
 		}
 #ifdef DYNAMIC_ACTIVITY_COUNTERS
@@ -433,28 +426,6 @@ static void s_mmi_default(const RosMailType* p_mail)
       case API_PP_ULE_INIT_CFM:
       {
          ApiPpUleInitCfmType *lpm = (ApiPpUleInitCfmType *) p_mail;
-         LogString ("API_PP_ULE_INIT_CFM:");
-         if(lpm->WakeupEvent==API_PP_ULE_WAKEUP_EVENT_UNDEF)   	 LogString ("WakeupEvent:API_PP_ULE_WAKEUP_EVENT_UNDEF\n");
-         if(lpm->WakeupEvent==API_PP_ULE_WAKEUP_EVENT_NON_ULP)   LogString ("WakeupEvent:API_PP_ULE_WAKEUP_EVENT_NON_ULP\n");
-         if(lpm->WakeupEvent==API_PP_ULE_WAKEUP_EVENT_PORT)   	 LogString ("WakeupEvent:API_PP_ULE_WAKEUP_EVENT_PORT\n");
-         if(lpm->WakeupEvent==API_PP_ULE_WAKEUP_EVENT_TIMER)   	 LogString ("WakeupEvent:API_PP_ULE_WAKEUP_EVENT_TIMER");
-         // BPA Specific info
-         if(lpm->ActivityStatus==API_PP_ULE_START_UNDEF)   		 		LogString ("ActivityStatus:API_PP_ULE_START_UNDEF\n");
-         if(lpm->ActivityStatus==API_PP_ULE_START_DB_ERROR)   	 		LogString ("ActivityStatus:API_PP_ULE_START_DB_ERROR\n");
-         if(lpm->ActivityStatus==API_PP_ULE_START_APP_ONLY)   	 		LogString ("ActivityStatus:API_PP_ULE_START_APP_ONLY\n");
-         if(lpm->ActivityStatus==API_PP_ULE_START_PAGED)   		 		LogString ("ActivityStatus:API_PP_ULE_START_PAGED\n");
-         if(lpm->ActivityStatus==API_PP_ULE_START_PAGE_ERR)   	 		LogString ("ActivityStatus:API_PP_ULE_START_PAGE_ERR\n");
-         if(lpm->ActivityStatus==API_PP_ULE_START_KEEP_ALIVE)    		LogString ("ActivityStatus:API_PP_ULE_START_KEEP_ALIVE\n");
-         if(lpm->ActivityStatus==API_PP_ULE_START_KEEP_ALIVE_PAGED)		LogString ("ActivityStatus:API_PP_ULE_START_KEEP_ALIVE_PAGED\n");
-         if(lpm->ActivityStatus==API_PP_ULE_START_KEEP_ALIVE_PAGE_ERR)	LogString ("ActivityStatus:API_PP_ULE_START_KEEP_ALIVE_PAGE_ERR\n");
-
-         if(lpm->BpaStatus& 0x80){
-        	 LogString ("Number of samples to get lock: %d\n",lpm->BpaStatus & 0xF);
-         }else{
-        	 LogString ("Number of full frequency scans to get lock: %d\n",lpm->BpaStatus);
-         }
-
-         LogString ("ActivityCounter:%d\n",lpm->ResumeCounter);
 
         // Keep activity Status
         MmiCtrl.activity_status 		= lpm->ActivityStatus;
@@ -464,7 +435,6 @@ static void s_mmi_default(const RosMailType* p_mail)
 
          if ((MmiCtrl.wakeup_event == API_PP_ULE_WAKEUP_EVENT_NON_ULP) || (lpm->IsUlpWakeup == 0))
          {
-            LogString ("########## Is Cold Boot #############\n");
             MmiCtrl.wakeup_event = API_PP_ULE_WAKEUP_EVENT_NON_ULP;
             SendApiHalReadReq(COLA_TASK, AHA_NVS, NVS_USR_BASE, NVS_USER_LEN);
          }
@@ -485,7 +455,6 @@ static void s_mmi_default(const RosMailType* p_mail)
             if (MmiCtrl.nvs.sleep_time < 1)
             {
 				MmiCtrl.nvs.sleep_time = INITIAL_SLEEP_TIME;
-				LogString("Setting Sleeptime: %d\n", MmiCtrl.nvs.sleep_time);
 			}
          }
          else
@@ -495,7 +464,6 @@ static void s_mmi_default(const RosMailType* p_mail)
 			MmiCtrl.nvs.sleep_time = INITIAL_SLEEP_TIME;
 	        MmiCtrl.nvs.lock_timeout = DEFAULT_LOCK_TIMEOUT;
 	        MmiCtrl.nvs.lr_timeout = DEFAULT_LR_TIMEOUT;
-	        LogString("Setting Sleep time: %d\n", MmiCtrl.nvs.sleep_time);
 		}
 
          MmiCtrl.nvs.sync_time = g_state.sync_time;
@@ -605,18 +573,12 @@ static void s_mmi_default(const RosMailType* p_mail)
 		{
 		case API_PP_ULE_ERR_NO_RESOURCES:
 			// TBD
-			//LogString(" ##################################################");
-			//LogString(" ########### PVC FAILED ... NO RESOURCES ##########");
-			//LogString(" ##################################################");
 			break;
 		case API_PP_ULE_ERR_BUSY:
 			// Connection ongoing, wait
 			break;
 		case API_PP_ULE_ERR_UNKNOWN:
 			// Restart PVC configuration
-			//LogString(" ##################################################");
-			//LogString(" ########### PVC FAILED ... RESTARTING ############");
-			//LogString(" ##################################################");
             // Start PVC configuration
 			MmiCtrl.pvc =1;
                SendApiPpUlePvcConfigReq(COLA_TASK, API_ULE_PROTOCOL_FUN_1,
@@ -626,9 +588,6 @@ static void s_mmi_default(const RosMailType* p_mail)
 			break;
 		case API_PP_ULE_ERR_NOT_LOCATED:
 			// Start locate registration
-			//LogString(" ##################################################");
-			//LogString(" ########### PVC FAILED ... NOT LOCATED ###########");
-			//LogString(" ##################################################");
 
 	    	SendApiPpUleLocateReq(COLA_TASK);
 	    	MmiCtrl.PendTDR=0;
@@ -753,7 +712,6 @@ static void s_mmi_default(const RosMailType* p_mail)
       //  - so start a new location registration
          if ((MmiCtrl.UleReadyReceived) && (MmiCtrl.PendTDR))
          { // A TX attempted had started, we need to notify user that it failed.
-			LogString("FP reset while in Tx process!\n");
     	}
     	SendApiPpUleLocateReq(COLA_TASK);
         // MmiCtrl.pvc = 1;
@@ -800,7 +758,6 @@ static void s_mmi_default(const RosMailType* p_mail)
          }
 #endif
 		g_state.sync_time=MmiCtrl.nvs.sync_time;
-		LogString("MmiCtrl.nvs.sync_time = %d\n",MmiCtrl.nvs.sync_time);
 #endif
 		RosTimerStop(LOCK_TIMER);
 		PagingMode(MmiCtrl.pagingInitiated); // We should re-enable paging if node temporarily got out of lock.
@@ -828,7 +785,6 @@ static void s_mmi_default(const RosMailType* p_mail)
 	     // Is data accepted by the the transmitter
          if (((ApiPpUleDataCfmType *) p_mail)->Result == API_PP_ULE_ERR_NO_ERROR)
          {
-	    	 LogString("Data packet accepted\n");
             if(is_setup_again==0){setupagaintimer=2000;}
             is_setup_again=0;
 				 // Don't transmit again before a new DTR is received
@@ -836,7 +792,6 @@ static void s_mmi_default(const RosMailType* p_mail)
          }
          else
          {
-			LogString("Data packet rejected\n");
 	        	MmiCtrl.PendTDR=0;
 	        }
 	    }
@@ -951,31 +906,22 @@ static void s_mmi_default(const RosMailType* p_mail)
 				case PT_CMD_GET_SW_VERSION:
 					MmiCtrl.StackVersion = (uint16_t) ((prodTestCfm->Parameters[1] << 8)
 														+ prodTestCfm->Parameters[0]);
-					LogString("Stack Version: %X \n", MmiCtrl.StackVersion);
-			LogString(GIT_TAG);
-			LogString(BUILD_DATE_STRING);
 					break;
 
 				case PT_CMD_SET_DECT_MODE:
 					// Soft reset after successful Dect Mode change
 					if (prodTestCfm->Parameters[0] == RSS_SUCCESS) {
-				LogString("\r\n Dect Mode was successfully changed\n");
-				LogString("\r\n Soft resetting the device...\n");
 				SendApiProdTestReq(COLA_TASK, PT_CMD_SW_RESET, 0, NULL);
 			}
 					break;
 				case PT_CMD_GET_DECT_MODE:
 					if ( prodTestCfm->Parameters[0] == 0x00 ) {
-						LogString("DECT REGION IS SET TO EUROPE\n");
 						MmiCtrl.nvs.region=0;
 					} else if ( prodTestCfm->Parameters[0] == 0x08 ) {
-						LogString("DECT REGION IS SET TO US_EXT\n");
 						MmiCtrl.nvs.region=1;
 					} else if ( prodTestCfm->Parameters[0] == 0x0A ) {
-						LogString("DECT REGION IS SET TO JPN-5CH\n");
 						MmiCtrl.nvs.region=2;
 					} else {
-						LogString("DECT REGION IS SET TO INVALID (Region Code 0x%X)\n", prodTestCfm->Parameters[0]);
 						break;
 		}
 					break;
@@ -1009,7 +955,6 @@ static void s_mmi_default(const RosMailType* p_mail)
 //				}
 //				break;
 			case LR_TIMER:
-				LogString("LOCATION REGISTRATION TIMEOUT\n");
 //				MmiCtrl.PendTDR=0;
 //				RosTimerStop(LR_TIMER);
                //SendApiPpUleLocateReq(COLA_TASK);
@@ -1024,7 +969,6 @@ static void s_mmi_default(const RosMailType* p_mail)
 				RosTimerStart(LR_TIMER, T_MMI_WAIT_LR, &LocateRegTimerConfig);
 				break;
             case DUMMY_MESSAGE_TIMER:
-               LogString(">>> DUMMY_MESSAGE_TIMER <<<\n");
                is_setup_again=1;
 #ifndef HANFUN
                RosTimerStop(DUMMY_MESSAGE_TIMER);
@@ -1032,7 +976,6 @@ static void s_mmi_default(const RosMailType* p_mail)
                //SendApiPpUleDataReq (COLA_TASK, API_ULE_DLC_CTRL_ACKNOWLEDGED, 0, NULL);
 				break;
 			case LOCK_TIMER:
-			LogString("LOCK TIMEOUT\n");
 				MmiCtrl.PendTDR=0;
 				RosTimerStop(LOCK_TIMER);
 				break;
@@ -1046,7 +989,6 @@ static void s_mmi_default(const RosMailType* p_mail)
 
 	default:
 		//MmiUnknowPrim=p_mail->Primitive;
-		//LogString(" ##### WARNING: unhandled primitive!!! 0x%4X #####", p_mail->Primitive);
 		break;
 	}
 
@@ -1077,7 +1019,6 @@ void GoToSleep()
 
 void Enable_Registration (uint16_t AccessCode)
 {
-	LogString("\r\n Enable Registration\n");
 	RosTimerStop(LR_TIMER);
 	RosTimerStop(LOCK_TIMER);
 	MmiCtrl.AccessCode[2] =(uint8_t)(AccessCode>>8);
@@ -1118,8 +1059,6 @@ void ColaTask(const RosMailType* p_mail) {
 	// mail_len is 3+PRIM+DATA,
 	if (mail_len >= 5) mail_len -= 5; // it can't be less than 5 (3+PRIM)
 	else mail_len -= 2; // this is the case of custom RosAllocate packet, remove only PRIM
-	LogStringData(mail_len, (uint8_t *)p_mail->Data.Data, "\tMMI: |<<<=| P: %s (0x%0X) D:",
-					GetStringRosPrimDbg(p_mail->Primitive), p_mail->Primitive);
 #endif
 
 	if(g_state.is_booted==0){
@@ -1145,7 +1084,6 @@ void ColaTask(const RosMailType* p_mail) {
 
 void PagingMode(uint8_t Enable) {
 	if((MmiCtrl.islocked)&&(MmiCtrl.UleReadyReceived)){
-		LogString("Enable paging ... %x\n", Enable);
 		SendApiPpUleDbPageEnableReq( COLA_TASK, (Enable > 0)? API_ULE_DLC_DB_PAGE_MODE_1:0 ); // If enabled always set to API_ULE_DLC_DB_PAGE_MODE_1, in order to scan in every frame
 	}
 	MmiCtrl.pagingInitiated = Enable;

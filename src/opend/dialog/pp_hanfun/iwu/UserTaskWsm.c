@@ -99,13 +99,11 @@ void Sleep (rsuint8 txstatus)
 
    if (gotosleep)
    {
-	  LogString ("Going to sleep!  %d ",MmiCtrl.nvs.UserData[HF_OFFSET]);
       // Cold Boot or Port Trigger
       // On COLD BOOT set the UMODE to the initial values
       // On PORT TRIGGER change edge to trigger relais both ways
 
       // Positive edge if ULE port if low for Reed relais
-      LogString ("== Setting UMODE positive edge");
       MmiCtrl.nvs.PortDirMode = ULP_PORT_DIR_MODE_IN_PULLDOWN;
       MmiCtrl.nvs.PortTrigMode = ULP_PORT_TRIG_MODE_RISING_EDGE;
 
@@ -134,9 +132,7 @@ void UserTask(const RosMailType* p_mail) {
 		ApiPpUleHanfunCmdType *Mp = (ApiPpUleHanfunCmdType*) p_mail;
 		switch ((ApiPpAppMsg_t)Mp->cmd) {
 		case HANFUN_CONNECT_COMPLETE:
-			LogString("HANFUN_CONNECT_COMPLETE!!!\n");
 			if (MmiCtrl.hanfun_registered)  {
-				LogString("Trigger application timer\n");
 //				Enable_Sleep();
 //				if (MmiCtrl.wakeup_event == API_PP_ULE_WAKEUP_EVENT_NON_ULP) {
 //					Sleep ( TX_PASS);
@@ -149,7 +145,6 @@ void UserTask(const RosMailType* p_mail) {
 
 			if (MmiCtrl.wakeup_event == API_PP_ULE_WAKEUP_EVENT_PORT && MmiCtrl.hanfun_registered)
 			{
-				LogString ("== Button wake up==\n");
 				// RosTimerStop(DUMMY_MESSAGE_TIMER);
 				Enable_Sleep();
 				ColaMail(HANFUN_SWITCH_TOGGLE);
@@ -166,7 +161,6 @@ void UserTask(const RosMailType* p_mail) {
 
 		if (MmiCtrl.wakeup_event == API_PP_ULE_WAKEUP_EVENT_PORT && MmiCtrl.hanfun_registered)
 		{
-			LogString ("== HANFUN_DETECTOR_ALERT wake up==\n");
 			// RosTimerStop(DUMMY_MESSAGE_TIMER);
 			Enable_Sleep();
 			ColaMail(HANFUN_DETECTOR_ALERT);
@@ -182,14 +176,12 @@ void UserTask(const RosMailType* p_mail) {
 			break;
 
 		case HANFUN_REG_COMPLETE:
-			LogString("HANFUN_REG_COMPLETE!!!\n");
 			Enable_Sleep();
 			Sleep ( TX_PASS);
 			RosTimerStop( USER_SW_COUNTER_TIMER);
 			RosTimerStart(USER_SW_COUNTER_TIMER, 1000, &UserTimerConfig);
 			break;
 		case HANFUN_NVS_SAVE:
-			LogString("HANFUN_NVS_SAVE!!! %d \n",MmiCtrl.hanfun_address);
 			MmiCtrl.nvs.UserData[HF_OFFSET] = MmiCtrl.hanfun_address;
 			SendApiHalWriteReq(COLA_TASK, AHA_NVS, NVS_USR_BASE, NVS_USER_LEN, &MmiCtrl.hanfun_address);
 			if(MmiCtrl.delaysleep==DELAYSLEEP_REGISTERDELAY){
@@ -275,7 +267,6 @@ void UserTask(const RosMailType* p_mail) {
 			break;
 		}
 
-		LogString("=== API_PP_ULE_READY_IND ===\n");
 		//ColaMail(HANFUN_CONNECT);
 
 		break;
@@ -283,7 +274,6 @@ void UserTask(const RosMailType* p_mail) {
 	case API_PP_ULE_DATA_CFM: {
 		// Is data accepted by the stack
 		if (((ApiPpUleDataCfmType *) p_mail)->Result != API_PP_ULE_ERR_NO_ERROR) {
-			LogString("== Data packet rejected by stack ==\n");
 			rsuint16 TxFail = (rsuint16) (MmiCtrl.nvs.UserData[TXFAIL_MSB]
 					* 255 + MmiCtrl.nvs.UserData[TXFAIL_LSB]);
 			TxFail++;
@@ -304,13 +294,11 @@ void UserTask(const RosMailType* p_mail) {
 					(rsuint16) ((rsuint16) (MmiCtrl.nvs.UserData[TXPASS_MSB]
 							<< 8) + MmiCtrl.nvs.UserData[TXPASS_LSB]);
 			TxPass++;
-			LogString(" Tx success %d\n", TxPass);
 			MmiCtrl.nvs.UserData[TXPASS_MSB] = (rsuint8) (TxPass >> 8);
 			MmiCtrl.nvs.UserData[TXPASS_LSB] = (rsuint8) (TxPass & 0xFF);
 			if(MmiCtrl.delaysleep==DELAYSLEEP_REENABLE) {Enable_Sleep();MmiCtrl.delaysleep=DELAYSLEEP_IDLE;}
 			Sleep(TX_PASS);
 		} else {
-			LogString("Tx fail with error %d\n", lpm->Status);
 			rsuint16 TxFail =
 					(rsuint16) ((rsuint16) (MmiCtrl.nvs.UserData[TXFAIL_MSB]
 							<< 8) + MmiCtrl.nvs.UserData[TXFAIL_LSB]);
@@ -363,7 +351,6 @@ void UserTask(const RosMailType* p_mail) {
 			CurMeasurement.current= 10 * ( ((rsuint32)SmartplugData[7]<<8) + ((rsuint32)SmartplugData[6]));
 			CurMeasurement.energy= SmartplugData[11]*256*256*256 + SmartplugData[10]*256*256 + SmartplugData[9]*256 + SmartplugData[8];
 
-			LogString(">>> SmartplugData v: %d i: %d p: %d e: %d<<<\n", CurMeasurement.voltage, CurMeasurement.current, CurMeasurement.power, CurMeasurement.energy);
 			ColaMailPtr(HANFUN_SMARTPLUG_MSR,(rsuint32)&CurMeasurement);
 			ColaMailPtr(HANFUN_SMARTPLUG_INTERVAL,10);
 			ColaMailPtr(HANFUN_SMARTPLUG_PERIODIC,cntpm++);
@@ -375,7 +362,6 @@ void UserTask(const RosMailType* p_mail) {
 			//CurMeasurement.voltage= 20 + cntpm;
 			//CurMeasurement.current= 30 + cntpm;
 			//CurMeasurement.energy= 40 + cntpm;
-			//LogString(">>> SmartplugData v: %d i: %d p: %d e: %d<<<", CurMeasurement.voltage, CurMeasurement.current, CurMeasurement.power, CurMeasurement.energy);
 #ifdef HF_SMARTPLUG_SIM
 			ColaMailPtr(HANFUN_SMARTPLUG_MSR,(rsuint32)&CurMeasurement);
 			ColaMailPtr(HANFUN_SMARTPLUG_INTERVAL,10);
@@ -396,7 +382,6 @@ void UserTask(const RosMailType* p_mail) {
 	}
 
 	case API_PP_MM_REGISTRATION_COMPLETE_IND: {
-		LogString("Registration success\n");
 
 		SetLED3(0);
 		break;
@@ -408,14 +393,10 @@ void UserTask(const RosMailType* p_mail) {
 		// ColaMailPtr(HANFUN_NVS_SET, 0);
 		// ColaMail(HANFUN_NVS_SAVE);
 
-		// LogString("Registration deleted\n");
-
 		break;
 	}
 
 	case API_PP_MM_REGISTRATION_FAILED_IND: {
-		// LogString("REGISTRATION_ERROR\n");
-		// LogString("Retry to register .. \n");
 
 		Enable_Registration(ACCESS_CODE);
 
@@ -424,28 +405,15 @@ void UserTask(const RosMailType* p_mail) {
 		break;
 	}
 	case API_PP_ULE_START_LOCATE_IND: {
-		LogString("TRANSMITION_ERROR_FPLOST\n");
 		break;
 	}
 
 	case API_PP_VBATT_CFM: {
-		LogString("Battery measurement: %d, %d, %d\n",
-				((ApiPpVbattCfmType *) p_mail)->VbattIdle,
-				((ApiPpVbattCfmType *) p_mail)->VbattRx,
-				((ApiPpVbattCfmType *) p_mail)->VbattTx);
 
 		break;
 	}
 
 	case API_PP_ULE_HAL_GET_PORT_CFM: {
-		ApiPpUleHalGetPortCfmType* PpGetPortCfm =
-				(ApiPpUleHalGetPortCfmType *) p_mail;
-
-		if (PpGetPortCfm->gpio_id == API_PP_ULE_GPIO_ADC1) //PS  API_PP_ULE_GPIO_ADC0 not supported yet in stack
-		{
-			rsuint16 AdcValue = PpGetPortCfm->value;
-			LogString("ADC1 val: %d \n", AdcValue);
-		}
 
 		break;
 	}
@@ -476,7 +444,6 @@ void UserTask(const RosMailType* p_mail) {
 	}
 
 	default: {
-		// LogString ("Got primitive : %04X", p_mail->Primitive);
 		break;
 	}
 	}
