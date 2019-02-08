@@ -108,7 +108,8 @@ void Command_Register::run (std::vector <std::string> &args)
     j["status"] = "OK";
     j["param1"] = "r";
     j["param2"] = args[0].c_str();
-    j["param3"] = args[1].c_str();
+    if ( args.size () > 1 )
+      j["param3"] = args[1].c_str();
   }
   else
   {
@@ -136,7 +137,8 @@ void Command_Deregister::run (std::vector <std::string> &args)
   j["status"] = "OK";
   j["param1"] = "d";
   j["param2"] = args[0].c_str();
-  j["param3"] = args[1].c_str();
+  if ( args.size () > 1 )
+    j["param3"] = args[1].c_str();
   size_t len = strlen((j.dump()).c_str())+1;
   udp_send((j.dump()).c_str(), len);
 }

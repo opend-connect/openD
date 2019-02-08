@@ -49,10 +49,23 @@ int8_t openD_ll_gpio_init( openD_ll_gpio_pin_t pin, openD_ll_gpio_irqCallback_t 
       HAL_GPIO_Init( OPEND_LL_GPIO_PIN_USER_BUTTON_01_Port, &GPIO_InitStruct );
       break;
 
-    case OPEND_LL_GPIO_PIN_USER_LED_01:
+    case OPEND_LL_GPIO_PIN_USER_BUTTON_02:
 
       /* Enable peripherals and GPIO Clocks. */
       __HAL_RCC_GPIOA_CLK_ENABLE( );
+
+      /* Configure peripheral GPIO. */
+      GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+      GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+      GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+      GPIO_InitStruct.Pin = OPEND_LL_GPIO_PIN_USER_BUTTON_02_Pin;
+      HAL_GPIO_Init( OPEND_LL_GPIO_PIN_USER_BUTTON_02_Port, &GPIO_InitStruct );
+      break;
+
+    case OPEND_LL_GPIO_PIN_USER_LED_01:
+
+      /* Enable peripherals and GPIO Clocks. */
+      __HAL_RCC_GPIOC_CLK_ENABLE( );
 
       /* Configure peripheral GPIO. */
       GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
@@ -61,6 +74,20 @@ int8_t openD_ll_gpio_init( openD_ll_gpio_pin_t pin, openD_ll_gpio_irqCallback_t 
       GPIO_InitStruct.Pin = OPEND_LL_GPIO_PIN_USER_LED_01_Pin;
       HAL_GPIO_Init( OPEND_LL_GPIO_PIN_USER_LED_01_Port, &GPIO_InitStruct );
       break;
+
+    case OPEND_LL_GPIO_PIN_USER_LED_02:
+
+      /* Enable peripherals and GPIO Clocks. */
+      __HAL_RCC_GPIOA_CLK_ENABLE( );
+
+      /* Configure peripheral GPIO. */
+      GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+      GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+      GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+      GPIO_InitStruct.Pin = OPEND_LL_GPIO_PIN_USER_LED_02_Pin;
+      HAL_GPIO_Init( OPEND_LL_GPIO_PIN_USER_LED_02_Port, &GPIO_InitStruct );
+      break;
+
 
     default:
       ret = -1;
@@ -79,8 +106,16 @@ int8_t openD_ll_gpio_deInit( openD_ll_gpio_pin_t pin ) {
       HAL_GPIO_DeInit(OPEND_LL_GPIO_PIN_USER_BUTTON_01_Port, OPEND_LL_GPIO_PIN_USER_BUTTON_01_Pin);
       break;
 
+    case OPEND_LL_GPIO_PIN_USER_BUTTON_02:
+      HAL_GPIO_DeInit(OPEND_LL_GPIO_PIN_USER_BUTTON_02_Port, OPEND_LL_GPIO_PIN_USER_BUTTON_02_Pin);
+      break;
+
     case OPEND_LL_GPIO_PIN_USER_LED_01:
       HAL_GPIO_DeInit(OPEND_LL_GPIO_PIN_USER_LED_01_Port, OPEND_LL_GPIO_PIN_USER_LED_01_Pin);
+      break;
+
+    case OPEND_LL_GPIO_PIN_USER_LED_02:
+      HAL_GPIO_DeInit(OPEND_LL_GPIO_PIN_USER_LED_02_Port, OPEND_LL_GPIO_PIN_USER_LED_02_Pin);
       break;
 
     default:
@@ -98,6 +133,10 @@ void openD_ll_gpio_write( openD_ll_gpio_pin_t pin, openD_ll_gpio_pin_state_t sta
       HAL_GPIO_WritePin( OPEND_LL_GPIO_PIN_USER_LED_01_Port, OPEND_LL_GPIO_PIN_USER_LED_01_Pin, (GPIO_PinState) state);
       break;
 
+    case OPEND_LL_GPIO_PIN_USER_LED_02:
+      HAL_GPIO_WritePin( OPEND_LL_GPIO_PIN_USER_LED_02_Port, OPEND_LL_GPIO_PIN_USER_LED_02_Pin, (GPIO_PinState) state);
+      break;
+
     default:
       break;
   }
@@ -112,6 +151,10 @@ openD_ll_gpio_pin_state_t openD_ll_gpio_read( openD_ll_gpio_pin_t pin ) {
   switch( pin ) {
     case OPEND_LL_GPIO_PIN_USER_BUTTON_01:
       state =  HAL_GPIO_ReadPin( OPEND_LL_GPIO_PIN_USER_BUTTON_01_Port, OPEND_LL_GPIO_PIN_USER_BUTTON_01_Pin);
+      break;
+
+    case OPEND_LL_GPIO_PIN_USER_BUTTON_02:
+      state =  HAL_GPIO_ReadPin( OPEND_LL_GPIO_PIN_USER_BUTTON_02_Port, OPEND_LL_GPIO_PIN_USER_BUTTON_02_Pin);
       break;
 
     default:
