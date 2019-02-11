@@ -139,14 +139,27 @@ bool _message_primitive_user_call( void *param ) {
 
   ApiCallReferenceType CallReference;
   ApiTerminalIdType TerminalId;
+  rsuint8 handsetId = 0;
 
   switch(((openD_callApiReq_t *)param)->service)
   {
     case OPEND_CALLAPI_SETUP:
       terminalId = asciiToHex(((openD_callApiReq_t *)param)->param.setup.pmid[0]);
-      CallReference.Value = 0;
+      CallReference.Instance.Fp = 0;
+      CallReference.Instance.Host = terminalId;
       ApiFpCcSetupReq( CallReference, terminalId );
 
+      break;
+
+    case OPEND_CALLAPI_RELEASE:
+      handsetId = ( ((openD_callApiReq_t *)param)->param.setup.pmid[1] ) - '0';
+
+      /* Release connection. */
+      SendApiFpCcReleaseReq ( COLA_TASK,
+                             CallState[handsetId].CallReference,    //ApiCallReferenceType
+                             API_RR_NORMAL,                         //ApiCcReleaseReasonType Reason,
+                             0,                                     //tsuint16 InfoElementLength,
+                             NULL);                                 //tsuint8 InfoElement[1])
       break;
 
     default:
@@ -243,6 +256,7 @@ bool _message_primitive_cfm_ind( void *param ) {
       /* Send openD subscription indication to the application. */
       sIndication.service = OPEND_SUBAPI_SUBSCRIBE;
       util_memcpy(sIndication.param.subscribe.ipui, pCfSysCtrl->CfSysStatus.HsInfo[((ApiFpMmRegistrationCompleteIndType *)param)->TerminalId].Ipui, 5);
+      util_memcpy(sIndication.param.subscribe.pmid, &((ApiFpMmRegistrationCompleteIndType *)param)->TerminalId, 1);
       openD_sub_indication( &sIndication );
 
       MmiShowLedStatus();
@@ -283,7 +297,9 @@ bool _message_primitive_cfm_ind( void *param ) {
     case API_FP_CC_SETUP_IND:
       CallCtrlMailHandler((RosMailType *)param);
 #ifdef NATALIE_V11
-      pCfSysCtrl->CfSysStatus.CallInfo.HsId.Value = ((ApiFpCcSetupIndType*)param)->TerminalId; //save HandsetId
+      pCfSysCtrl->CfSysStatus.CallInfo.HsId.Value = ((ApiFpCcSetupIndType*)param)->TerminalId; //save HandsetId /*!< Id of the calling handset. */
+      pCfSysCtrl->CfSysStatus.CallInfo.CallReference = ((ApiFpCcSetupCfmType*)param)->CallReference; /*!< Call reference/instance number. */
+      pCfSysCtrl->CfSysStatus.CallInfo.CallClass = ((ApiFpCcSetupIndType*)param)->CallClass;
 #else
       pCfSysCtrl->CfSysStatus.CallInfo.HsId.HandsetId = ((ApiFpCcSetupIndType*)param)->CallReference.HandsetId; //save HandsetId
 #endif
@@ -298,9 +314,19 @@ bool _message_primitive_cfm_ind( void *param ) {
       break;
 
     case API_FP_CC_SETUP_CFM:
+      CallCtrlMailHandler((RosMailType *)param);
+#ifdef NATALIE_V11
+      pCfSysCtrl->CfSysStatus.CallInfo.CallReference = ((ApiFpCcSetupCfmType*)param)->CallReference; /*!< Call reference/instance number. */
+      pCfSysCtrl->CfSysStatus.CallInfo.CallClass = ((ApiFpCcSetupCfmType*)param)->CallClass;
+#else
+      pCfSysCtrl->CfSysStatus.CallInfo.HsId.HandsetId = ((ApiFpCcSetupCfmType*)param)->CallReference.HandsetId; //save HandsetId
+#endif
+
+      rsuint8 handsetId = GetHsFromCallReference( ((ApiFpCcSetupCfmType*)param)->CallReference );
 
       /* Send openD call confirmation to the application. */
       cConfirm.service = OPEND_CALLAPI_SETUP;
+      util_memcpy(cConfirm.param.setup.pmid, &handsetId, 1);
       cConfirm.status = OPEND_STATUS_OK;
       openD_call_confirmation( &cConfirm );
       break;

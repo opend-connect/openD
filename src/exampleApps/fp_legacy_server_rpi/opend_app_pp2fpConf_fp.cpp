@@ -248,7 +248,7 @@ static void openD_callApiCfm_callback( openD_callApiCfm_t *cConfirm ) {
         j["primitive"] = "confirmation";
         j["service"] = "setupCall";
         j["status"] = "OK";
-        j["param1"] = std::to_string( static_cast<int>( ((openD_callApiCfm_t*) appMessage.param)->param.setup.pmid[0]) );
+        j["param1"] = std::to_string( static_cast<int>( cConfirm->param.setup.pmid[0]) );
         j["param2"] = "0";
         j["param3"] = "0";
         size_t len = strlen((j.dump()).c_str())+1;
@@ -339,7 +339,7 @@ static void openD_subApiInd_callback( openD_subApiInd_t *sIndication ) {
       printf("Registration APP finished!\n");
       j["version"] = "1.0.0";
       j["module"] = "legacy";
-      j["primitive"] = "confirmation";
+      j["primitive"] = "indication";
       j["service"] = "openRegistrationWindow";
       j["status"] = "OK";
       j["param1"] = std::to_string( static_cast<int>( sIndication->param.subscribe.pmid[0] ) );
@@ -347,6 +347,7 @@ static void openD_subApiInd_callback( openD_subApiInd_t *sIndication ) {
       j["param3"] = "0";
       len = strlen((j.dump()).c_str())+1;
       udp_send((j.dump()).c_str(), len);
+      msManager_changeState( &appStateCtxt, APP_STATE_STANDBY );
       break;
 
     default:
@@ -545,6 +546,7 @@ bool app_state_connected( void *param ) {
           callApiReq.service = OPEND_CALLAPI_RELEASE;
           memcpy(&callApiReq.param.setup.pmid[1], handsetOrCallId.c_str(), (handsetOrCallId.size() + 1));
           openD_callApi_request( &callApiReq );
+          break;
 
         case 0x69:
           /* Key 'i' Volume up */
@@ -584,6 +586,12 @@ bool app_state_connected( void *param ) {
       switch( ((openD_subApiCfm_t*) message->param)->service ) {
         case OPEND_CALLAPI_RELEASE:
           if( OPEND_STATUS_OK == ((openD_callApiCfm_t*) message->param)->status ) {
+
+            /* Mute */
+            audioApiReq.service = OPEND_AUDIOAPI_SET_MUTE;
+            audioApiReq.param.setMute.enable = true;
+            openD_audioApi_request( &audioApiReq );
+
             printf("Call APP released!\n");
             j["version"] = "1.0.0";
             j["module"] = "legacy";

@@ -65,11 +65,11 @@
 /* _parsedPacketFct */
 /*---------------------------------------------------------------------------*/
 void _parsedPacketFct( uint8_t *data, uint16_t len ) {
-  printf("RX Data:");
-  for (int i = 0; i < len; ++i) {
-    printf("%x", data[i]);
-  }
-  printf("\n");
+  // printf("RX Data:");
+  // for (int i = 0; i < len; ++i) {
+  //   printf("%x", data[i]);
+  // }
+  // printf("\n");
   LocalMainAppTask( (RosMailType *) &data[2] );
   // print_incoming_msg( (const RosMailType *) &data[2] );
   return;
@@ -126,13 +126,13 @@ int hdlc_hostInit( void ) {
 /*---------------------------------------------------------------------------*/
 void hdlc_hostSend( uint8_t iTaskId, uint8_t *bInputDataPtr, uint16_t iLength ) {
 
-  printf("TX Data:");
-  for(int i = 0; i < iLength; ++i)
-  {
-    printf("%x", bInputDataPtr[i]);
-  }
-  printf("\n");
+  // printf("TX Data:");
+  // for(int i = 0; i < iLength; ++i)
+  // {
+  //   printf("%x", bInputDataPtr[i]);
+  // }
+  // printf("\n");
 
   hdlc_infoFrameCreate(iTaskId, bInputDataPtr, iLength);
-  printf("Done.\n");
+  // printf("Done.\n");
 }

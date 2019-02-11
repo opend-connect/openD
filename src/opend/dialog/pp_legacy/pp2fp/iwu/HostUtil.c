@@ -314,8 +314,8 @@ void LocalMainAppTaskInit(void)
     {
       RosMailEmptyType* pMail = (RosMailEmptyType*)RosMailAllocate(API_TASK, API_TASK, sizeof(RosMailEmptyType));
       pMail->Primitive = INITTASK;
-      ColaTask((RosMailType*)pMail);
       HandleCvmConOptions((RosMailType*)pMail);
+      ColaTask((RosMailType*)pMail);
 	    RosMailFree((RosMailType* )pMail);
     }
 #else

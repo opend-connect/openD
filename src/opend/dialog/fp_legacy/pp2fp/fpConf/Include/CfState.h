@@ -119,7 +119,9 @@ typedef struct
 
 typedef struct
 {
+  ApiCallReferenceType CallReference;
   ApiCallReferenceType HsId;
+  ApiCcCallClassType CallClass;
 } CallInfoType;
 
 typedef struct

@@ -95,7 +95,10 @@ DECL_STATE_FN(S_CfStateConnected)
         pCfSysCtrl->PpSysPara.PpMmiPara.MmiAudioVol=(AUDIO_NUMBER_OF_VOL_STEPS/2);
       }
 
-      RosTimerStart(UNMUTE_AUDIO_TIMER, UNMUTE_AUDIO_TIMEOUT, &ColaTimerCfgTable[ColaTimerCfgTableIdx(UNMUTE_AUDIO_TIMER)]);
+      pCfSysCtrl->PpSysPara.AudioMode=API_AUDIO_MODE_HEADSET;
+      SendApiPpAudioSetVolumeReq(COLA_TASK, 0);                                 //Set volume
+      SendApiPpAudioOpenReq ( COLA_TASK, pCfSysCtrl->PpSysPara.AudioMode );     //Open and unmute Audio
+      SendApiPpAudioUnmuteReq(COLA_TASK, API_MUTE_BOTH);
 
       CfSetSubState(CF_SUB_STATE_CONNECTED);
 
@@ -179,9 +182,9 @@ DECL_STATE_FN(S_CfStateConnected)
       }
       break;
 
-    case API_CC_RELEASE_IND: // just in case
+    case API_CC_RELEASE_IND:
        SendApiCcReleaseRes ( COLA_TASK,                               //RosTaskIdType Src,
-                             pCfSysCtrl->PpSysPara.MmiConEi,          //ApiCcConEiType ConEi,
+                             ((ApiCcReleaseIndType *)p_Mail)->ConEi,  //ApiCcConEiType ConEi,
                              0,                                       //rsuint16 InfoElementLength,
                              NULL);                                   //rsuint8 InfoElement[1];
       //intentionally fall through
