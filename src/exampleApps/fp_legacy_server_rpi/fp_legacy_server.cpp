@@ -93,8 +93,6 @@ static void appPrintHelp(void)
   printf( "w : Open registration\n" );
   printf( "e : Close registration\n" );
   printf( "\n" );
-  printf( "m : Mute\n" );
-  printf( "u : Unmute\n" );
   printf( "r : Setup Call\n");
   printf( "t : Release Call\n");
   printf( "z : Mute\n");
