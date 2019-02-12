@@ -102,7 +102,7 @@ DECL_STATE_FN(S_CfStateRegistration)
     case KEY_MESSAGE:
       switch(((RosMailType *)p_Mail)->P1.P1)
       {
-        case KEY_REG:
+        case KEY_MESSAGE_REQ_REG:
           SendApiPpMmRegistrationStopReq(COLA_TASK);            //stop searching
           pCfSysCtrl->PpSysPara.MmiMacLocked=FALSE;
           CfEnterState(CF_STATE_UNLOCKED);

@@ -13,7 +13,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0 OR GPL-2.0-only
 
-project(pp2fpConf_fp_server)
+project(fp_legacy_server_rpi)
 
 cmake_minimum_required(VERSION 3.6)
 
@@ -27,7 +27,7 @@ link_directories(
 )
 
 file(GLOB SOURCES
-    "${CMAKE_CURRENT_SOURCE_DIR}/opend_app_pp2fpConf_fp.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/fp_legacy_server.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/udp_server.c"
 )
 

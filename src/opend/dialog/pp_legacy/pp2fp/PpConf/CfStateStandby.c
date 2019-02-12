@@ -126,7 +126,7 @@ DECL_STATE_FN(S_CfStateStandby)
         MmiCcSetupIndGetCallCtrlPara((ApiCcSetupIndType*) p_Mail);              // store CallClass, ConEi and BasicService for later use
 
         SendApiCcAlertReq ( COLA_TASK,                                          //RosTaskIdType Src,
-                            pCfSysCtrl->PpSysPara.CallCtrlPara.ConEi,           //ApiCcConEiType ConEi,
+                            ((ApiCcSetupIndType *)p_Mail)->ConEi,              //ApiCcConEiType ConEi,
                             0,                                                  //rsuint16 InfoElemenength,
                             NULL);                                              //rsuint8 InfoElement[1])
 

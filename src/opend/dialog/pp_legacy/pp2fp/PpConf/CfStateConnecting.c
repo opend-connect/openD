@@ -144,9 +144,9 @@ DECL_STATE_FN(S_CfStateConnecting)
       }
       break;
 
-    case API_CC_RELEASE_IND: // just in case
+    case API_CC_RELEASE_IND:
        SendApiCcReleaseRes ( COLA_TASK,                               //RosTaskIdType Src,
-                             pCfSysCtrl->PpSysPara.MmiConEi,          //ApiCcConEiType ConEi,
+                             ((ApiCcReleaseIndType *)p_Mail)->ConEi,  //ApiCcConEiType ConEi,
                              0,                                       //rsuint16 InfoElementLength,
                              NULL);                        //rsuint8 InfoElement[1];
 

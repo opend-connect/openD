@@ -10,6 +10,7 @@ The idea of the openD framework is to make the DECT and ULE technology available
   - [Introduction](#quickstartguide_intro)
   - [Demonstration Applications](#demonstrationapplications)
   - [Hardware Platforms](#hardware_platforms)
+      - [Raspberry Pi Configuration](#raspberryPiConfiguration)
   - [Build Instructions](#buildinstructions)
       - [Build System](#buildinstructions_sys)
       - [Toolchains](#buildinstructions_tool)
@@ -54,7 +55,23 @@ In general, the purpose of the demonstration applications is to provide an overv
 
   This example is a voice call from the PP to the FP or vise versa. It demonstrates the openD framework opens up a voice call including the management services as device registration, initiating the call and picking up the phone. This framework provides examples for both, the FP and the PP as initiator of the call.
 
-  1. Run the UDP_Client_Legacy and LEGACY_FP_SERVER demo applications on the Raspberry PI 3 and the LEGACY_PP demo application on the Nucleo hardware.
+  1. Run the `FP_LEGACY_CLIENT` and `FP_LEGACY_SERVER` demo applications on the Raspberry PI 3 and the `PP_LEGACY_BASICCALL` demo application on the Nucleo hardware.
+      - UDP FP legacy client:
+        ```sh
+          $ ./fp_legacy_client_rpi
+          ```
+      - UDP FP legacy server:
+        - Dialog FP: You should call the demo application with the serial port as argument.
+          ```sh
+          $ ./fp_legacy_server_rpi <SERIAL PORT>
+
+          Example:
+          $ ./fp_legacy_server_rpi /dev/ttyACM0
+          ```
+        - DSPG FP: You can start the demo application without any arguments.
+          ```sh
+          $ ./fp_legacy_server_rpi
+          ```
 
   2. Open the registration window with the client demo application.<br/>
   The terminal input to open the registration window is the key "w".
@@ -85,7 +102,23 @@ In general, the purpose of the demonstration applications is to provide an overv
 
   The internal call example shows how to handle voice calls from one PP to another PP using a central FP. The FP acts as a central "server" between the to PPs and forwards the call.
 
-  1. Run the UDP_Client_Legacy and LEGACY_FP_SERVER demo applications on the Raspberry PI 3 and the LEGACY_PP_INTERCOM demo application on the two Nucleo hardwares.
+  1. Run the `FP_LEGACY_CLIENT` and `FP_LEGACY_SERVER` demo applications on the Raspberry PI 3 and the `PP_LEGACY_INTERCOM` demo application on the two Nucleo hardwares.
+      - UDP FP legacy client:
+        ```sh
+          $ ./fp_legacy_client_rpi
+          ```
+      - UDP FP legacy server:
+        - Dialog FP: You should call the demo application with the serial port as argument.
+          ```sh
+          $ ./fp_legacy_server_rpi <SERIAL PORT>
+
+          Example:
+          $ ./fp_legacy_server_rpi /dev/ttyACM0
+          ```
+        - DSPG FP: You can start the demo application without any arguments.
+          ```sh
+          $ ./fp_legacy_server_rpi
+          ```
 
   2. Open the registration window with the client demo application.<br/>
   The terminal input to open the registration window is the key "w".
@@ -120,10 +153,26 @@ In general, the purpose of the demonstration applications is to provide an overv
 
   This example utilizes the 'Simple Switch' profile from the HAN FUN specification. THe PP implements this profile provides the possibility to switch a light on the hardware platforms.
 
-  1. Run the UDP_Client_Hanfun and HANFUN_SimpleSwitch_FP demo applications on the Raspberry PI 3 and the HANFUN_SimpleLight_PP demo application on the Nucleo hardware.
+  1. Run the `FP_HANFUN_CLIENT` and `FP_HANFUN_SERVER` demo applications on the Raspberry PI 3 and the `PP_HANFUN` demo application on the Nucleo hardware.
+      - UDP FP HAN-FUN client:
+        ```sh
+          $ ./fp_hanfun_client_rpi
+          ```
+      - UDP FP legacy server:
+        - Dialog FP: You should call the demo application with the serial port as argument.
+          ```sh
+          $ ./fp_hanfun_server_rpi <SERIAL PORT>
+
+          Example:
+          $ ./fp_hanfun_server_rpi /dev/ttyACM0
+          ```
+        - DSPG FP: You can start the demo application without any arguments.
+          ```sh
+          $ ./fp_hanfun_server_rpi
+          ```
 
   2. Open the registration window with the client demo application.<br/>
-  The terminal input to open the registration window and register a device x is "r 1 x".
+  The terminal input to open the registration window and register a device is "r 1 x". Whit "x" you can assign a device address. For example "r 1 1", in this case the next registered device will have the address 1.
 
   3. Press the blue button on the Nucleo hardware to send a registration request.
 
@@ -141,30 +190,46 @@ In general, the purpose of the demonstration applications is to provide an overv
 
   The simple switch sample application implements a HAN FUN 'On/Off' profile on the PP side. The FP can use the profile to perform toggle operations on the hardware platforms.
 
-  1. Run the UDP_Client_Hanfun and HANFUN_SimpleSwitch_FP demo applications on the Raspberry PI 3 and the HANFUN_SimpleLight_PP demo application on the Nucleo hardware.
+  1. Run the `FP_HANFUN_CLIENT` and `FP_HANFUN_SERVER` demo applications on the Raspberry PI 3 and the `PP_HANFUN` demo application on the Nucleo hardware.
+      - UDP FP HAN-FUN client:
+        ```sh
+          $ ./fp_hanfun_client_rpi
+          ```
+      - UDP FP legacy server:
+        - Dialog FP: You should call the demo application with the serial port as argument.
+          ```sh
+          $ ./fp_hanfun_server_rpi <SERIAL PORT>
+
+          Example:
+          $ ./fp_hanfun_server_rpi /dev/ttyACM0
+          ```
+        - DSPG FP: You can start the demo application without any arguments.
+          ```sh
+          $ ./fp_hanfun_server_rpi
+          ```
 
   2. Open the registration window with the client demo application.<br/>
-  The terminal input to open the registration window and register a device x is "r 1 x".
+  The terminal input to open the registration window and register a device is "r 1 x". Whit "x" you can assign a device address. For example "r 1 1", in this case the next registered device will have the address 1.
 
   3. Press the blue button on the Nucleo hardware to send a registration request.
 
   4. List the registered devices to check if the portable part has been registered successfully with the client demo application.<br/>
   The terminal input to list the registered devices is "lr".
 
-  5. Send an on command to device x/unit pair u with the client demo application.<br/>
-  The terminal input to turn on the specific led on a device d with unit pair u is "on d u".
+  1. Send an on command to device with the client demo application.<br/>
+  The terminal input to turn on the specific led on a device (device address = x) is "on x 1".
 
-  6. Send an off command to device x/unit pair u with the client demo application.<br/>
-  The terminal input to turn off the specific led on a device d with unit pair u is "off d u".
+  1. Send an off command to device with the client demo application.<br/>
+  The terminal input to turn off the specific led on a device (device address = x) is "off x 1".
 
-  7. Deregister the device with the client demo application.<br/>
-  The terminal input to deregister a device x is "d x".
+  1. De-register the device with the client demo application.<br/>
+  The terminal input to de-register a device (device address = x) is "d x".
 
 **Device management example on the PP to mute audio**
 
   This example demonstrates how to mute the volume on the PP for an active audio connection with the openD framework. The implementation uses the device management services.
 
-  1. Run the UDP_Client_Legacy and LEGACY_FP_SERVER demo applications on the Raspberry PI 3 and the LEGACY_PP demo application on the Nucleo hardware.
+  1. Run the legacy demo applications on the Raspberry PI 3 and also the legacy demo application on the Nucleo hardware.
 
   2. Open the registration window with the client demo application.<br/>
   The terminal input to open the registration window is the key "w".
@@ -188,7 +253,7 @@ In general, the purpose of the demonstration applications is to provide an overv
 
   This is an example which shows how to use the device management services of the openD framework to change the volume of an active audio connection.
 
-  1. Run the UDP_Client_Legacy and LEGACY_FP_SERVER demo applications on the Raspberry PI 3 and the LEGACY_PP demo application on the Nucleo hardware.
+  1. Run the legacy demo applications on the Raspberry PI 3 and also the legacy demo application on the Nucleo hardware.
 
   2. Open the registration window with the client demo application.<br/>
   The terminal input to open the registration window is the key "w".
@@ -233,6 +298,21 @@ Please refer to the following images of the supported hardwares:
 |Dialog Semiconductor|![Fixed Part - Dialog Semiconductor](/doc/pics/Dialog_FP.png)|![Portable Part - Dialog Semiconductor](/doc/pics/Dialog_PP.png)|
 |DSPG|![Fixed Part - DSPG](/doc/pics/DSPG_FP.png)|![Portable Part - DSPG](/doc/pics/DSPG_PP.png)|
 
+<a name="raspberryPiConfiguration"/>
+
+### Raspberry Pi configuration
+
+In case of using Dialog FP hardware the serial port has to be enabled. In order to enable it edit the /boot/config.txt file and add following line at the end of the file.
+
+```
+enable_uart=1
+```
+Please also make sure that you have removed following characters in the /boot/cmdline.txt file. This will disable the console via the GPIO UART of the Raspberry Pi.
+
+```
+console=serial0,115200
+```
+
 <a name="buildinstructions"/>
 
 ## Build Instructions
@@ -241,7 +321,7 @@ Please refer to the following images of the supported hardwares:
 
 ### Build System
 
-This project uses CMake as build system. A user is able to build the firmware with a terminal or with an IDE on Windows, Linux and OSX. The project requires a CMake version >= v3.6.
+This project uses CMake as build system. A user is able to build the firmware with a terminal or with an IDE on Windows, Linux and OSX. The project requires a **CMake version >= v3.6**. Example installations are:
 
 * Windows
   * [CMake Download](https://cmake.org/download/) from the official homepage.
@@ -257,27 +337,22 @@ This project uses CMake as build system. A user is able to build the firmware wi
 This project uses two different toolchains to build the firmware. The GNU Arm Embedded Toolchain (arm-none-eabi) builds the firmware for the Nucleo-L476RG board with ARM Cortex M4. The GNU Arm Linux Toolchain (arm-linux) builds the firmware for the Raspberry Pi.
 
 * GNU Arm Embedded Toolchain
-  * Windows
-     * Please install the gcc-arm-none-eabi toolchain, e.g. here [Download](https://developer.arm.com/open-source/gnu-toolchain/gnu-rm/downloads)
-     * The tool *Make* is also required. E.g., the MSYS2 includes it [MSYS2](http://www.msys2.org/).
+  * Windows / Linux / OSX
+     * Please install the gcc-arm-none-eabi toolchain, version **7-2018-q2-update**. E.g. a download is available [here](https://developer.arm.com/open-source/gnu-toolchain/gnu-rm/downloads).
+     * For windows, the tool *Make* is also required. E.g., the MSYS2 includes it [MSYS2](http://www.msys2.org/).
        **Note:** Add both path to the environment `Path` variable.
-       For example, add `C:\msys64\mingw64\bin` and `C:\Program Files (x86)\GNU Tools ARM Embedded\6 2017-q2-update\bin`.
-  * Linux
-     * Ubuntu/Linux Mint: `sudo apt-get install gcc-arm-none-eabi`
-  * OSX
-     * [Download](https://developer.arm.com/open-source/gnu-toolchain/gnu-rm/downloads)
+       For example, add `C:\msys64\mingw64\bin` and `C:\Program Files (x86)\GNU Tools ARM Embedded\7 2018-q2-update\bin`.
 
 * GNU Arm Linux Toolchain
   * Windows
-     * Please install the gcc-arm-linux-gnueabihf toolchain, e.g. here [Download](http://gnutoolchains.com/raspberry/tutorial/)
+     * Please install the gcc-arm-linux-gnueabihf toolchain, version **raspberry-gcc6.3.0-r3.exe**. E.g. a download is available [here](http://gnutoolchains.com/raspberry/).
      * Make is also required, you can download and install [MSYS2](http://www.msys2.org/).
        **Note:** Add both path to the environment `Path` variable.
        For example, add `C:\msys64\mingw64\bin` and `C:\SysGCC\Raspberry\bin`.
   * Linux
-     * gcc: `apt-get install gcc-arm-linux-gnueabihf`
-     * g++: `apt-get install g++-arm-linux-gnueabihf`
+     * Please install the gcc-arm-linux-gnueabihf toolchain, version **linaro-1.13.1+bzr2650 - Linaro GCC 2014.03 4.8.3**. E.g. a download is available [here](https://github.com/raspberrypi/tools/tree/master/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64 ).
   * OSX
-     * [Download](https://github.com/asymptotik/crosstool-arm-osx)
+     * E.g. a download is available [here](https://github.com/asymptotik/crosstool-arm-osx).
 
 
 <a name="buildinstructions_app"/>
@@ -298,13 +373,9 @@ In general, the procedure to build a version of this project with CMake is as fo
 
 Please note, that if you want to build an application for a target for DSPG, you have to perform the additional steps:
 
-1. Download the DSPG software package here [Software](https://www.dspg.com/wpdm-package/cmbs-host-sw-package).
-      - The package contains a directory called `cmbs`. Please copy the complete folder into the directory `src/opend/dspg/`.
-      - The package contains a directory called `CmndLib`. Please copy the complete folder into the directory `src/opend/dspg/pp_hanfun/iwu`.
-2. Apply patch: patch/appcallCFile.patch
-3. Apply patch: patch/appmsgparserCFile.patch
-4. Apply patch: patch/appmsgparserHeader.patch
-5. Apply patch: patch/appsrvCFile.patch
+1. Download the DSPG software package [here](https://www.dspg.com/wpdm-package/cmbs-host-sw-package) (https://www.dspg.com/wpdm-package/cmbs-host-sw-package).
+2. The package contains a directory called `cmbs`. Please copy the complete folder into the directory `src/opend/dspg/`.
+3. The package contains a directory called `CmndLib`. Please copy the complete folder into the directory `src/opend/dspg/pp_hanfun/iwu`.
 
 
 **Build Parameters**
@@ -325,7 +396,7 @@ According to step 4, the project provides several options to define which demons
 | **CMAKE_TOOLCHAIN_FILE** | **Description** |
 |-|-|
 | cmake/toolchains/arm-linux-gnueabihf.cmake | Use this path if you want to build an application for the RaspberryPI |
-| cmake/toolchains//toolchain-cortex-M4.cmake | Use this path if you want to build an application for the Nucleo |
+| cmake/toolchains/toolchain-cortex-M4.cmake | Use this path if you want to build an application for the Nucleo |
 
 | **BOARD** | **Description** |
 |-|-|
@@ -337,30 +408,29 @@ According to step 4, the project provides several options to define which demons
 
 | **APPLICATION** | **Description** |
 |-|-|
-| HANFUN_SimpleSwitch_FP | Application option to build the HAN FUN Simple Switch for the fixed part |
-| HANFUN_SimpleLight_PP | Application option to build the HAN FUN Simple Light for the portable part |
-| UDP_Client_Hanfun | Application option to build the HAN FUN UDP client |
-| LEGACY_PP | Application option to build the legacy demo for the portable part |
-| LEGACY_FP | Application option to build the legacy demo for the fixed part |
-| LEGACY_FP_SERVER | Application option to build the legacy demo for the fixed part server |
-| LEGACY_PP_INTERCOM | Application option to build the legacy demo for the portable part with intercom call |
-| UDP_Client_Legacy | Application option to build the legacy UDP client |
+| FP_HANFUN_SERVER | Application option to build the HAN FUN Simple Switch for the fixed part |
+| PP_HANFUN | Application option to build the HAN FUN Simple Light for the portable part |
+| FP_HANFUN_CLIENT | Application option to build the HAN FUN UDP client |
+| PP_LEGACY_BASICCALL | Application option to build the legacy demo for the portable part |
+| FP_LEGACY_SERVER | Application option to build the legacy demo for the fixed part server |
+| PP_LEGACY_INTERCOM | Application option to build the legacy demo for the portable part with intercom call |
+| FP_LEGACY_CLIENT | Application option to build the legacy UDP client |
 
 **Examples**
 
-Build the application HAN FUN Simple Switch for the fixed part, one for Dialog Semiconductor and one for DSPG:
+Build the application HAN FUN for the fixed part, one for Dialog Semiconductor and one for DSPG:
 
 ```sh
 mkdir build
 cd build
-cmake -DCMAKE_BUILD_TYPE=Release -DTOOLCHAIN_PREFIX=/usr -DCMAKE_TOOLCHAIN_FILE=cmake/toolchains/arm-linux-gnueabihf.cmake -DBOARD=DialogMmiRpi -DAPPLICATION=HANFUN_SimpleSwitch_FP ..
+cmake -DCMAKE_BUILD_TYPE=Release -DTOOLCHAIN_PREFIX=/usr -DCMAKE_TOOLCHAIN_FILE=cmake/toolchains/arm-linux-gnueabihf.cmake -DBOARD=DialogMmiRpi -DAPPLICATION=FP_HANFUN_SERVER ..
 make
 ```
 
 ```sh
 mkdir build
 cd build
-cmake -DCMAKE_BUILD_TYPE=Release -DTOOLCHAIN_PREFIX=/usr -DCMAKE_TOOLCHAIN_FILE=cmake/toolchains/arm-linux-gnueabihf.cmake -DBOARD=DspgDectRpi -DAPPLICATION=HANFUN_SimpleSwitch_FP ..
+cmake -DCMAKE_BUILD_TYPE=Release -DTOOLCHAIN_PREFIX=/usr -DCMAKE_TOOLCHAIN_FILE=cmake/toolchains/arm-linux-gnueabihf.cmake -DBOARD=DspgDectRpi -DAPPLICATION=FP_HANFUN_SERVER ..
 make
 ```
 
@@ -372,7 +442,7 @@ This project supports VS Code as IDE [VSCode](https://code.visualstudio.com/). T
 
 **Installation**
 
-* GNU/Linux, Windows and OSX
+* GNU/Linux, Windows and OSX - (**latest tested version: v1.30.2**)
     * [VSCode Download](https://code.visualstudio.com/Download)
 * VSCode extensions
     * Open VSCode and search `(Crtl+Shift+x)` the following extensions:
@@ -420,8 +490,8 @@ Available options are:
     **Note:** Must be path to your toolchain prefix.
 
 - `APPLICATION` - Determines the application.
-    You can choose between: HANFUN_SimpleSwitch_FP, HANFUN_SimpleLight_PP, UDP_Client
-    For example: `"APPLICATION":"HANFUN_SimpleSwitch_FP"`
+    You can choose between: FP_HANFUN_CLIENT, FP_HANFUN_SERVER, PP_HANFUN, FP_LEGACY_CLIENT, FP_LEGACY_SERVER, PP_LEGACY_BASICCALL, PP_LEGACY_INTERCOM
+    For example: `"APPLICATION":"FP_HANFUN_SERVER"`
 
 - `Board` - Determines the target board.
     You can choose between: DialogMmiRpi, DialogMmiNucleo, DspgDectNucleo, DspgDectRpi
@@ -470,7 +540,7 @@ You can read [Description of how to connect and flash](#flash) for detailed info
 
 * GNU Debugger (gdb)
     * Supplied by the toolchain.
-* Open On-Chip Debugger (OpenOCD)
+* Open On-Chip Debugger (OpenOCD) - **Version 0.10.0**
     * Windows
         * [OpenOCD Download] (http://openocd.org/getting-openocd/)
     * Linux

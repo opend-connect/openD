@@ -348,19 +348,19 @@ struct Command_Deregister:public Command
 
 struct Command_On:public Command
 {
-  Command_On ():Command ("on", "on <d> <u>:Send an ON command to device x/unit pair u.") {}
+  Command_On ():Command ("on", "on <x> 1:Send an ON command to device x.") {}
   void run (std::vector <std::string> &args);
 }command_On;
 
 struct Command_Off:public Command
 {
-  Command_Off ():Command ("off", "off <d> <u>:Send an OFF command to device x/unit pair u.") {}
+  Command_Off ():Command ("off", "off <x> 1:Send an OFF command to device x.") {}
   void run (std::vector <std::string> &args);
 }command_Off;
 
 struct Command_Toggle:public Command
 {
-  Command_Toggle ():Command ("tog", "tog <d> <u>:Send a TOGGLE command to device x/unit pair u.") {}
+  Command_Toggle ():Command ("tog", "tog <x> 1:Send a TOGGLE command to device x.") {}
   void run (std::vector <std::string> &args);
 }command_Toggle;
 

@@ -12,13 +12,22 @@
         "TOOLCHAIN_PREFIX":"C:/SysGCC/Raspberry",
 
         // Determines the application. You can choose between:
-        // HANFUN_SimpleSwitch_FP, HANFUN_SimpleLight_PP, UDP_Client_Hanfun,
-        // UDP_Client_Legacy, LEGACY_PP, LEGACY_FP, LEGACY_FP_SERVER, LEGACY_PP_INTERCOM
-        "APPLICATION":"UDP_Client_Legacy",
+        // FP_HANFUN_CLIENT, FP_HANFUN_SERVER, PP_HANFUN,
+        // FP_LEGACY_CLIENT, FP_LEGACY_SERVER, PP_LEGACY_BASICCALL, PP_LEGACY_INTERCOM
+        // "APPLICATION":"FP_HANFUN_CLIENT",
+        // "APPLICATION":"FP_HANFUN_SERVER",
+        // "APPLICATION":"FP_LEGACY_CLIENT",
+        // "APPLICATION":"FP_LEGACY_SERVER",
+        // "APPLICATION":"PP_HANFUN",
+        // "APPLICATION":"PP_LEGACY_BASICCALL",
+        // "APPLICATION":"PP_LEGACY_INTERCOM",
 
         // Target board. You can choose between:
         // DialogMmiRpi, DialogMmiNucleo, DspgDectNucleo, DspgDectRpi
-        "BOARD":"DialogMmiRpi",
+        // "BOARD":"DialogMmiNucleo",
+        // "BOARD":"DspgDectNucleo",
+        // "BOARD":"DialogMmiRpi",
+        // "BOARD":"DspgDectRpi",
 
         // Doxygen build. You can choose between:
         // ON, OFF

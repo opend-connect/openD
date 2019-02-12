@@ -93,8 +93,6 @@ static void appPrintHelp(void)
   printf( "w : Open registration\n" );
   printf( "e : Close registration\n" );
   printf( "\n" );
-  printf( "m : Mute\n" );
-  printf( "u : Unmute\n" );
   printf( "r : Setup Call\n");
   printf( "t : Release Call\n");
   printf( "z : Mute\n");
@@ -248,7 +246,7 @@ static void openD_callApiCfm_callback( openD_callApiCfm_t *cConfirm ) {
         j["primitive"] = "confirmation";
         j["service"] = "setupCall";
         j["status"] = "OK";
-        j["param1"] = std::to_string( static_cast<int>( ((openD_callApiCfm_t*) appMessage.param)->param.setup.pmid[0]) );
+        j["param1"] = std::to_string( static_cast<int>( cConfirm->param.setup.pmid[0]) );
         j["param2"] = "0";
         j["param3"] = "0";
         size_t len = strlen((j.dump()).c_str())+1;
@@ -271,6 +269,40 @@ static void openD_callApiInd_callback( openD_callApiInd_t *cIndication ) {
     case OPEND_CALLAPI_CONNECTION_STATUS_RINGING:
       /* Ringing. */
       printf("Connection status: ringing!\n");
+      break;
+
+    case OPEND_CALLAPI_RELEASE:
+      {
+        printf("Call APP released!\n");
+        j["version"] = "1.0.0";
+        j["module"] = "legacy";
+        j["primitive"] = "indication";
+        j["service"] = "releaseCall";
+        j["status"] = "OK";
+        j["param1"] = "0";
+        j["param2"] = "0";
+        j["param3"] = "0";
+        size_t len = strlen((j.dump()).c_str())+1;
+        udp_send((j.dump()).c_str(), len);
+        msManager_changeState( &appStateCtxt, APP_STATE_STANDBY );
+      }
+      break;
+
+    case OPEND_CALLAPI_SETUP:
+      {
+        printf("Call setup APP succesfully!\n");
+        j["version"] = "1.0.0";
+        j["module"] = "legacy";
+        j["primitive"] = "indication";
+        j["service"] = "setupCall";
+        j["status"] = "OK";
+        j["param1"] = std::to_string( static_cast<int>( cIndication->param.setup.pmid[0]) );
+        j["param2"] = "0";
+        j["param3"] = "0";
+        size_t len = strlen((j.dump()).c_str())+1;
+        udp_send((j.dump()).c_str(), len);
+        msManager_changeState( &appStateCtxt, APP_STATE_CONNECTED );
+      }
       break;
 
     default:
@@ -305,7 +337,7 @@ static void openD_subApiInd_callback( openD_subApiInd_t *sIndication ) {
       printf("Registration APP finished!\n");
       j["version"] = "1.0.0";
       j["module"] = "legacy";
-      j["primitive"] = "confirmation";
+      j["primitive"] = "indication";
       j["service"] = "openRegistrationWindow";
       j["status"] = "OK";
       j["param1"] = std::to_string( static_cast<int>( sIndication->param.subscribe.pmid[0] ) );
@@ -313,6 +345,7 @@ static void openD_subApiInd_callback( openD_subApiInd_t *sIndication ) {
       j["param3"] = "0";
       len = strlen((j.dump()).c_str())+1;
       udp_send((j.dump()).c_str(), len);
+      msManager_changeState( &appStateCtxt, APP_STATE_STANDBY );
       break;
 
     default:
@@ -511,6 +544,7 @@ bool app_state_connected( void *param ) {
           callApiReq.service = OPEND_CALLAPI_RELEASE;
           memcpy(&callApiReq.param.setup.pmid[1], handsetOrCallId.c_str(), (handsetOrCallId.size() + 1));
           openD_callApi_request( &callApiReq );
+          break;
 
         case 0x69:
           /* Key 'i' Volume up */
@@ -550,6 +584,12 @@ bool app_state_connected( void *param ) {
       switch( ((openD_subApiCfm_t*) message->param)->service ) {
         case OPEND_CALLAPI_RELEASE:
           if( OPEND_STATUS_OK == ((openD_callApiCfm_t*) message->param)->status ) {
+
+            /* Mute */
+            audioApiReq.service = OPEND_AUDIOAPI_SET_MUTE;
+            audioApiReq.param.setMute.enable = true;
+            openD_audioApi_request( &audioApiReq );
+
             printf("Call APP released!\n");
             j["version"] = "1.0.0";
             j["module"] = "legacy";
@@ -598,12 +638,16 @@ int main(int argc, char* argv[]) {
       portname = argv[1];
       break;
     case 1: /* No argument. */
+      break;
+
     default:
+      printf("Error occurred - Argument is invalid!\n");
+      return 0;
       break;
   }
 
   if( OPEND_STATUS_OK != openD_init( portname ) ) {
-    printf("Error occurred!\n");
+    printf("Error occurred - Fail to initialize!\n");
     return 0;
   }
 

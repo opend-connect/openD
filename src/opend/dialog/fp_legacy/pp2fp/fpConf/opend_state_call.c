@@ -71,6 +71,7 @@ rsuint8 VolAdjustDir;
 *                          Local Function prototypes
 ****************************************************************************/
 #ifdef FP_AUDIO_SUPPORT
+void AudioFpOff( void );
 void AudioFpSetup(ApiPpAudioModeType AudioMode);
 #endif //FP_AUDIO_SUPPORT
 /****************************************************************************
@@ -125,17 +126,18 @@ static bool _message_primitive_user_call( void *param ) {
     return false;
   }
 
+  rsuint8 handsetId = 0;
 
   switch(((openD_callApiReq_t *)param)->service)
   {
     case OPEND_CALLAPI_RELEASE:
+      handsetId = ( ((openD_callApiReq_t *)param)->param.setup.pmid[1] ) - '0';
       /* Release connection. */
       SendApiFpCcReleaseReq ( COLA_TASK,
-                             pCfSysCtrl->CfSysStatus.CallInfo.HsId, //ApiCallReferenceType
+                             CallState[handsetId].CallReference,    //ApiCallReferenceType
                              API_RR_NORMAL,                         //ApiCcReleaseReasonType Reason,
                              0,                                     //tsuint16 InfoElementLength,
                              NULL);                                 //tsuint8 InfoElement[1])
-
       break;
 
     default:
@@ -192,6 +194,9 @@ static bool _message_primitive_cfm_ind( void *param ) {
 
         CallCtrlMailHandler((RosMailType *)param);
 
+        /* Audio off. */
+        AudioFpOff();
+
         // if( LineUserNo == 1 ) {
           /* Change to standby state. */
           msManager_changeState( &opendStateCtxt, OPEND_STATE_STANDBY );
@@ -244,10 +249,6 @@ bool opend_state_call( void *param ) {
       AudioFpSetup(pCfSysCtrl->CfSysStatus.AudioMode);
 #endif /* FP_AUDIO_SUPPORT */
       MmiShowLedStatus();
-
-      /* Send openD call indication to the application. */
-      cIndication.service = OPEND_CALLAPI_SETUP;
-      openD_call_indication( &cIndication );
       break;
 
     case MESSAGE_PRIMITIVE_USER:
@@ -281,6 +282,20 @@ bool opend_state_call( void *param ) {
 
 
 #ifdef FP_AUDIO_SUPPORT
+
+void AudioFpOff() {
+
+  SendApiFpAudioInternalCodecSetupReq(
+      COLA_TASK,
+      0,                       // 0 = power off 1 = power on
+      16,                      // SampleFreq
+      API_AUDIO_IOMODE_OFF,    // MicMode
+      API_AUDIO_IOMODE_OFF,    // MicHeadsetMode
+      API_AUDIO_IOMODE_OFF,    // LsrMode
+      API_AUDIO_IOMODE_OFF     // ClassDMode
+  );
+}
+
 void AudioFpSetup(ApiPpAudioModeType AudioMode){
 	switch (AudioMode){
 	case API_AUDIO_MODE_EARPIECE:

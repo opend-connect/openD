@@ -90,6 +90,7 @@ DECL_STATE_FN(S_CfStateAlerting)
       pCfSysCtrl->PpSysPara.AudioMode=API_AUDIO_MODE_HEADSET;
       SendApiPpAudioSetVolumeReq(COLA_TASK, 0);                                 //Set volume
       SendApiPpAudioOpenReq ( COLA_TASK, pCfSysCtrl->PpSysPara.AudioMode );     //Open and unmute Audio
+      SendApiPpAudioUnmuteReq(COLA_TASK, API_MUTE_BOTH);
       CfEnterState(CF_STATE_CONNECTED);
       break;
 
@@ -112,7 +113,7 @@ DECL_STATE_FN(S_CfStateAlerting)
 
     case API_CC_RELEASE_IND:
       SendApiCcReleaseRes ( COLA_TASK,                                          //RosTaskIdType Src,
-                            pCfSysCtrl->PpSysPara.CallCtrlPara.ConEi,           //ApiCcConEiType ConEi,
+                            ((ApiCcReleaseIndType *)p_Mail)->ConEi,             //ApiCcConEiType ConEi,
                             0,                                                  //rsuint16 InfoElementLength,
                             NULL);                                              //rsuint8 InfoElement[1];
 

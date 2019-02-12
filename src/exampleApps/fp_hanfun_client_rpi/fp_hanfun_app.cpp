@@ -7,10 +7,10 @@
  * embedded.connectivity.solutions.==============
  * @endcode
  *
- * @file       fp_legacy_app.cpp
+ * @file       fp_hanfun_app.cpp
  * @copyright  STACKFORCE GmbH, Heitersheim, Germany, www.stackforce.de
  * @author     Heiko Berger
- * @brief      fp legacy app implementation.
+ * @brief      Implementation of the fixed part HAN FUN client
  * @details
  *
  * This work is dual-licensed under Apache 2.0 and GPL 2.0. You can choose between one of them if you use this work.
@@ -29,7 +29,7 @@
 #include <sstream>
 #include <iterator>
 #include <stdbool.h>
-#include "fp_legacy_app.h"
+#include "fp_hanfun_app.h"
 #include <../../json/single_include/nlohmann/json.hpp>
 
 using json = nlohmann::json;
@@ -40,66 +40,88 @@ json j;
 /* Map object for commands. */
 std::map <std::string, Command *> Command::registry;
 
-struct Command_Registration:public Command
+struct Command_ListRegs:public Command
 {
-  Command_Registration ():Command ("w", "w:Open the registration window.") {}
+  Command_ListRegs ():Command ("lr", "lr:List registered devices.") {}
   void run (std::vector <std::string> &args);
-}command_Registration;
+}command_ListRegs;
 
-struct Command_SetupCall:public Command
+struct Command_Register:public Command
 {
-  Command_SetupCall ():Command ("r", "r <h>:Setup a call with handset id h.") {}
+  Command_Register ():Command ("r", "r 1 <x>:Register the device x.\nr 0:Exit registration mode.") {}
   void run (std::vector <std::string> &args);
-}command_SetupCall;
+}command_Register;
 
-struct Command_ReleaseCall:public Command
+struct Command_Deregister:public Command
 {
-  Command_ReleaseCall ():Command ("t", "t <c>:Release a call with call id c.") {}
+  Command_Deregister ():Command ("d", "d <x>:De-register the device x.") {}
   void run (std::vector <std::string> &args);
-}command_ReleaseCall;
+}command_Deregister;
 
-struct Command_Mute:public Command
+struct Command_On:public Command
 {
-  Command_Mute ():Command ("z", "z:Mute.") {}
+  Command_On ():Command ("on", "on <x> 1:Send an ON command to device x.") {}
   void run (std::vector <std::string> &args);
-}command_Mute;
+}command_On;
 
-struct Command_Unmute:public Command
+struct Command_Off:public Command
 {
-  Command_Unmute ():Command ("u", "u:Unmute.") {}
+  Command_Off ():Command ("off", "off <x> 1:Send an OFF command to device x.") {}
   void run (std::vector <std::string> &args);
-}command_Unmute;
+}command_Off;
 
-struct Command_VolumeUp:public Command
+struct Command_Toggle:public Command
 {
-  Command_VolumeUp ():Command ("i", "i:Volume up.") {}
+  Command_Toggle ():Command ("tog", "tog <x> 1:Send a TOGGLE command to device x.") {}
   void run (std::vector <std::string> &args);
-}command_VolumeUp;
+}command_Toggle;
 
-struct Command_VolumeDown:public Command
-{
-  Command_VolumeDown ():Command ("o", "o:Volume down.") {}
-  void run (std::vector <std::string> &args);
-}command_VolumeDown;
-
-void Command_Registration::run (std::vector <std::string> &args)
+void Command_ListRegs::run (std::vector <std::string> &args)
 {
   j["version"] = "1.0.0";
-  j["module"] = "legacy";
+  j["module"] = "hanfun";
   j["primitive"] = "request";
-  j["service"] = "openRegistrationWindow";
+  j["service"] = "deviceManagementEntriesRegistration";
   j["status"] = "OK";
-  j["param1"] = "w";
+  j["param1"] = "lr";
   j["param2"] = "0";
   j["param3"] = "0";
   size_t len = strlen((j.dump()).c_str())+1;
   udp_send((j.dump()).c_str(), len);
-
-  std::cout.clear (); std::cout << "Registration window open until timeout!" <<
-  std::endl; std::cout.clear (); std::cerr.clear ();
 }
 
-void Command_SetupCall::run (std::vector <std::string> &args)
+void Command_Register::run (std::vector <std::string> &args)
+{
+  if ( (args.size () > 0 && args[0] == "0") || (args.size () > 1 && args[0] == "1") )
+  {
+    j["version"] = "1.0.0";
+    j["module"] = "hanfun";
+    j["primitive"] = "request";
+    if(strcmp(args[0].c_str(), "1") == 0)
+    {
+      j["service"] = "deviceManagementRegisterDisable";
+    }
+    else
+    {
+      j["service"] = "deviceManagementRegisterEnable";
+    }
+    j["status"] = "OK";
+    j["param1"] = "r";
+    j["param2"] = args[0].c_str();
+    if ( args.size () > 1 )
+      j["param3"] = args[1].c_str();
+  }
+  else
+  {
+    std::cout.clear ();std::cout << "Wrong usage - use command h or ? for help menu" <<
+    std::endl;std::cout.clear (); std::cerr.clear ();
+  }
+
+  size_t len = strlen((j.dump()).c_str())+1;
+  udp_send((j.dump()).c_str(), len);
+}
+
+void Command_Deregister::run (std::vector <std::string> &args)
 {
   if (args.size () < 1)
   {
@@ -109,90 +131,77 @@ void Command_SetupCall::run (std::vector <std::string> &args)
   }
 
   j["version"] = "1.0.0";
-  j["module"] = "legacy";
+  j["module"] = "hanfun";
   j["primitive"] = "request";
-  j["service"] = "setupCall";
+  j["service"] = "deviceManagementDeregister";
   j["status"] = "OK";
-  j["param1"] = "r";
+  j["param1"] = "d";
   j["param2"] = args[0].c_str();
-  j["param3"] = "0";
+  if ( args.size () > 1 )
+    j["param3"] = args[1].c_str();
   size_t len = strlen((j.dump()).c_str())+1;
   udp_send((j.dump()).c_str(), len);
 }
 
-void Command_ReleaseCall::run (std::vector <std::string> &args)
+void Command_On::run (std::vector <std::string> &args)
 {
-  if (args.size () < 1)
+  if (args.size () < 2)
   {
-    std::cout.clear (); std::cout << "Wrong usage - use command h or ? for help menu" <<
-    std::endl;std::cout.clear (); std::cerr.clear ();
+    std::cout.clear (); std::cout << "Wrong usage - use command h or ? for help menu"
+    << std::endl; std::cout.clear (); std::cerr.clear ();
     return;
   }
 
   j["version"] = "1.0.0";
-  j["module"] = "legacy";
+  j["module"] = "hanfun";
   j["primitive"] = "request";
-  j["service"] = "releaseCall";
+  j["service"] = "IOnOffClientOn";
   j["status"] = "OK";
-  j["param1"] = "t";
+  j["param1"] = "on";
   j["param2"] = args[0].c_str();
-  j["param3"] = "0";
+  j["param3"] = args[1].c_str();
   size_t len = strlen((j.dump()).c_str())+1;
   udp_send((j.dump()).c_str(), len);
 }
 
-void Command_Mute::run (std::vector <std::string> &args)
+void Command_Off::run (std::vector <std::string> &args)
 {
+  if (args.size () < 2)
+  {
+    std::cout.clear (); std::cout << "Wrong usage - use command h or ? for help menu"
+    << std::endl; std::cout.clear (); std::cerr.clear ();
+    return;
+  }
+
   j["version"] = "1.0.0";
-  j["module"] = "legacy";
+  j["module"] = "hanfun";
   j["primitive"] = "request";
-  j["service"] = "mute";
+  j["service"] = "IOnOffClientOff";
   j["status"] = "OK";
-  j["param1"] = "z";
-  j["param2"] = "0";
-  j["param3"] = "0";
+  j["param1"] = "off";
+  j["param2"] = args[0].c_str();
+  j["param3"] = args[1].c_str();
   size_t len = strlen((j.dump()).c_str())+1;
   udp_send((j.dump()).c_str(), len);
 }
 
-void Command_Unmute::run (std::vector <std::string> &args)
+void Command_Toggle::run (std::vector <std::string> &args)
 {
-  j["version"] = "1.0.0";
-  j["module"] = "legacy";
-  j["primitive"] = "request";
-  j["service"] = "unmute";
-  j["status"] = "OK";
-  j["param1"] = "u";
-  j["param2"] = "0";
-  j["param3"] = "0";
-  size_t len = strlen((j.dump()).c_str())+1;
-  udp_send((j.dump()).c_str(), len);
-}
+  if (args.size () < 2)
+  {
+    std::cout.clear (); std::cout << "Wrong usage - use command h or ? for help menu"
+    << std::endl; std::cout.clear (); std::cerr.clear ();
+    return;
+  }
 
-void Command_VolumeUp::run (std::vector <std::string> &args)
-{
   j["version"] = "1.0.0";
-  j["module"] = "legacy";
+  j["module"] = "hanfun";
   j["primitive"] = "request";
-  j["service"] = "volumeUp";
+  j["service"] = "IOnOffClientToggle";
   j["status"] = "OK";
-  j["param1"] = "i";
-  j["param2"] = "0";
-  j["param3"] = "0";
-  size_t len = strlen((j.dump()).c_str())+1;
-  udp_send((j.dump()).c_str(), len);
-}
-
-void Command_VolumeDown::run (std::vector <std::string> &args)
-{
-  j["version"] = "1.0.0";
-  j["module"] = "legacy";
-  j["primitive"] = "request";
-  j["service"] = "volumeDown";
-  j["status"] = "OK";
-  j["param1"] = "o";
-  j["param2"] = "0";
-  j["param3"] = "0";
+  j["param1"] = "tog";
+  j["param2"] = args[0].c_str();
+  j["param3"] = args[1].c_str();
   size_t len = strlen((j.dump()).c_str())+1;
   udp_send((j.dump()).c_str(), len);
 }
@@ -204,13 +213,12 @@ void HF::Application::Initialize (receiveUdpData rxUdpData)
 
   udp_init(rxUdpData);
 
-  Command::add(&command_Registration);
-  Command::add(&command_SetupCall);
-  Command::add(&command_ReleaseCall);
-  Command::add(&command_Mute);
-  Command::add(&command_Unmute);
-  Command::add(&command_VolumeUp);
-  Command::add(&command_VolumeDown);
+  Command::add(&command_ListRegs);
+  Command::add(&command_Register);
+  Command::add(&command_Deregister);
+  Command::add(&command_Off);
+  Command::add(&command_On);
+  Command::add(&command_Toggle);
 }
 
 /* Command::add */
@@ -303,7 +311,7 @@ std::ostream &Command::help (std::ostream &streamOut)
   stream << std::endl;
 
   stream << "************************************************" << std::endl;
-  stream << "  STACKFORCE openD LEGACY Demo Application 1.0  " << std::endl;
+  stream << "  STACKFORCE openD HANFUN Demo Application 1.0  " << std::endl;
   stream << "************************************************" << std::endl << std::endl;
 
   stream << std::setfill (' ');
@@ -349,19 +357,6 @@ bool HF::Application::Handle (std::string command)
   }
   else if (cmd == "h" || cmd == "?")
   {
-    /* json library object. */
-    json j;
-    j["version"] = "1.0.0";
-    j["module"] = "legacy";
-    j["primitive"] = "request";
-    j["service"] = "printHelp";
-    j["status"] = "OK";
-    j["param1"] = "a";
-    j["param2"] = "0";
-    j["param3"] = "0";
-    size_t len = strlen((j.dump()).c_str())+1;
-    udp_send((j.dump()).c_str(), len);
-
     std::cout.clear (); std::cout << "";
     Command::help (std::cout);
   }
@@ -374,6 +369,3 @@ bool HF::Application::Handle (std::string command)
 
   return false;
 }
-
-
-

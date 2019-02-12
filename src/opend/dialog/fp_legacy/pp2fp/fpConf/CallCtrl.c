@@ -81,9 +81,10 @@ void ApiFpCcSetupReq( ApiCallReferenceType CallReference, ApiTerminalIdType term
   ApiLineIdType TempLineId;
   rsuint16 IeBlockLength = 0;
 
-  CallState[ CallReference.Value ].CallClass = API_CC_NORMAL; //normal external call
-  CallState[ CallReference.Value ].BasicService = API_WIDEBAND_SPEECH;
-  CallState[ CallReference.Value ].DestinationId = terminalId;
+  CallState[ terminalId ].CallClass = API_CC_NORMAL; //normal external call
+  CallState[ terminalId ].BasicService = API_WIDEBAND_SPEECH;
+  CallState[ terminalId ].DestinationId = terminalId;
+  CallState[ terminalId ].CallReference = CallReference;
 
   AudioId.IntExtAudio = API_IEA_INT;
   AudioId.SourceTerminalId = terminalId;
@@ -104,14 +105,14 @@ void ApiFpCcSetupReq( ApiCallReferenceType CallReference, ApiTerminalIdType term
                       sizeof(ApiLineIdType),
                       (rsuint8*)&TempLineId);
 
-  CfSetCallState( CallReference.Value, F06_CALL_PRESENT);
+  CfSetCallState( terminalId, F06_CALL_PRESENT);
 
   SendApiFpCcSetupReq(COLA_TASK,
                       CallReference,                                    //CallReference
-                      CallState[ CallReference.Value ].DestinationId ,  //ApiTerminalIdType
+                      CallState[ terminalId ].DestinationId ,           //ApiTerminalIdType
                       AudioId,                                          //SourceId
-                      CallState[ CallReference.Value ].BasicService,    //BasicService
-                      CallState[ CallReference.Value ].CallClass,       //CallClass
+                      CallState[ terminalId ].BasicService,             //BasicService
+                      CallState[ terminalId ].CallClass,                //CallClass
                       API_CC_SIGNAL_ALERT_ON_PATTERN_0_INT,             //Signal
                       IeBlockLength,
                       (rsuint8 *)IeBlockPtr);

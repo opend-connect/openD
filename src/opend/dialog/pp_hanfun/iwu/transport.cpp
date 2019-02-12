@@ -65,24 +65,11 @@ extern "C" void hanfun_state_machine(const RosMailType* p_mail)
 
         /* Print the received message. */
 		    pdu = (UlePdu *)p_mail->Data.Data;
-		    LogString("Hanfun packet received : %d %d\n", pdu->size, pdu->data);
 		    MmiCtrl.delaysleep=DELAYSLEEP_CHECK;
-        LogString ("HF::ULE::Transport::receive > begin\n");
-        LogString("SrcAddr: %X \n", 0x7FFF&(pdu->data[0]*256+pdu->data[1]));
-        LogString("SrcUnitID: %X \n", pdu->data[2]);
-        LogString("DstAddr: %X \n", 0x7FFF&(pdu->data[3]*256+pdu->data[4]));
-        LogString("DstUnitID: %X \n",pdu->data[5]);
-        LogString("ExtMode : %d AdrType : %d \n", (pdu->data[0]&0x80)?1:0, (pdu->data[3]&0x80)?1:0);
-        LogString("Transport : %d %d \n",pdu->data[6],pdu->data[7]);
-        LogString("Length: %d \n",pdu->data[13]*256+pdu->data[14]);
-        LogString("Itf: %X \n",0x7FFF&(pdu->data[10]*256+pdu->data[11]));
-        LogString("AppRef : %d Type : %d Role: %d  Member: %d \n",pdu->data[8], pdu->data[9],(pdu->data[10]&0x80)?1:0,pdu->data[12]);
 
         /* Create payload and handle the received message in the HANFUN library. */
         HF::Common::ByteArray payload(pdu->data, pdu->size);
         g_transport->HF::Devices::Node::Transport::receive(new HF::ULE::Link(g_transport), payload);
-
-        LogString ("HF::ULE::Transport::receive > end\n");
 		break;
     }
     case API_PP_ULE_READY_IND:
@@ -190,7 +177,6 @@ void HF::ULE::Transport::initialize()
 
 void HF::ULE::Transport::configure(char *portname)
 {
-	LogString("\nSetting port to [%s]\n", portname);
 
 }
 
@@ -215,21 +201,8 @@ void HF::ULE::Transport::destroy()
 // =============================================================================
 void HF::ULE::Transport::receive (const rsuint8 *data, size_t size)
 {
-  LogString ("HF::ULE::Transport::receive > begin\n");
-  LogString("SrcAddr: %X \n", 0x7FFF&(data[0]*256+data[1]));
-  LogString("SrcUnitID: %X \n", data[2]);
-  LogString("DstAddr: %X \n", 0x7FFF&(data[3]*256+data[4]));
-  LogString("DstUnitID: %X \n",data[5]);
-  LogString("ExtMode : %d AdrType : %d \n", (data[0]&0x80)?1:0, (data[3]&0x80)?1:0);
-  LogString("Transport : %d %d \n",data[6],data[7]);
-  LogString("Length: %d \n",data[13]*256+data[14]);
-  LogString("Itf: %X \n",0x7FFF&(data[10]*256+data[11]));
-  LogString("AppRef : %d Type : %d Role: %d  Member: %d \n",data[8], data[9],(data[10]&0x80)?1:0,data[12]);
-
   HF::Common::ByteArray payload(data, size);
   HF::Devices::Node::Transport::receive(link, payload);
-
-  LogString ("HF::ULE::Transport::receive > end\n");
 }
 
 // =============================================================================
@@ -241,11 +214,7 @@ void HF::ULE::Transport::receive (const rsuint8 *data, size_t size)
 // =============================================================================
 void HF::ULE::Transport::connected()
 {
-   LogString ("HF::ULE::Transport::connected > begin\n");
-
    add(new HF::ULE::Link(this));
-
-   LogString ("HF::ULE::Transport::connected > end\n");
 }
 
 // =============================================================================
@@ -278,8 +247,6 @@ void HF::ULE::Transport::check()
 // =============================================================================
 void HF::ULE::Transport::deliver(HF::Common::ByteArray &payload)
 {
-   LogString("HF::ULE::Transport::deliver > begin : %d\n", tx_queue.size());
-
    tx_queue.push (payload);
    if(MmiCtrl.delaysleep==DELAYSLEEP_CHECK) Disable_Sleep();
    /*
@@ -288,30 +255,25 @@ void HF::ULE::Transport::deliver(HF::Common::ByteArray &payload)
     */
    if (!is_stack_ready() || is_tx_pending() || tx_queue.size() > 1)
    {
-      LogString("HF::ULE::Transport::deliver > end (queued)\n");
-
       if (!is_stack_ready())
       {
-         LogString("HF::ULE::Transport::deliver > end (not ready)\n");
+
       }
 
       if (is_tx_pending())
       {
-         LogString("HF::ULE::Transport::deliver > end (tx pending)\n");
+
       }
 
       if (tx_queue.size() > 1)
       {
          send(); // try to send
-    	 LogString("HF::ULE::Transport::deliver > end (queue not empty : %d)\n", tx_queue.size());
       }
 
       return;
    }
 
    send ();
-
-   LogString("HF::ULE::Transport::deliver > end\n");
 }
 
 // =============================================================================
@@ -323,8 +285,6 @@ void HF::ULE::Transport::deliver(HF::Common::ByteArray &payload)
 // =============================================================================
 void HF::ULE::Transport::delivered(bool result)
 {
-   LogString("HF::ULE::Transport::delivered : %d\n", result);
-
    if(result)
    {
       if (!tx_queue.empty())  // Send next message.
@@ -346,18 +306,12 @@ void HF::ULE::Transport::delivered(bool result)
 // =============================================================================
 void HF::ULE::Transport::send()
 {
-   LogString("HF::ULE::Transport::send > begin\n");
    if (!tx_queue.empty())
    {
       MmiCtrl.PendTDR = 1;
       if(MmiCtrl.delaysleep==DELAYSLEEP_CHECK) {Disable_Sleep();MmiCtrl.delaysleep=DELAYSLEEP_REENABLE;}
       SendApiPpUleDataReq(COLA_TASK, API_ULE_DLC_CTRL_ACKNOWLEDGED, tx_queue.front().size(), tx_queue.front().data());
    }
-   else
-   {
-      LogString("HF::ULE::Transport::send > Queue is empty !\n");
-   }
-   LogString("HF::ULE::Transport::send > end\n");
 }
 // HF::ULE::Link
 // =============================================================================
@@ -371,20 +325,17 @@ void HF::ULE::Transport::send()
 // =============================================================================
 void HF::ULE::Link::send (HF::Common::ByteArray &payload)
 {
-  LogString("HF::ULE::Link::send > begin\n");
   _layer->deliver(payload);
-
-  LogString("HF::ULE::Link::send > end\n");
 }
 
 void successConInd()
 {
-  LogString("SUCCESS\n");
+
 }
 
 void failureConInd()
 {
-  LogString("FAIL\n");
+
 }
 
 void exitApp()

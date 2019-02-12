@@ -70,37 +70,29 @@ void FwsApiFwsStatusInd(const ApiFwsStatusIndType *m)
 {
 	switch (m->FwsStatus) {
 	case AF_STATUS_IDLE:
-		LogString("############## FWS API: AF_STATUS_IDLE %u, setting Offset 0", m->Progress);
 		MmiCtrl.FWS.Offst = 0;
 		FwsSendStartTransferCfm();
 		break;
 	case AF_STATUS_RESUME:
-		LogString("############## FWS API: AF_STATUS_RESUME %u, setting Offset %u", m->Progress, m->Progress);
 		MmiCtrl.FWS.Offst = m->Progress;
 		FwsSendStartTransferCfm();
 		break;
 	case AF_STATUS_ERASING:
-		LogString("############## FWS API: AF_STATUS_ERASING %u", m->Progress);
 		break;
 	case AF_STATUS_WRITING:
-		LogString("############## FWS API: AF_STATUS_WRITING %u", m->Progress);
 		break;
 	case AF_STATUS_CHECKING:
-		LogString("############## FWS API: AF_STATUS_CHECKING %u", m->Progress);
 		break;
 	case AF_STATUS_BOOTING:
-		LogString("$$$$$$$$$$$$$ FWS API: SUCCESS: AF_STATUS_BOOTING %u", m->Progress);
 		FwsSetNextAction(MDT_FWS_RESULT_SUCCESS_IND);
 		//MmiCtrl.FWS.Enabled = 0; // do not FWS disable here, done at reset (prevents unwanted msgs before reboot)
 		break;
 	case AF_STATUS_DONE:
-		LogString("$$$$$$$$$$$$$ FWS API: SUCCESS: AF_STATUS_DONE %u", m->Progress);
 		FwsSetNextAction(MDT_FWS_RESULT_SUCCESS_IND);
 		SendApiFwsTerminateReq(COLA_TASK, true/*Reboot*/);
 		//MmiCtrl.FWS.Enabled = 0; // do not FWS disable here, done at reset (prevents unwanted msgs before reboot)
 		break;
 	case AF_STATUS_FAILED:
-		LogString("@@@@@@@@@@@@@ FWS API: upgrade FAIL %u", m->Progress);
 		FwsSetNextAction(MDT_FWS_RESULT_FAILED_IND);
 		SendApiFwsTerminateReq(COLA_TASK, true/*Reboot*/);
 		//MmiCtrl.FWS.Enabled = 0; // do not FWS disable here, done at reset (prevents unwanted msgs before reboot)
@@ -114,7 +106,6 @@ static void FwsSendNextExtData(const char* origin)
 {
 	//SendApiFwsWriteExtDataReq(COLA_TASK, MmiCtrl.FWS.Offst, MmiCtrl.FWS.len, MmiCtrl.FWS.DataBuf);
 	SendApiFwsWriteReq(COLA_TASK, MmiCtrl.FWS.Offst, MmiCtrl.FWS.len, MmiCtrl.FWS.DataBuf);
-	LogString("## FWS write offset: 0x%08X (%d) (%s)", MmiCtrl.FWS.Offst, MmiCtrl.FWS.Offst, origin);
 	MmiCtrl.FWS.Ready = false;
 	MmiCtrl.FWS.DataAvail = false;
 	RosTimerStop(FWS_TIMER);
@@ -152,14 +143,10 @@ void FwsApiPpUleDataInd(const ApiPpUleDataIndType* m)
 		&&	(m->Data[4] == 0xDE) && (m->Data[5] == 0xAD)
 		&&	(m->Data[6] == 0xDE) && (m->Data[7] == 0xAD) )
 	{
-		LogString("## FWS 0xDEADDEAD: abort! offset: %d (API_PP_ULE_DATA_IND)", MmiCtrl.FWS.Offst);
 		FwsAbort("0xDEADDEAD detected");
 		return;
 	}
 
-	if (MmiCtrl.FWS.DataAvail) {
-		LogString("## FWS old data not yet WriteExt: Drama! offset: %d (API_PP_ULE_DATA_IND)", MmiCtrl.FWS.Offst);
-	}
 	MmiCtrl.FWS.DataAvail = true;
 	MmiCtrl.FWS.len = (rsuint16) m->Length;
 	MmiCtrl.FWS.XferTimeouts = 0;
@@ -170,8 +157,6 @@ void FwsApiPpUleDataInd(const ApiPpUleDataIndType* m)
 	// can we WriteExt this data right away?
 	if (MmiCtrl.FWS.Ready) {
 		FwsSendNextExtData("API_PP_ULE_DATA_IND");
-	} else {
-		LogString("############## FWS Not READY, postpone WriteExt");
 	}
 }
 
@@ -207,7 +192,6 @@ void FwsApiPpUleDataInd_MdtFws(const MmiUleData_MmiDataTypeFws* d)
 void
 FwsTriggerSwReset(const char* reason)
 {
-	LogString("Triggering SW Reset (%s)", reason);
 	//WRITE_REG(0xFF5004,0x0080);
 	//WRITE_REG(0xFF5004,0x0000);
 }
@@ -217,8 +201,6 @@ void FwsTimeout()
 
 	if (!MmiCtrl.FWS.Enabled)
 		return;
-
-	LogString("FWS TIMEOUT %d :  %i sec", FWS_TIMEOUT_XFER / 1000, MmiCtrl.FWS.XferTimeouts);
 
 	if (MmiCtrl.isRegistered)
 	{
@@ -246,8 +228,6 @@ void FwsTimeout()
 
 void FwsStart(void)
 {
-	LogString("### Enable FW upgrade process");
-
 	SetLED4(0); // set LED4 off
 
 	MmiCtrl.FWS.DataAvail = false;
@@ -260,7 +240,6 @@ void FwsStart(void)
 	// response will be sent when we receive AF_STATUS_{IDLE,RESUME}
 
 	if(MmiCtrl.pagingInitiated==API_ULE_DLC_DB_PAGE_MODE_0){
-		LogString("Paging was disabled.. Enable paging..");
 		PagingMode(API_ULE_DLC_DB_PAGE_MODE_2);
 	}
 
@@ -268,8 +247,6 @@ void FwsStart(void)
 
 void FwsAbort(const char* reason)
 {
-	LogString("### Abort FW upgrade process (%s)", reason);
-
 	MmiCtrl.FWS.DataAvail = false;
 	MmiCtrl.FWS.Ready = false;
 	MmiCtrl.FWS.Enabled = false;
@@ -289,7 +266,6 @@ void FwsFillDataPacket(MmiUlePdu_common_t* packet)
 	MdtFwsAction Action = (MmiCtrl.FWS.NextMsgAction >> 1);
 	if (!Action)
 	{
-		LogString("No NextMsgAction, using default MDT_FWS_XFER_TIMEOUT_IND");
 		Action = MDT_FWS_XFER_TIMEOUT_IND;
 	}
 
@@ -308,14 +284,12 @@ void FwsFillDataPacket(MmiUlePdu_common_t* packet)
 
 	d->Action = Action;
 	d->Offset = MmiCtrl.FWS.Offst;
-	char* what = "";
 	switch (Action)
 	{
 		case MDT_FWS_GET_VERSION_CFM:
 		{
 			// override the outgoing msg type
 			MmiUleData_MmiDataTypeFws* dfws = (MmiUleData_MmiDataTypeFws*)d;
-			what = "MDT_FWS_GET_VERSION_CFM";
 			packet->Hdr.Length += /*Offset = StackVersion + ColaRev*/ + sizeof(dfws->ColaBuildNo) + sizeof(dfws->ColaLinkDate); // add fields
 			dfws->StackVersion = MmiCtrl.StackVersion;
 			dfws->ColaRev = ColaRev;
@@ -324,25 +298,18 @@ void FwsFillDataPacket(MmiUlePdu_common_t* packet)
 			break;
 		}
 		case MDT_FWS_START_TRANSFER_CFM:
-			what = "MDT_FWS_START_TRANSFER_CFM";
 			break;
 		case MDT_FWS_ABORT_TRANSFER_IND:
-			what = "MDT_FWS_ABORT_TRANSFER_IND";
 			break;
 		case MDT_FWS_XFER_SUCCESS_IND:
-			what = "MDT_FWS_XFER_SUCCESS_IND";
 			break;
 		case MDT_FWS_XFER_TIMEOUT_IND:
-			what = "MDT_FWS_XFER_TIMEOUT_IND";
 			break;
 		case MDT_FWS_RESULT_SUCCESS_IND:
-			what = "MDT_FWS_RESULT_SUCCESS_IND";
 			break;
 		case MDT_FWS_RESULT_FAILED_IND:
-			what = "MDT_FWS_RESULT_FAILED_IND";
 			break;
 		case MDT_FWS_XFER_PENDED_ON_DTR_IND:
-			what = "MDT_FWS_XFER_DTR_IND";
 			break;
 
 		// not sent from this end:
@@ -351,8 +318,6 @@ void FwsFillDataPacket(MmiUlePdu_common_t* packet)
 		case MDT_FWS_ABORT_TRANSFER_REQ:
 			break;
 	}
-
-	LogString("Sending %s ...", what);
 }
 
 void FwsSetNextAction(MdtFwsAction Action)
@@ -360,16 +325,8 @@ void FwsSetNextAction(MdtFwsAction Action)
 	// check if there was an action we did not send yet
 	MdtFwsAction OldAction = (MmiCtrl.FWS.NextMsgAction >> 1);
 	if (OldAction)
-		LogString("NextMsgAction was MDT_FWS_0x%02x while trying to send MDT_FWS_0x%02x, using last.", OldAction, Action);
 
 	MmiCtrl.FWS.NextMsgAction = (Action << 1);
-
-	if ((MmiCtrl.PendTDR) || (MmiCtrl.islocked == 0))
-	{
-		LogString("DTR is still pending, XferTimeouts %i -> Cannot send MDT_FWS_0x%02x!", MmiCtrl.FWS.XferTimeouts, Action);
-
-		return;
-	}
 
 	// apparently we can send it right away
 	//SendData();
