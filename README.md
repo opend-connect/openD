@@ -309,13 +309,9 @@ In general, the procedure to build a version of this project with CMake is as fo
 
 Please note, that if you want to build an application for a target for DSPG, you have to perform the additional steps:
 
-1. Download the DSPG software package [here](https://www.dspg.com/wpdm-package/cmbs-host-sw-package).
-      - The package contains a directory called `cmbs`. Please copy the complete folder into the directory `src/opend/dspg/`.
-      - The package contains a directory called `CmndLib`. Please copy the complete folder into the directory `src/opend/dspg/pp_hanfun/iwu`.
-2. Apply patch: patch/appcallCFile.patch
-3. Apply patch: patch/appmsgparserCFile.patch
-4. Apply patch: patch/appmsgparserHeader.patch
-5. Apply patch: patch/appsrvCFile.patch
+1. Download the DSPG software package [here](https://www.dspg.com/wpdm-package/cmbs-host-sw-package) (https://www.dspg.com/wpdm-package/cmbs-host-sw-package).
+2. The package contains a directory called `cmbs`. Please copy the complete folder into the directory `src/opend/dspg/`.
+3. The package contains a directory called `CmndLib`. Please copy the complete folder into the directory `src/opend/dspg/pp_hanfun/iwu`.
 
 
 **Build Parameters**
