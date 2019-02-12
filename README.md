@@ -124,7 +124,7 @@ In general, the purpose of the demonstration applications is to provide an overv
   1. Run the UDP_Client_Hanfun and HANFUN_SimpleSwitch_FP demo applications on the Raspberry PI 3 and the HANFUN_SimpleLight_PP demo application on the Nucleo hardware.
 
   2. Open the registration window with the client demo application.<br/>
-  The terminal input to open the registration window and register a device x is "r 1 x".
+  The terminal input to open the registration window and register a device is "r 1 x". Whit "x" you can assign a device address. For example "r 1 1", in this case the next registered device will have the address 1.
 
   3. Press the blue button on the Nucleo hardware to send a registration request.
 
@@ -145,21 +145,21 @@ In general, the purpose of the demonstration applications is to provide an overv
   1. Run the UDP_Client_Hanfun and HANFUN_SimpleSwitch_FP demo applications on the Raspberry PI 3 and the HANFUN_SimpleLight_PP demo application on the Nucleo hardware.
 
   2. Open the registration window with the client demo application.<br/>
-  The terminal input to open the registration window and register a device x is "r 1 x".
+  The terminal input to open the registration window and register a device is "r 1 x". Whit "x" you can assign a device address. For example "r 1 1", in this case the next registered device will have the address 1.
 
   3. Press the blue button on the Nucleo hardware to send a registration request.
 
   4. List the registered devices to check if the portable part has been registered successfully with the client demo application.<br/>
   The terminal input to list the registered devices is "lr".
 
-  5. Send an on command to device x/unit pair u with the client demo application.<br/>
-  The terminal input to turn on the specific led on a device d with unit pair u is "on d u".
+  1. Send an on command to device with the client demo application.<br/>
+  The terminal input to turn on the specific led on a device (device address = x) is "on x 1".
 
-  6. Send an off command to device x/unit pair u with the client demo application.<br/>
-  The terminal input to turn off the specific led on a device d with unit pair u is "off d u".
+  1. Send an off command to device with the client demo application.<br/>
+  The terminal input to turn off the specific led on a device (device address = x) is "off x 1".
 
-  7. Deregister the device with the client demo application.<br/>
-  The terminal input to deregister a device x is "d x".
+  1. De-register the device with the client demo application.<br/>
+  The terminal input to de-register a device (device address = x) is "d x".
 
 **Device management example on the PP to mute audio**
 
