@@ -55,7 +55,23 @@ In general, the purpose of the demonstration applications is to provide an overv
 
   This example is a voice call from the PP to the FP or vise versa. It demonstrates the openD framework opens up a voice call including the management services as device registration, initiating the call and picking up the phone. This framework provides examples for both, the FP and the PP as initiator of the call.
 
-  1. Run the UDP_Client_Legacy and LEGACY_FP_SERVER demo applications on the Raspberry PI 3 and the LEGACY_PP demo application on the Nucleo hardware.
+  1. Run the `FP_LEGACY_CLIENT` and `FP_LEGACY_SERVER` demo applications on the Raspberry PI 3 and the `PP_LEGACY_BASICCALL` demo application on the Nucleo hardware.
+      - UDP FP legacy client:
+        ```sh
+          $ ./fp_legacy_client_rpi
+          ```
+      - UDP FP legacy server:
+        - Dialog FP: You should call the demo application with the serial port as argument.
+          ```sh
+          $ ./fp_legacy_server_rpi <SERIAL PORT>
+
+          Example:
+          $ ./fp_legacy_server_rpi /dev/ttyACM0
+          ```
+        - DSPG FP: You can start the demo application without any arguments.
+          ```sh
+          $ ./fp_legacy_server_rpi
+          ```
 
   2. Open the registration window with the client demo application.<br/>
   The terminal input to open the registration window is the key "w".
@@ -86,7 +102,23 @@ In general, the purpose of the demonstration applications is to provide an overv
 
   The internal call example shows how to handle voice calls from one PP to another PP using a central FP. The FP acts as a central "server" between the to PPs and forwards the call.
 
-  1. Run the UDP_Client_Legacy and LEGACY_FP_SERVER demo applications on the Raspberry PI 3 and the LEGACY_PP_INTERCOM demo application on the two Nucleo hardwares.
+  1. Run the `FP_LEGACY_CLIENT` and `FP_LEGACY_SERVER` demo applications on the Raspberry PI 3 and the `PP_LEGACY_INTERCOM` demo application on the two Nucleo hardwares.
+      - UDP FP legacy client:
+        ```sh
+          $ ./fp_legacy_client_rpi
+          ```
+      - UDP FP legacy server:
+        - Dialog FP: You should call the demo application with the serial port as argument.
+          ```sh
+          $ ./fp_legacy_server_rpi <SERIAL PORT>
+
+          Example:
+          $ ./fp_legacy_server_rpi /dev/ttyACM0
+          ```
+        - DSPG FP: You can start the demo application without any arguments.
+          ```sh
+          $ ./fp_legacy_server_rpi
+          ```
 
   2. Open the registration window with the client demo application.<br/>
   The terminal input to open the registration window is the key "w".
@@ -121,7 +153,23 @@ In general, the purpose of the demonstration applications is to provide an overv
 
   This example utilizes the 'Simple Switch' profile from the HAN FUN specification. THe PP implements this profile provides the possibility to switch a light on the hardware platforms.
 
-  1. Run the UDP_Client_Hanfun and HANFUN_SimpleSwitch_FP demo applications on the Raspberry PI 3 and the HANFUN_SimpleLight_PP demo application on the Nucleo hardware.
+  1. Run the `FP_HANFUN_CLIENT` and `FP_HANFUN_SERVER` demo applications on the Raspberry PI 3 and the `PP_HANFUN` demo application on the Nucleo hardware.
+      - UDP FP HAN-FUN client:
+        ```sh
+          $ ./fp_hanfun_client_rpi
+          ```
+      - UDP FP legacy server:
+        - Dialog FP: You should call the demo application with the serial port as argument.
+          ```sh
+          $ ./fp_hanfun_server_rpi <SERIAL PORT>
+
+          Example:
+          $ ./fp_hanfun_server_rpi /dev/ttyACM0
+          ```
+        - DSPG FP: You can start the demo application without any arguments.
+          ```sh
+          $ ./fp_hanfun_server_rpi
+          ```
 
   2. Open the registration window with the client demo application.<br/>
   The terminal input to open the registration window and register a device is "r 1 x". Whit "x" you can assign a device address. For example "r 1 1", in this case the next registered device will have the address 1.
@@ -142,7 +190,23 @@ In general, the purpose of the demonstration applications is to provide an overv
 
   The simple switch sample application implements a HAN FUN 'On/Off' profile on the PP side. The FP can use the profile to perform toggle operations on the hardware platforms.
 
-  1. Run the UDP_Client_Hanfun and HANFUN_SimpleSwitch_FP demo applications on the Raspberry PI 3 and the HANFUN_SimpleLight_PP demo application on the Nucleo hardware.
+  1. Run the `FP_HANFUN_CLIENT` and `FP_HANFUN_SERVER` demo applications on the Raspberry PI 3 and the `PP_HANFUN` demo application on the Nucleo hardware.
+      - UDP FP HAN-FUN client:
+        ```sh
+          $ ./fp_hanfun_client_rpi
+          ```
+      - UDP FP legacy server:
+        - Dialog FP: You should call the demo application with the serial port as argument.
+          ```sh
+          $ ./fp_hanfun_server_rpi <SERIAL PORT>
+
+          Example:
+          $ ./fp_hanfun_server_rpi /dev/ttyACM0
+          ```
+        - DSPG FP: You can start the demo application without any arguments.
+          ```sh
+          $ ./fp_hanfun_server_rpi
+          ```
 
   2. Open the registration window with the client demo application.<br/>
   The terminal input to open the registration window and register a device is "r 1 x". Whit "x" you can assign a device address. For example "r 1 1", in this case the next registered device will have the address 1.
@@ -165,7 +229,7 @@ In general, the purpose of the demonstration applications is to provide an overv
 
   This example demonstrates how to mute the volume on the PP for an active audio connection with the openD framework. The implementation uses the device management services.
 
-  1. Run the UDP_Client_Legacy and LEGACY_FP_SERVER demo applications on the Raspberry PI 3 and the LEGACY_PP demo application on the Nucleo hardware.
+  1. Run the legacy demo applications on the Raspberry PI 3 and also the legacy demo application on the Nucleo hardware.
 
   2. Open the registration window with the client demo application.<br/>
   The terminal input to open the registration window is the key "w".
@@ -189,7 +253,7 @@ In general, the purpose of the demonstration applications is to provide an overv
 
   This is an example which shows how to use the device management services of the openD framework to change the volume of an active audio connection.
 
-  1. Run the UDP_Client_Legacy and LEGACY_FP_SERVER demo applications on the Raspberry PI 3 and the LEGACY_PP demo application on the Nucleo hardware.
+  1. Run the legacy demo applications on the Raspberry PI 3 and also the legacy demo application on the Nucleo hardware.
 
   2. Open the registration window with the client demo application.<br/>
   The terminal input to open the registration window is the key "w".
@@ -344,30 +408,29 @@ According to step 4, the project provides several options to define which demons
 
 | **APPLICATION** | **Description** |
 |-|-|
-| HANFUN_SimpleSwitch_FP | Application option to build the HAN FUN Simple Switch for the fixed part |
-| HANFUN_SimpleLight_PP | Application option to build the HAN FUN Simple Light for the portable part |
-| UDP_Client_Hanfun | Application option to build the HAN FUN UDP client |
-| LEGACY_PP | Application option to build the legacy demo for the portable part |
-| LEGACY_FP | Application option to build the legacy demo for the fixed part |
-| LEGACY_FP_SERVER | Application option to build the legacy demo for the fixed part server |
-| LEGACY_PP_INTERCOM | Application option to build the legacy demo for the portable part with intercom call |
-| UDP_Client_Legacy | Application option to build the legacy UDP client |
+| FP_HANFUN_SERVER | Application option to build the HAN FUN Simple Switch for the fixed part |
+| PP_HANFUN | Application option to build the HAN FUN Simple Light for the portable part |
+| FP_HANFUN_CLIENT | Application option to build the HAN FUN UDP client |
+| PP_LEGACY_BASICCALL | Application option to build the legacy demo for the portable part |
+| FP_LEGACY_SERVER | Application option to build the legacy demo for the fixed part server |
+| PP_LEGACY_INTERCOM | Application option to build the legacy demo for the portable part with intercom call |
+| FP_LEGACY_CLIENT | Application option to build the legacy UDP client |
 
 **Examples**
 
-Build the application HAN FUN Simple Switch for the fixed part, one for Dialog Semiconductor and one for DSPG:
+Build the application HAN FUN for the fixed part, one for Dialog Semiconductor and one for DSPG:
 
 ```sh
 mkdir build
 cd build
-cmake -DCMAKE_BUILD_TYPE=Release -DTOOLCHAIN_PREFIX=/usr -DCMAKE_TOOLCHAIN_FILE=cmake/toolchains/arm-linux-gnueabihf.cmake -DBOARD=DialogMmiRpi -DAPPLICATION=HANFUN_SimpleSwitch_FP ..
+cmake -DCMAKE_BUILD_TYPE=Release -DTOOLCHAIN_PREFIX=/usr -DCMAKE_TOOLCHAIN_FILE=cmake/toolchains/arm-linux-gnueabihf.cmake -DBOARD=DialogMmiRpi -DAPPLICATION=FP_HANFUN_SERVER ..
 make
 ```
 
 ```sh
 mkdir build
 cd build
-cmake -DCMAKE_BUILD_TYPE=Release -DTOOLCHAIN_PREFIX=/usr -DCMAKE_TOOLCHAIN_FILE=cmake/toolchains/arm-linux-gnueabihf.cmake -DBOARD=DspgDectRpi -DAPPLICATION=HANFUN_SimpleSwitch_FP ..
+cmake -DCMAKE_BUILD_TYPE=Release -DTOOLCHAIN_PREFIX=/usr -DCMAKE_TOOLCHAIN_FILE=cmake/toolchains/arm-linux-gnueabihf.cmake -DBOARD=DspgDectRpi -DAPPLICATION=FP_HANFUN_SERVER ..
 make
 ```
 
@@ -427,8 +490,8 @@ Available options are:
     **Note:** Must be path to your toolchain prefix.
 
 - `APPLICATION` - Determines the application.
-    You can choose between: HANFUN_SimpleSwitch_FP, HANFUN_SimpleLight_PP, UDP_Client
-    For example: `"APPLICATION":"HANFUN_SimpleSwitch_FP"`
+    You can choose between: FP_HANFUN_CLIENT, FP_HANFUN_SERVER, PP_HANFUN, FP_LEGACY_CLIENT, FP_LEGACY_SERVER, PP_LEGACY_BASICCALL, PP_LEGACY_INTERCOM
+    For example: `"APPLICATION":"FP_HANFUN_SERVER"`
 
 - `Board` - Determines the target board.
     You can choose between: DialogMmiRpi, DialogMmiNucleo, DspgDectNucleo, DspgDectRpi

@@ -21,36 +21,36 @@ cmake_minimum_required(VERSION 3.6)
 # Add subdirectories
 #---------------------------------------------------------------------------------------
 
-if(APPLICATION STREQUAL UDP_Client_Hanfun)
+if(APPLICATION STREQUAL FP_HANFUN_CLIENT)
 
-    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/fp_hanfun_client)
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/fp_hanfun_client_rpi)
 
-elseif(APPLICATION STREQUAL UDP_Client_Legacy)
+elseif(APPLICATION STREQUAL FP_LEGACY_CLIENT)
 
-   add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/fp_legacy_client)
+   add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/fp_legacy_client_rpi)
 
-elseif(APPLICATION STREQUAL HANFUN_SimpleSwitch_FP)
+elseif(APPLICATION STREQUAL FP_HANFUN_SERVER AND (BOARD STREQUAL DialogMmiRpi OR BOARD STREQUAL DspgDectRpi))
 
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/fp_hanfun_server_rpi)
 
-elseif(APPLICATION STREQUAL HANFUN_SimpleLight_PP)
+elseif(APPLICATION STREQUAL PP_HANFUN AND (BOARD STREQUAL DialogMmiNucleo OR BOARD STREQUAL DspgDectNucleo))
 
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/pp_hanfun_nucleo)
 
-elseif(APPLICATION STREQUAL LEGACY_FP)
-
-    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/fp_legacy)
-
-elseif(APPLICATION STREQUAL LEGACY_FP_SERVER)
+elseif(APPLICATION STREQUAL FP_LEGACY_SERVER AND (BOARD STREQUAL DialogMmiRpi OR BOARD STREQUAL DspgDectRpi))
 
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/fp_legacy_server_rpi)
 
-elseif(APPLICATION STREQUAL LEGACY_PP)
+elseif(APPLICATION STREQUAL PP_LEGACY_BASICCALL AND (BOARD STREQUAL DialogMmiNucleo OR BOARD STREQUAL DspgDectNucleo))
 
-    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/pp_legacy_nucleo)
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/pp_legacy_basiccall_nucleo)
 
-elseif(APPLICATION STREQUAL LEGACY_PP_INTERCOM)
+elseif(APPLICATION STREQUAL PP_LEGACY_INTERCOM AND (BOARD STREQUAL DialogMmiNucleo OR BOARD STREQUAL DspgDectNucleo))
 
-    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/pp_legacy_nucleo_intercom)
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/pp_legacy_intercom_nucleo)
+
+else()
+
+    message(FATAL_ERROR "The application, board or the combination of both is not supported!")
 
 endif()

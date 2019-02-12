@@ -21,21 +21,21 @@ cmake_minimum_required(VERSION 3.6)
 # Add subdirectories
 #---------------------------------------------------------------------------------------
 
-if(APPLICATION STREQUAL LEGACY_FP OR APPLICATION STREQUAL LEGACY_FP_SERVER)
+if(APPLICATION STREQUAL FP_LEGACY_SERVER)
 
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/cmbs)
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/fp_legacy)
 
-elseif(APPLICATION STREQUAL LEGACY_PP OR APPLICATION STREQUAL LEGACY_PP_INTERCOM)
+elseif(APPLICATION STREQUAL PP_LEGACY_BASICCALL OR APPLICATION STREQUAL PP_LEGACY_INTERCOM)
 
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/pp_legacy)
 
-elseif(APPLICATION STREQUAL HANFUN_SimpleSwitch_FP)
+elseif(APPLICATION STREQUAL FP_HANFUN_SERVER)
 
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/cmbs)
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/fp_hanfun)
 
-elseif(APPLICATION STREQUAL HANFUN_SimpleLight_PP)
+elseif(APPLICATION STREQUAL PP_HANFUN)
 
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/pp_hanfun)
 
