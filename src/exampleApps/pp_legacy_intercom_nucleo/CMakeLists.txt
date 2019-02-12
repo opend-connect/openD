@@ -13,7 +13,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0 OR GPL-2.0-only
 
-project(opend_app_pp2fpConf_ppNucleo)
+project(pp_legacy_intercom_nucleo)
 cmake_minimum_required(VERSION 3.6)
 
 enable_language(ASM)
@@ -29,7 +29,7 @@ set(CMAKE_EXE_LINKER_FLAGS_DEBUG "" CACHE INTERNAL "Linker options for debug bui
 
 
 file(GLOB SOURCE
-    "${CMAKE_CURRENT_SOURCE_DIR}/opend_app_pp2fpConf_pp.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/pp_legacy_intercom.c"
 )
 
 add_executable(${PROJECT_NAME} ${SOURCE})
