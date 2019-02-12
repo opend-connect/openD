@@ -73,7 +73,9 @@ openD_status_t openD_init( void *port )
 
 
     /* Initialize serial port. */
-    openD_ll_serial_init( (char*) port, 115200, _uartRxCallback );
+    if( 0 > openD_ll_serial_init( (char*) port, 115200, _uartRxCallback ) ) {
+      return OPEND_STATUS_ARGUMENT_INVALID;
+    }
 
 
     /* Init HDLC driver. */
