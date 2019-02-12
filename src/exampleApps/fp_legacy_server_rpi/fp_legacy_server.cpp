@@ -638,12 +638,16 @@ int main(int argc, char* argv[]) {
       portname = argv[1];
       break;
     case 1: /* No argument. */
+      break;
+
     default:
+      printf("Error occurred - Argument is invalid!\n");
+      return 0;
       break;
   }
 
   if( OPEND_STATUS_OK != openD_init( portname ) ) {
-    printf("Error occurred!\n");
+    printf("Error occurred - Fail to initialize!\n");
     return 0;
   }
 
