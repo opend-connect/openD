@@ -29,7 +29,6 @@
 
 #include <stdbool.h>
 #include "mmi_def.h"
-#include "log.h"
 
 
 rsuint16	ColaRev = GIT_TAG_REV;

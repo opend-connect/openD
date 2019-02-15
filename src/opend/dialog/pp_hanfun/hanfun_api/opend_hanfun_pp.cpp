@@ -20,12 +20,6 @@
  *
  */
 
-#include <iostream>
-#include <iomanip>
-#include <sstream>
-#include <fstream>
-#include <string>
-
 extern "C"
 {
 #include "mmi_def.h"
@@ -148,7 +142,6 @@ openD_status_t openD_hanfunApi_pp_init()
   /* Initialize the transport IWU object. */
 	g_transport->initialize();
 	if ( !g_transport->is_initialized() ) {
-		std::cout.clear (); std::cout << "\nTransport initialization error.\nExiting...\n" << std::endl; std::cout.clear (); std::cerr.clear ();
 		return OPEND_STATUS_FAIL;
 	}
 
@@ -214,6 +207,7 @@ openD_status_t opend_hanfun_registerDevice()
 
   /* Send a register device request. */
   g_device->unit0()->device_management()->register_device();
+  hDevMgmtConfirm.service = OPEND_HANFUNAPI_DEVICE_MANAGEMENT_REGISTER_DEVICE;
   hDevMgmtConfirm.status = OPEND_STATUS_OK;
   openD_hanfun_devMgmtCfm(&hDevMgmtConfirm);
 

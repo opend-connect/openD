@@ -27,8 +27,6 @@
  *
  */
 
-#include <string>
-
 #include "HanFunTask.h"
 
 #include "hanfun.h"
