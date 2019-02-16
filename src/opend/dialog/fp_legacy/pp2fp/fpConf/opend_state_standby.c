@@ -304,13 +304,16 @@ bool _message_primitive_cfm_ind( void *param ) {
       pCfSysCtrl->CfSysStatus.CallInfo.HsId.HandsetId = ((ApiFpCcSetupIndType*)param)->CallReference.HandsetId; //save HandsetId
 #endif
 
-      /* Send openD call indication to the application. */
-      cIndication.service = OPEND_CALLAPI_SETUP;
-      util_memcpy(cIndication.param.setup.pmid, &((ApiFpCcSetupIndType*)param)->TerminalId, 2);
-      openD_call_indication( &cIndication );
+      if( pCfSysCtrl->CfSysStatus.CallInfo.CallClass != API_CC_INTERNAL )
+      {
+        /* Send openD call indication to the application. */
+        cIndication.service = OPEND_CALLAPI_SETUP;
+        util_memcpy(cIndication.param.setup.pmid, &((ApiFpCcSetupIndType*)param)->TerminalId, 2);
+        openD_call_indication( &cIndication );
 
-      /* Change to call state. */
-      msManager_changeState( &opendStateCtxt, OPEND_STATE_CALL );
+        /* Change to call state. */
+        msManager_changeState( &opendStateCtxt, OPEND_STATE_CALL );
+      }
       break;
 
     case API_FP_CC_SETUP_CFM:
@@ -349,11 +352,22 @@ bool _message_primitive_cfm_ind( void *param ) {
       MmiShowLedStatus();
       break;
 
+    case API_FP_CC_RELEASE_IND:
+      CallCtrlMailHandler((RosMailType *)param);
+
+      /* Send openD call indication to the application. */
+      cIndication.service = OPEND_CALLAPI_RELEASE;
+      openD_call_indication( &cIndication );
+      break;
+
     case API_FP_CC_CONNECT_IND:
       CallCtrlMailHandler((RosMailType *)param);
 
-      /* Change to standby state. */
-      msManager_changeState( &opendStateCtxt, OPEND_STATE_CALL );
+      if( pCfSysCtrl->CfSysStatus.CallInfo.CallClass != API_CC_INTERNAL )
+      {
+        /* Change to standby state. */
+        msManager_changeState( &opendStateCtxt, OPEND_STATE_CALL );
+      }
       break;
 
     case API_FP_MM_HANDSET_PRESENT_IND:
@@ -373,6 +387,11 @@ bool _message_primitive_cfm_ind( void *param ) {
       sConfirm.status = OPEND_STATUS_OK;
       openD_sub_confirmation( &sConfirm );
       break;
+
+    case API_FP_CC_CALL_PROC_CFM:
+      CallCtrlMailHandler((RosMailType *)param);
+      break;
+
   }
 
   return true;
