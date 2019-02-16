@@ -20,12 +20,6 @@
  *
  */
 
-#include <iostream>
-#include <iomanip>
-#include <sstream>
-#include <fstream>
-#include <string>
-
 extern "C"
 {
 #include "mmi_def.h"
@@ -148,17 +142,11 @@ openD_status_t openD_hanfunApi_pp_init()
   /* Initialize the transport IWU object. */
 	g_transport->initialize();
 	if ( !g_transport->is_initialized() ) {
-		std::cout.clear (); std::cout << "\nTransport initialization error.\nExiting...\n" << std::endl; std::cout.clear (); std::cerr.clear ();
 		return OPEND_STATUS_FAIL;
 	}
 
   g_transport->add((HF::Transport::Endpoint *) g_device);
   g_transport->add(new HF::ULE::Link(g_transport));
-
-  if(opend_hanfun_createProfile(OPEND_HANFUNAPI_SIMPLE_LIGHT, 1) != OPEND_STATUS_OK)
-	{
-		return OPEND_STATUS_FAIL;
-	}
 
   return OPEND_STATUS_OK;
 }
@@ -171,7 +159,7 @@ openD_status_t opend_hanfun_createProfile(openD_hanfunApi_profile_t opend_profil
     case OPEND_HANFUNAPI_SIMPLE_LIGHT:
       g_simple_light = new SimpleLight(id, *g_device);
       break;
-    case OPEND_HANFUNAPI_SIMPLE_ONOFF_SWITCHABLE:
+    case OPEND_HANFUNAPI_SIMPLE_ONOFF_SWITCH:
       g_simple_switch = new SimpleSwitch(id, *g_device);
       break;
     case OPEND_HANFUNAPI_MOTION_DETECTOR:
@@ -214,6 +202,7 @@ openD_status_t opend_hanfun_registerDevice()
 
   /* Send a register device request. */
   g_device->unit0()->device_management()->register_device();
+  hDevMgmtConfirm.service = OPEND_HANFUNAPI_DEVICE_MANAGEMENT_REGISTER_DEVICE;
   hDevMgmtConfirm.status = OPEND_STATUS_OK;
   openD_hanfun_devMgmtCfm(&hDevMgmtConfirm);
 
@@ -249,6 +238,7 @@ openD_status_t openD_hanfunApi_pp_devMgmtRequest( openD_hanfunApi_devMgmtReq_t *
 openD_status_t openD_hanfunApi_pp_profileRequest( openD_hanfunApi_profileReq_t *hProfileRequest )
 {
   openD_hanfunApi_profileCfm_t hProfileConfirm;
+  HF::Protocol::Address device(0, 1);
 
   if(hProfileRequest == NULL)
   {
@@ -262,7 +252,7 @@ openD_status_t openD_hanfunApi_pp_profileRequest( openD_hanfunApi_profileReq_t *
       {
         case OPEND_HANFUN_IONOFF_CLIENT_TOGGLE:
           /* Send a toggle request. */
-          g_simple_switch->toggle();
+          g_simple_switch->toggle(device);
           hProfileConfirm.status = OPEND_STATUS_OK;
           hProfileConfirm.simpleOnOffSwitch.service = OPEND_HANFUN_IONOFF_CLIENT_TOGGLE;
           openD_hanfun_profileCfm(&hProfileConfirm);

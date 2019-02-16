@@ -63,6 +63,18 @@ openD_status_t openD_hanfunApi_pp_devMgmtRequest( openD_hanfunApi_devMgmtReq_t *
  */
 openD_status_t openD_hanfunApi_pp_profileRequest( openD_hanfunApi_profileReq_t *hProfileRequest );
 
+/**
+ * @brief   openD HANFUN create profile.
+ *
+ * @details Create a profile for the node device.
+ *
+ * @param   opend_profile Enum of the HANFUN profile.
+ * @param   id ID of the HANFUN profile.
+ *
+ * @retval  Status of the operation (@ref openD_status_t).
+ */
+openD_status_t opend_hanfun_createProfile(openD_hanfunApi_profile_t opend_profile, uint8_t id);
+
 /*! @} defgroup OPEND_HANFUN_API_PP */
 
 #endif /* __OPEND_HANFUN_API_PP_H__ */

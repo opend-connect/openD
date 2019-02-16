@@ -159,7 +159,6 @@ RosMailType *RosMailAllocate(RosTaskIdType uProgramId, RosTaskIdType uTaskId, Ro
 	uint8_t *bConPtr;
 	bConPtr = (uint8_t *)malloc(u16Size+5); // 2: u16Size, 1: infohdr, 1: uProgramId, 1: uTaskId
 	if(!bConPtr){
-		printf("Inside %s MALLOC FAILED  !!!!!!!!!!!!!!!!! \n\n\n\n", __FUNCTION__);
 		while(1);
 	}
 	*bConPtr 	 = (uint8_t) ((u16Size&0xff00)>>8);
@@ -215,46 +214,9 @@ void mmiRosTimerEmu_Init() {
 
 }
 
-//TODO: commended nucleo port
-// static void mmiRosTimerEmu_TimerHandler( int sig, siginfo_t *si, void *uc )
-// {
-// 	timer_t *tidp;
-// 	tidp = si->si_value.sival_ptr;
-// 	uint8_t  i;
-
-// 	for (i=0; i<MMI_ROS_TIMER_MAX_TIMERS; i++) {
-// 		if ( mmiRosTimerEmu_Timer_Array[i]->enabled &&
-// 				mmiRosTimerEmu_Timer_Array[i]->timerIdInternal == *tidp ) {
-
-// 			//printf("[%s] TICKED ID:%04X PAR:%04X\n ", __FUNCTION__, mmiRosTimerEmu_Timer_Array[i]->timerId,
-// 			//		mmiRosTimerEmu_Timer_Array[i]->timerConfigParam);
-
-// 			RosMailTimeoutType* my_timeout = (RosMailTimeoutType*) RosMailAllocate(COLA_TASK,
-// 																					COLA_TASK, sizeof(RosMailTimeoutType));
-
-// 			my_timeout->Primitive = mmiRosTimerEmu_Timer_Array[i]->timerConfigPrim;
-// 			my_timeout->Parameter = mmiRosTimerEmu_Timer_Array[i]->timerConfigParam;
-
-// 			ColaTask((RosMailType*) my_timeout);
-// 			return;
-// 		}
-
-// 	}
-// }
-
-
 static int mmiRosTimerEmu_SetTimer( timer_t *timer_id, int expire_ms, int interval_ms ) {
 
-//TODO: commended nucleo port
-	// struct itimerspec its;
 	int errornum = 0;
-
-	// its.it_interval.tv_sec = interval_ms / 1000;
-	// its.it_interval.tv_nsec = (interval_ms % 1000) * 1000000;
-	// its.it_value.tv_sec = expire_ms / 1000;
-	// its.it_value.tv_nsec = (expire_ms % 1000) * 1000000;
-	// if (timer_settime(*timer_id, 0, &its, NULL))
-	// 	errornum = errno;
 
 	return errornum;
 }
@@ -262,36 +224,6 @@ static int mmiRosTimerEmu_SetTimer( timer_t *timer_id, int expire_ms, int interv
 
 static int mmiRosTimerEmu_CreateTimer(timer_t *timer_id, int expire_ms, int interval_ms )
 {
-
-//TODO: commended nucleo port
-
-// 	struct sigevent         te;
-// 	struct itimerspec       its;
-// 	struct sigaction        sa;
-//  ;
-
-// 	/* Set up signal handler. */
-// 	sa.sa_flags = SA_SIGINFO;
-// 	sa.sa_sigaction = mmiRosTimerEmu_TimerHandler;
-// 	sigemptyset(&sa.sa_mask);
-// 	if (sigaction(SIGRTMIN, &sa, NULL) == -1)
-// 	{
-// 		printf("%s: Failed to setup signal handling for\n", __FUNCTION__);
-// 		return(-1);
-// 	}
-
-// 	/* Set and enable alarm */
-// 	te.sigev_notify = SIGEV_SIGNAL;
-// 	te.sigev_signo = SIGRTMIN;
-// 	te.sigev_value.sival_ptr = timer_id;
-// 	timer_create(CLOCK_REALTIME, &te, timer_id);
-
-// 	its.it_interval.tv_sec = interval_ms / 1000;
-// 	its.it_interval.tv_nsec = (interval_ms % 1000) * 1000000;
-// 	its.it_value.tv_sec = expire_ms / 1000;
-// 	its.it_value.tv_nsec = (expire_ms % 1000) * 1000000;
-// 	timer_settime(*timer_id, 0, &its, NULL);
-
 	return(0);
 }
 
@@ -328,7 +260,6 @@ void RosTimerStart(RosTimerIdType TimerId, RsTimerTickType Value, const RosTimer
 		while ( mmiRosTimerEmu_Timer_Array[i]->timerId != 0) {
 			i++;
 			if (i>=MMI_ROS_TIMER_MAX_TIMERS) {
-				printf("\n#### CANNOT CREATE MORE TIMERS!!! ####\n");
 				return;
 			}
 		}
@@ -489,7 +420,7 @@ static void s_mmi_default(const RosMailType* p_mail)
           case API_PP_ULE_WAKEUP_EVENT_NON_ULP:
             case API_PP_ULE_WAKEUP_EVENT_UNDEF:
           default:
-            SendApiPpUleSubsStatusReq(COLA_TASK);
+            // SendApiPpUleSubsStatusReq(COLA_TASK);
             break;
         }
 		}

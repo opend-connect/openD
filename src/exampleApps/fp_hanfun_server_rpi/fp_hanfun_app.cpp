@@ -163,6 +163,7 @@ void devMgmtConfirmCallback(openD_hanfunApi_devMgmtCfm_t *hDevMgmtConfirm)
 void profileIndCallback( openD_hanfunApi_profileInd_t *hProfileInd )
 {
   openD_status_t confirmAndIndStatusByte = hProfileInd->status;
+  size_t len;
 
   if(confirmAndIndStatusByte != OPEND_STATUS_OK)
   {
@@ -175,7 +176,17 @@ void profileIndCallback( openD_hanfunApi_profileInd_t *hProfileInd )
       switch(hProfileInd->simpleLight.service)
 	    {
 		    case OPEND_HANFUN_IONOFF_SERVER_TOGGLE_ADDR:
-          /* INDICATION IMPLEMENT HERE */
+          printf("Toggle LED indication from PP received.\n");
+          j["version"] = "1.0.0";
+          j["module"] = "hanfun";
+          j["primitive"] = "confirmation";
+          j["service"] = "IOnOffClientToggle";
+          j["status"] = "OK";
+          j["param1"] = "0";
+          j["param2"] = "0";
+          j["param3"] = "0";
+          len = strlen((j.dump()).c_str())+1;
+          udp_send((j.dump()).c_str(), len);
 		      break;
         case OPEND_HANFUN_IONOFF_SERVER_ON_ADDR:
           /* INDICATION IMPLEMENT HERE */

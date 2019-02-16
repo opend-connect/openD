@@ -28,6 +28,8 @@
 
 using namespace std;
 
+static bool deviceRegistered;
+
 openD_ll_gpio_button_ctxt_t button01;
 
 /**
@@ -85,10 +87,12 @@ void devMgmtConfirmCallback(openD_hanfunApi_devMgmtCfm_t *hDevMgmtConfirm)
       if(confirmAndIndStatusByte == OPEND_STATUS_OK)
       {
         successConInd();
+        deviceRegistered = true;
       }
       else
       {
         failureConInd();
+        deviceRegistered = false;
       }
 	    break;
 	  default:
@@ -140,14 +144,35 @@ static int handle_user_input( void )
 
   if( OPEND_LL_GPIO_BUTTON_PRESSED == openD_ll_gpio_readButton( &button01, OPEND_LL_GPIO_PIN_USER_BUTTON_01 ) ) {
 
+#if defined PROFILE_SIMPLE_LIGHT
     openD_hanfunApi_devMgmtReq_t hMgmtRequest;
     hMgmtRequest.service=OPEND_HANFUNAPI_DEVICE_MANAGEMENT_REGISTER_DEVICE;
     /* Send a device management register request to the concentrator. */
     if( openD_hanfunApi_pp_devMgmtRequest(&hMgmtRequest) == OPEND_STATUS_OK ) {
 
     }
-  }
+#elif defined PROFILE_SIMPLE_SWITCH
+    if(deviceRegistered == false)
+    {
+      openD_hanfunApi_devMgmtReq_t hMgmtRequest;
+      hMgmtRequest.service=OPEND_HANFUNAPI_DEVICE_MANAGEMENT_REGISTER_DEVICE;
+      /* Send a device management register request to the concentrator. */
+      if( openD_hanfunApi_pp_devMgmtRequest(&hMgmtRequest) == OPEND_STATUS_OK ) {
 
+      }
+    }
+    else
+    {
+      openD_hanfunApi_profileReq_t hProfileRequest;
+      hProfileRequest.profile=OPEND_HANFUNAPI_SIMPLE_ONOFF_SWITCH;
+      hProfileRequest.simpleOnOffSwitch.service=OPEND_HANFUN_IONOFF_CLIENT_TOGGLE;
+      /* Send a profile toggle request to the concentrator. */
+      if( openD_hanfunApi_pp_profileRequest(&hProfileRequest) == OPEND_STATUS_OK ) {
+
+      }
+    }
+#endif
+  }
   return 1;
 }
 
@@ -157,6 +182,8 @@ int main(int argc, char *argv[])
 {
 
   openD_init( NULL );
+
+  deviceRegistered = false;
 
   /* Variable for the openD primitives. */
 	openD_hanfunApiPrimitives openD_hanfunApiPrimitives;
@@ -176,6 +203,18 @@ int main(int argc, char *argv[])
 	{
 
   }
+
+#if defined PROFILE_SIMPLE_LIGHT
+  if(opend_hanfun_createProfile(OPEND_HANFUNAPI_SIMPLE_LIGHT, 1) != OPEND_STATUS_OK)
+  {
+
+  }
+#elif defined PROFILE_SIMPLE_SWITCH
+  if(opend_hanfun_createProfile(OPEND_HANFUNAPI_SIMPLE_ONOFF_SWITCH, 1) != OPEND_STATUS_OK)
+  {
+
+  }
+#endif
 
   while( 1 )
 	{

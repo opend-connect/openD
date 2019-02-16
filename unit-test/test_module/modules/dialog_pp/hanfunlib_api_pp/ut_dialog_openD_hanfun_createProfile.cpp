@@ -64,13 +64,26 @@ class ut_dialog_opend_hanfun_createProfile: public testing::Test
  * Unit tests
  * */
 /*!
- * \brief Tests the function opend_hanfun_createProfile.
+ * \brief Tests the function opend_hanfun_createProfile_simpleOnOffSwitch.
  *
  * \details Verifies if the functions succeeds if the mock initIwu returns true.
  */
-TEST_F( ut_dialog_opend_hanfun_createProfile, ut_dialog_opend_hanfun_createProfile )
+TEST_F( ut_dialog_opend_hanfun_createProfile, ut_dialog_opend_hanfun_createProfile_simpleOnOffSwitch )
 {
-    openD_hanfunApi_profile_t profile = OPEND_HANFUNAPI_SIMPLE_ONOFF_SWITCHABLE;
+    openD_hanfunApi_profile_t profile = OPEND_HANFUNAPI_SIMPLE_ONOFF_SWITCH;
+    uint8_t id;
+
+    EXPECT_EQ( OPEND_STATUS_OK, opend_hanfun_createProfile( profile, id ) );
+}
+
+/*!
+ * \brief Tests the function opend_hanfun_createProfile_simpleLight.
+ *
+ * \details Verifies if the functions succeeds if the mock initIwu returns true.
+ */
+TEST_F( ut_dialog_opend_hanfun_createProfile, ut_dialog_opend_hanfun_createProfile_simpleLight)
+{
+    openD_hanfunApi_profile_t profile = OPEND_HANFUNAPI_SIMPLE_LIGHT;
     uint8_t id;
 
     EXPECT_EQ( OPEND_STATUS_OK, opend_hanfun_createProfile( profile, id ) );

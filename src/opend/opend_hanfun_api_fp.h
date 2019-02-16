@@ -175,6 +175,45 @@ namespace BindManagement
 
 }
 
+/*!
+ * Simple Light struct profile for the node device.
+ */
+class SimpleLight: public HF::Units::Unit<HF::Profiles::SimpleLight>
+{
+  public:
+
+  SimpleLight (uint8_t id, HF::IDevice &device) :
+    HF::Units::Unit<HF::Profiles::SimpleLight>(id, device)
+  {}
+
+  /**
+   * @brief   Received turn on the led command.
+   *
+   * @details Save the state of the received on command in the HANFUN library.
+   *
+   * @param   source Source address of the received message.
+   */
+  void on (HF::Protocol::Address &source);
+
+  /**
+   * @brief   Received turn off the led command.
+   *
+   * @details Save the state of the received off command in the HANFUN library.
+   *
+   * @param   source Source address of the received message.
+   */
+  void off (HF::Protocol::Address &source);
+
+  /**
+   * @brief   Received toggle the led command.
+   *
+   * @details Save the state of the received toggle command in the HANFUN library.
+   *
+   * @param   source Source address of the received message.
+   */
+  void toggle (HF::Protocol::Address &source);
+};
+
 namespace Commands
 {
   typedef HF::Interfaces::Alert::Server Alert;

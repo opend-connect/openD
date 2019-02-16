@@ -36,6 +36,11 @@
 #include "dialog/fp_hanfun/iwu/hf_transport.h"
 
 
+/*!
+ * Static and global SimpleLight profile object.
+ */
+static SimpleLight * g_simple_light = nullptr;
+
 /**
  * @brief   Handle device information.
  *
@@ -57,6 +62,45 @@ static void handle_device_infomation (HF::Common::ByteArray &payload, uint16_t o
  * @retval  Status of the operation.
  */
 static openD_status_t simpleOnOffSwitchService( openD_hanfunApi_profileReq_t *hProfileRequest, HF::Protocol::Address device );
+
+void SimpleLight::on (HF::Protocol::Address &source)
+{
+  openD_hanfunApi_profileInd_t hProfileInd;
+
+  hProfileInd.profile = OPEND_HANFUNAPI_SIMPLE_LIGHT;
+  hProfileInd.simpleLight.service = OPEND_HANFUN_IONOFF_SERVER_ON_ADDR;
+  hProfileInd.status = OPEND_STATUS_OK;
+  g_simple_light->HF::Units::Unit<HF::Profiles::SimpleLight>::on( source );
+  hProfileInd.simpleLight.param.getState.state = (bool) g_simple_light->state();
+
+  openD_hanfun_profileInd(&hProfileInd);
+}
+
+void SimpleLight::off (HF::Protocol::Address &source)
+{
+  openD_hanfunApi_profileInd_t hProfileInd;
+
+  hProfileInd.profile = OPEND_HANFUNAPI_SIMPLE_LIGHT;
+  hProfileInd.simpleLight.service = OPEND_HANFUN_IONOFF_SERVER_OFF_ADDR;
+  hProfileInd.status = OPEND_STATUS_OK;
+  g_simple_light->HF::Units::Unit<HF::Profiles::SimpleLight>::off( source );
+  hProfileInd.simpleLight.param.getState.state = (bool) g_simple_light->state();
+
+  openD_hanfun_profileInd(&hProfileInd);
+}
+
+void SimpleLight::toggle (HF::Protocol::Address &source)
+{
+  openD_hanfunApi_profileInd_t hProfileInd;
+
+  hProfileInd.profile = OPEND_HANFUNAPI_SIMPLE_LIGHT;
+  hProfileInd.simpleLight.service = OPEND_HANFUN_IONOFF_SERVER_TOGGLE_ADDR;
+  hProfileInd.status = OPEND_STATUS_OK;
+  g_simple_light->HF::Units::Unit<HF::Profiles::SimpleLight>::toggle( source );
+  hProfileInd.simpleLight.param.getState.state = (bool) g_simple_light->state();
+
+  openD_hanfun_profileInd(&hProfileInd);
+}
 
 /* DeviceManagement::Entries::save. */
 HF::Common::Result DeviceManagement::Entries::save (const HF::Core::DeviceManagement::Device &device)
@@ -406,6 +450,8 @@ openD_status_t openD_hanfunApi_fp_init( HF::Transport::Layer *transport )
   FP * fp = FP::instance();
 
   transport->add(fp);
+
+  g_simple_light = new SimpleLight(1, *fp);
 
   return OPEND_STATUS_OK;
 }
