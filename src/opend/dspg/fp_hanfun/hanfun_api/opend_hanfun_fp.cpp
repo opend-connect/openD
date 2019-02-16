@@ -39,7 +39,13 @@ extern "C"
   #include "apphan.h"
   #include "appmsgparser.h"
   #include "appsrv.h"
+  #include "cmbs_han.h"
 }
+
+/*!
+ * Static and global SimpleLight profile object.
+ */
+static SimpleLight * g_simple_light = nullptr;
 
 /**
  * HANFUN address of the node device.
@@ -65,6 +71,15 @@ extern ST_HAN_REG_STAGE_1_STATUS st_Status;
 void registerSuccessClb(uint16_t address, uint8_t handsetId);
 
 /**
+ * @brief   HANFUN message callback.
+ *
+ * @details Handle the HANFUN message callback.
+ *
+ * @param   ptrHanfunData Pointer to the HANFUN message struct.
+ */
+void hanfunMessageClb(void* ptrHanfunData);
+
+/**
  * @brief   Handle device information.
  *
  * @details Handle the received device information.
@@ -85,6 +100,45 @@ static void handle_device_infomation (HF::Common::ByteArray &payload, uint16_t o
  * @retval  Status of the operation.
  */
 static openD_status_t simpleOnOffSwitchService( openD_hanfunApi_profileReq_t *hProfileRequest, HF::Protocol::Address device );
+
+void SimpleLight::on (HF::Protocol::Address &source)
+{
+  openD_hanfunApi_profileInd_t hProfileInd;
+
+  hProfileInd.profile = OPEND_HANFUNAPI_SIMPLE_LIGHT;
+  hProfileInd.simpleLight.service = OPEND_HANFUN_IONOFF_SERVER_ON_ADDR;
+  hProfileInd.status = OPEND_STATUS_OK;
+  g_simple_light->HF::Units::Unit<HF::Profiles::SimpleLight>::on( source );
+  hProfileInd.simpleLight.param.getState.state = (bool) g_simple_light->state();
+
+  openD_hanfun_profileInd(&hProfileInd);
+}
+
+void SimpleLight::off (HF::Protocol::Address &source)
+{
+  openD_hanfunApi_profileInd_t hProfileInd;
+
+  hProfileInd.profile = OPEND_HANFUNAPI_SIMPLE_LIGHT;
+  hProfileInd.simpleLight.service = OPEND_HANFUN_IONOFF_SERVER_OFF_ADDR;
+  hProfileInd.status = OPEND_STATUS_OK;
+  g_simple_light->HF::Units::Unit<HF::Profiles::SimpleLight>::off( source );
+  hProfileInd.simpleLight.param.getState.state = (bool) g_simple_light->state();
+
+  openD_hanfun_profileInd(&hProfileInd);
+}
+
+void SimpleLight::toggle (HF::Protocol::Address &source)
+{
+  openD_hanfunApi_profileInd_t hProfileInd;
+
+  hProfileInd.profile = OPEND_HANFUNAPI_SIMPLE_LIGHT;
+  hProfileInd.simpleLight.service = OPEND_HANFUN_IONOFF_SERVER_TOGGLE_ADDR;
+  hProfileInd.status = OPEND_STATUS_OK;
+  g_simple_light->HF::Units::Unit<HF::Profiles::SimpleLight>::toggle( source );
+  hProfileInd.simpleLight.param.getState.state = (bool) g_simple_light->state();
+
+  openD_hanfun_profileInd(&hProfileInd);
+}
 
 /* DeviceManagement::Entries::save. */
 HF::Common::Result DeviceManagement::Entries::save (const HF::Core::DeviceManagement::Device &device)
@@ -435,9 +489,11 @@ openD_status_t openD_hanfunApi_fp_init( HF::Transport::Layer *transport )
 
   transport->add(fp);
 
+  g_simple_light = new SimpleLight(1, *fp);
+
   app_HanRegularStart(TRUE);
 
-  initMsgParserSub(registerSuccessClb);
+  initMsgParserSub(registerSuccessClb, hanfunMessageClb);
 
   return OPEND_STATUS_OK;
 }
@@ -718,6 +774,34 @@ void registerSuccessClb(uint16_t address, uint8_t handsetId)
 
   /* Data for the register finished indication. */
   const uint8_t data[] = { 0x7F, 0xFF, 0, 0, 0, 0, 0, 0, 0, 1, 0x80, 1, 1, 0, 7, 0, 0, 1, 3, 1, 1, 8 };
+
+  /* Size of the register finished data. */
+  size_t size = sizeof(data);
+
+  /* Notify the HANFUN library about the connected device. */
+  transport->connected(dev_id, st_Status.u8_IPUI);
+
+  /* Register finished indication received. */
+  transport->receive(dev_id, data, size);
+}
+
+void hanfunMessageClb(void* ptrHanfunData)
+{
+  ST_IE_HAN_MSG hanMsg = *(ST_IE_HAN_MSG*)ptrHanfunData;
+
+  if(hanMsg.u16_InterfaceId != 0x0200)
+  {
+    return;
+  }
+
+  /* HAN-FUN Transport Layer over Dialog's ULE Stack. */
+  HF::ULE::Transport * transport = HF::ULE::Transport::instance();
+
+  /* HANFUN address of the connected device. */
+  const uint8_t dev_id = 1;
+
+  /* Data for the register finished indication. */
+  const uint8_t data[] = { 0x0, 0x1, 0x1, 0, 0, 0x1, 0, 0, 0x1E, 1, 0x82, 0, 0x3, 0, 0, 0, 0, 1, 3, 1, 1, 1 };
 
   /* Size of the register finished data. */
   size_t size = sizeof(data);

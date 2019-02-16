@@ -32,6 +32,7 @@
 #include "CmndMsg_DeviceManagement.h"
 #include "opend.h"
 #include "CmndMsg_KeepAlive.h"
+#include "CmndMsg_OnOff.h"
 #include "ule.h"
 
 
@@ -107,6 +108,11 @@ openD_status_t openD_hanfunApi_pp_devMgmtRequest( openD_hanfunApi_devMgmtReq_t *
   return OPEND_STATUS_ARGUMENT_INVALID;
 }
 
+openD_status_t opend_hanfun_createProfile(openD_hanfunApi_profile_t opend_profile, uint8_t id)
+{
+  return OPEND_STATUS_OK;
+}
+
 void sendKeepLive()
 {
 	/* Keep alive to base. */
@@ -123,6 +129,8 @@ void sendKeepLive()
 openD_status_t openD_hanfunApi_pp_profileRequest( openD_hanfunApi_profileReq_t *hProfileRequest )
 {
   openD_hanfunApi_profileCfm_t hProfileConfirm;
+  t_st_hanCmndApiMsg st_hanCmndApiMsg;
+  t_st_Packet        st_Packet = { 0 };
 
   if(hProfileRequest == NULL)
   {
@@ -138,6 +146,15 @@ openD_status_t openD_hanfunApi_pp_profileRequest( openD_hanfunApi_profileReq_t *
 
           hProfileConfirm.status = OPEND_STATUS_OK;
           hProfileConfirm.simpleOnOffSwitch.service = OPEND_HANFUN_IONOFF_CLIENT_TOGGLE;
+
+          p_CmndMsg_OnOff_CreateToggleReq( &st_hanCmndApiMsg, 0 );
+          st_Packet.length = p_CmndApiPacket_CreateFromCmndApiMsg(st_Packet.buffer, &st_hanCmndApiMsg);
+          p_CmndMsgLog_PrintTxBuffer(st_Packet.length, st_Packet.buffer);
+          if(sendFctPtr)
+          {
+            sendFctPtr(st_Packet.buffer, st_Packet.length);
+          }
+
           openD_hanfun_profileCfm(&hProfileConfirm);
           return OPEND_STATUS_OK;
           break;
