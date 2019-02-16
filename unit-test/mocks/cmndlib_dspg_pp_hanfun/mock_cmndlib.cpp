@@ -50,6 +50,12 @@ bool p_CmndMsg_KeepAlive_CreateImAliveReq( OUT t_st_hanCmndApiMsg* pst_hanCmndAp
     return ObjCmndlib->p_CmndMsg_KeepAlive_CreateImAliveReq( pst_hanCmndApiMsg );
 }
 
+bool p_CmndMsg_OnOff_CreateToggleReq( OUT t_st_hanCmndApiMsg* pst_hanCmndApiMsg, u8 u8_UnitId )
+{
+    assert( ObjCmndlib != NULL );
+    return ObjCmndlib->p_CmndMsg_OnOff_CreateToggleReq( pst_hanCmndApiMsg, u8_UnitId );
+}
+
 bool p_hanCmndApi_HandleByte( t_stReceiveData* context, u8 byte, OUT t_st_Msg* msg )
 {
     assert( ObjCmndlib != NULL );
