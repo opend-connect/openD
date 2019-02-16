@@ -151,9 +151,9 @@ In general, the purpose of the demonstration applications is to provide an overv
 
 **Simple light with the HAN FUN 'Simple Switch' profile**
 
-  This example utilizes the 'Simple Switch' profile from the HAN FUN specification. THe PP implements this profile provides the possibility to switch a light on the hardware platforms.
+  This example utilizes the 'Simple Switch' profile from the HAN FUN specification. The PP implements this profile provides the possibility to switch a light on the hardware platforms.
 
-  1. Run the `FP_HANFUN_CLIENT` and `FP_HANFUN_SERVER` demo applications on the Raspberry PI 3 and the `PP_HANFUN` demo application on the Nucleo hardware.
+  1. Run the `FP_HANFUN_CLIENT` and `FP_HANFUN_SERVER` demo applications on the Raspberry PI 3 and the `PP_HANFUN_SIMPLELIGHT` demo application on the Nucleo hardware.
       - UDP FP HAN-FUN client:
         ```sh
           $ ./fp_hanfun_client_rpi
@@ -182,15 +182,20 @@ In general, the purpose of the demonstration applications is to provide an overv
   5. Close the registration window with the client demo application.<br/>
   The terminal input to close the registration window is "r 0".
 
-  6. Send a toggle command to device x/unit pair u with the client demo application.<br/>
-  The terminal input to toggle the specific led on a device d with unit pair u is "tog d u".
+  1. Send a toggle command to device with the client demo application.<br/>
+  The terminal input to toggle the specific led on a device (device address = x) is "tog d 1".
 
+  1. Send an on command to device with the client demo application.<br/>
+  The terminal input to turn on the specific led on a device (device address = x) is "on x 1".
 
-**Simple switch with the HAN FUN 'On/Off' profile**
+  1. Send an off command to device with the client demo application.<br/>
+  The terminal input to turn off the specific led on a device (device address = x) is "off x 1".
 
-  The simple switch sample application implements a HAN FUN 'On/Off' profile on the PP side. The FP can use the profile to perform toggle operations on the hardware platforms.
+**Simple switch with the HAN FUN 'Simple light' profile**
 
-  1. Run the `FP_HANFUN_CLIENT` and `FP_HANFUN_SERVER` demo applications on the Raspberry PI 3 and the `PP_HANFUN` demo application on the Nucleo hardware.
+  The simple switch sample application implements a HAN FUN 'On/Off' profile on the PP side. On the FP side the sample application implements a HAN FUN 'Simple light' profile. You can use the button on the PP hardware to toggle a 'On/Off' indication at the FP.
+
+  1. Run the `FP_HANFUN_CLIENT` and `FP_HANFUN_SERVER` demo applications on the Raspberry PI 3 and the `PP_HANFUN_SIMPLESWITCH` demo application on the Nucleo hardware.
       - UDP FP HAN-FUN client:
         ```sh
           $ ./fp_hanfun_client_rpi
@@ -216,11 +221,7 @@ In general, the purpose of the demonstration applications is to provide an overv
   4. List the registered devices to check if the portable part has been registered successfully with the client demo application.<br/>
   The terminal input to list the registered devices is "lr".
 
-  1. Send an on command to device with the client demo application.<br/>
-  The terminal input to turn on the specific led on a device (device address = x) is "on x 1".
-
-  1. Send an off command to device with the client demo application.<br/>
-  The terminal input to turn off the specific led on a device (device address = x) is "off x 1".
+  5. Press the blue button on the Nucleo hardware to send a toggle (On/Off) request.
 
   1. De-register the device with the client demo application.<br/>
   The terminal input to de-register a device (device address = x) is "d x".
@@ -409,7 +410,8 @@ According to step 4, the project provides several options to define which demons
 | **APPLICATION** | **Description** |
 |-|-|
 | FP_HANFUN_SERVER | Application option to build the HAN FUN Simple Switch for the fixed part |
-| PP_HANFUN | Application option to build the HAN FUN Simple Light for the portable part |
+| PP_HANFUN_SIMPLELIGHT | Application option to build the HAN FUN Simple Light for the portable part |
+| PP_HANFUN_SIMPLESWITCH | Application option to build the HAN FUN Simple Switch for the portable part |
 | FP_HANFUN_CLIENT | Application option to build the HAN FUN UDP client |
 | PP_LEGACY_BASICCALL | Application option to build the legacy demo for the portable part |
 | FP_LEGACY_SERVER | Application option to build the legacy demo for the fixed part server |
@@ -490,7 +492,7 @@ Available options are:
     **Note:** Must be path to your toolchain prefix.
 
 - `APPLICATION` - Determines the application.
-    You can choose between: FP_HANFUN_CLIENT, FP_HANFUN_SERVER, PP_HANFUN, FP_LEGACY_CLIENT, FP_LEGACY_SERVER, PP_LEGACY_BASICCALL, PP_LEGACY_INTERCOM
+    You can choose between: FP_HANFUN_CLIENT, FP_HANFUN_SERVER, PP_HANFUN_SIMPLELIGHT, PP_HANFUN_SIMPLESWITCH, FP_LEGACY_CLIENT, FP_LEGACY_SERVER, PP_LEGACY_BASICCALL, PP_LEGACY_INTERCOM
     For example: `"APPLICATION":"FP_HANFUN_SERVER"`
 
 - `Board` - Determines the target board.

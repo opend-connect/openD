@@ -127,6 +127,14 @@ void handleConfirmationAndIndication(char *buffer)
       << "FAIL" << " !" << std::endl; std::cout.clear (); std::cerr.clear ();
     }
   }
+  if(service.compare("IOnOffClientToggle") == 0)
+  {
+    if(status.compare("OK") == 0)
+    {
+      std::cout.clear (); std::cout << "[INFO ] " << "Toggle LED indication from PP received."
+      << std::endl; std::cout.clear (); std::cerr.clear ();
+    }
+  }
 }
 
 // =============================================================================

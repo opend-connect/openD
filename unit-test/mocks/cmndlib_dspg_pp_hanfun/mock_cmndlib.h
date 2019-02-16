@@ -25,6 +25,7 @@ extern "C"{
 #include "CmndLib.h"
 #include "CmndMsg_DeviceManagement.h"
 #include "CmndMsg_KeepAlive.h"
+#include "CmndMsg_OnOff.h"
 }
 
 class Cmndlib
@@ -35,6 +36,7 @@ class Cmndlib
         virtual u16 p_CmndApiPacket_CreateFromCmndApiMsg( OUT u8* pu8_Buffer, const t_st_hanCmndApiMsg* p_Msg ) = 0;
         virtual void p_CmndMsgLog_PrintTxBuffer( u16 u16_BufferLen, const u8* u8_Buffer ) = 0;
         virtual bool p_CmndMsg_KeepAlive_CreateImAliveReq( OUT t_st_hanCmndApiMsg* pst_hanCmndApiMsg ) = 0;
+        virtual bool p_CmndMsg_OnOff_CreateToggleReq( OUT t_st_hanCmndApiMsg* pst_hanCmndApiMsg, u8 u8_UnitId ) = 0;
         virtual bool p_hanCmndApi_HandleByte( t_stReceiveData* context, u8 byte, OUT t_st_Msg* msg ) = 0;
         virtual bool p_CmndMsg_IeGet( IN const t_st_hanCmndApiMsg* pst_Msg, tpf_CmndIeGetter pf_Getter, OUT void* pv_IeValue, u16 u16_IeSize ) = 0;
         virtual void keepAliveTimerStart( void ) = 0;
@@ -50,6 +52,7 @@ class MockCmndlib : public Cmndlib
         MOCK_METHOD2( p_CmndApiPacket_CreateFromCmndApiMsg, u16( OUT u8* pu8_Buffer, const t_st_hanCmndApiMsg* p_Msg ) );
         MOCK_METHOD2( p_CmndMsgLog_PrintTxBuffer, void( u16 u16_BufferLen, const u8* u8_Buffer ) );
         MOCK_METHOD1( p_CmndMsg_KeepAlive_CreateImAliveReq, bool( OUT t_st_hanCmndApiMsg* pst_hanCmndApiMsg ) );
+        MOCK_METHOD2( p_CmndMsg_OnOff_CreateToggleReq, bool( OUT t_st_hanCmndApiMsg* pst_hanCmndApiMsg, u8 u8_UnitId ) );
         MOCK_METHOD3( p_hanCmndApi_HandleByte, bool( t_stReceiveData* context, u8 byte, OUT t_st_Msg* msg ) );
         MOCK_METHOD4( p_CmndMsg_IeGet, bool( IN const t_st_hanCmndApiMsg* pst_Msg, tpf_CmndIeGetter pf_Getter, OUT void* pv_IeValue, u16 u16_IeSize ) );
         MOCK_METHOD0( keepAliveTimerStart, void( void ) );

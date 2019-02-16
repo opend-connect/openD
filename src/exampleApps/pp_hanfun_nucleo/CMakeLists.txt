@@ -30,6 +30,17 @@ if(BOARD STREQUAL DialogMmiNucleo)
 
   add_executable(${PROJECT_NAME} main_hanfun.cpp)
 
+  if(APPLICATION STREQUAL PP_HANFUN_SIMPLELIGHT)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE
+        -DPROFILE_SIMPLE_LIGHT
+    )
+  elseif(APPLICATION STREQUAL PP_HANFUN_SIMPLESWITCH)
+
+    target_compile_definitions(${PROJECT_NAME} PRIVATE
+        -DPROFILE_SIMPLE_SWITCH
+    )
+  endif()
+
 #---------------------------------------------------------------------------------------
 # Link target
 #---------------------------------------------------------------------------------------
@@ -47,6 +58,17 @@ elseif(BOARD STREQUAL DspgDectNucleo)
 #---------------------------------------------------------------------------------------
 
   add_executable(${PROJECT_NAME} main_hanfun.cpp)
+
+  if(APPLICATION STREQUAL PP_HANFUN_SIMPLELIGHT)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE
+        -DPROFILE_SIMPLE_LIGHT
+    )
+  elseif(APPLICATION STREQUAL PP_HANFUN_SIMPLESWITCH)
+
+    target_compile_definitions(${PROJECT_NAME} PRIVATE
+        -DPROFILE_SIMPLE_SWITCH
+    )
+  endif()
 
 #---------------------------------------------------------------------------------------
 # Link target
