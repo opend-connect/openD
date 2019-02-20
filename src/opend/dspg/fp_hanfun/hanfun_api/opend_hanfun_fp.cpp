@@ -505,13 +505,13 @@ uint16_t *getAddress()
 
 openD_status_t openD_hanfunApi_fp_devMgmtRequest( openD_hanfunApi_devMgmtReq_t *hMgmtRequest, uint16_t address, uint8_t dectMode )
 {
+  openD_status_t ret = OPEND_STATUS_FAIL;
   FP * fp = FP::instance();
   HF::Protocol::Address device (address, 0);
   openD_hanfunApi_devMgmtCfm_t hDevMgmtConfirm;
   HF::Core::SessionManagement::Entries<DeviceManagement::Entries> &devices = fp->unit0 ()->device_management ()->entries ();
   uint16_t i = 0;
   HF::Protocol::Message *msg = nullptr;
-  uint8_t ret = 0;
   std::forward_list <HF::Transport::Link *> &links = fp->links();
 
   if(hMgmtRequest == NULL)
@@ -528,17 +528,19 @@ openD_status_t openD_hanfunApi_fp_devMgmtRequest( openD_hanfunApi_devMgmtReq_t *
         fp->unit0 ()->device_management ()->next_address (address);
         hanfunAddress = address;
         app_SrvSubscriptionOpenExt( 120, CMBS_HS_REG_ENABLE_ALL );
+        ret = OPEND_STATUS_OK;
       }
       else
       {
         hDevMgmtConfirm.status = OPEND_STATUS_ARGUMENT_INVALID;
         openD_hanfun_devMgmtCfm( &hDevMgmtConfirm );
-        return OPEND_STATUS_ARGUMENT_INVALID;
+        ret =  OPEND_STATUS_ARGUMENT_INVALID;
       }
       break;
     case OPEND_HANFUNAPI_DEVICE_MANAGEMENT_REGISTER_DISABLE:
       hDevMgmtConfirm.service = OPEND_HANFUNAPI_DEVICE_MANAGEMENT_REGISTER_DISABLE;
       app_SrvSubscriptionClose();
+      ret = OPEND_STATUS_OK;
       break;
     case OPEND_HANFUNAPI_DEVICE_MANAGEMENT_DEREGISTER:
       hDevMgmtConfirm.service = OPEND_HANFUNAPI_DEVICE_MANAGEMENT_DEREGISTER;
@@ -548,13 +550,13 @@ openD_status_t openD_hanfunApi_fp_devMgmtRequest( openD_hanfunApi_devMgmtReq_t *
         hDevMgmtConfirm.status = OPEND_STATUS_OK;
         openD_hanfun_devMgmtCfm( &hDevMgmtConfirm );
         app_DsrHanDeleteDevice(appAddress[address], false);
-        return OPEND_STATUS_OK;
+        ret = OPEND_STATUS_OK;
       }
       else
       {
         hDevMgmtConfirm.status = OPEND_STATUS_FAIL;
         openD_hanfun_devMgmtCfm( &hDevMgmtConfirm );
-        return OPEND_STATUS_FAIL;
+        ret = OPEND_STATUS_FAIL;
       }
       break;
     case OPEND_HANFUNAPI_DEVICE_MANAGEMENT_ENTRIES_REGISTRATION:
@@ -578,7 +580,7 @@ openD_status_t openD_hanfunApi_fp_devMgmtRequest( openD_hanfunApi_devMgmtReq_t *
         i++;
         }
       openD_hanfun_devMgmtCfm( &hDevMgmtConfirm );
-      return OPEND_STATUS_OK;
+      ret = OPEND_STATUS_OK;
       break;
     case OPEND_HANFUNAPI_DEVICE_MANAGEMENT_GET_DEVICE_INFORMATION_MANDATORY:
       hDevMgmtConfirm.service = OPEND_HANFUNAPI_DEVICE_MANAGEMENT_GET_DEVICE_INFORMATION_MANDATORY;
@@ -586,52 +588,40 @@ openD_status_t openD_hanfunApi_fp_devMgmtRequest( openD_hanfunApi_devMgmtReq_t *
       if (msg != nullptr)
       {
         fp->commands.send (device, *msg, nullptr);
+        delete msg;
         hDevMgmtConfirm.status = OPEND_STATUS_OK;
         openD_hanfun_devMgmtCfm( &hDevMgmtConfirm );
-        return OPEND_STATUS_OK;
       }
       else
       {
         hDevMgmtConfirm.status = OPEND_STATUS_FAIL;
         openD_hanfun_devMgmtCfm( &hDevMgmtConfirm );
-        return OPEND_STATUS_FAIL;
       }
-      delete msg;
+      ret = OPEND_STATUS_OK;
+      break;
     case OPEND_HANFUNAPI_DEVICE_MANAGEMENT_GET_DEVICE_INFORMATION_ALL:
       hDevMgmtConfirm.service = OPEND_HANFUNAPI_DEVICE_MANAGEMENT_GET_DEVICE_INFORMATION_ALL;
       msg = HF::Core::DeviceInformation::all ();
       if (msg != nullptr)
       {
         fp->commands.send (device, *msg, nullptr);
+        delete msg;
         hDevMgmtConfirm.status = OPEND_STATUS_OK;
         openD_hanfun_devMgmtCfm( &hDevMgmtConfirm );
-        return OPEND_STATUS_OK;
       }
       else
       {
         hDevMgmtConfirm.status = OPEND_STATUS_FAIL;
         openD_hanfun_devMgmtCfm( &hDevMgmtConfirm );
-        return OPEND_STATUS_FAIL;
       }
-      delete msg;
+      ret = OPEND_STATUS_OK;
       break;
     case OPEND_HANFUNAPI_DEVICE_MANAGEMENT_CHANGE_CONCENTRATOR_DECT_MODE:
       hDevMgmtConfirm.service = OPEND_HANFUNAPI_DEVICE_MANAGEMENT_CHANGE_CONCENTRATOR_DECT_MODE;
       hDevMgmtConfirm.status = OPEND_STATUS_OK;
-      /* Default return value. */
-      ret = 0;
-      /* Kill application after successfully action. */
-	    if (ret == 0)
-	    {
-        openD_hanfun_devMgmtCfm( &hDevMgmtConfirm );
-        return OPEND_STATUS_OK;
-	    }
-      else
-      {
-        hDevMgmtConfirm.status = OPEND_STATUS_FAIL;
-        openD_hanfun_devMgmtCfm( &hDevMgmtConfirm );
-        return OPEND_STATUS_FAIL;
-      }
+
+      openD_hanfun_devMgmtCfm( &hDevMgmtConfirm );
+      ret = OPEND_STATUS_OK;
       break;
     case OPEND_HANFUNAPI_DEVICE_MANAGEMENT_ENTRIES_LINK:
       hDevMgmtConfirm.service = OPEND_HANFUNAPI_DEVICE_MANAGEMENT_ENTRIES_LINK;
@@ -649,14 +639,16 @@ openD_status_t openD_hanfunApi_fp_devMgmtRequest( openD_hanfunApi_devMgmtReq_t *
       }
       hDevMgmtConfirm.param.registrationElement.size = i;
       openD_hanfun_devMgmtCfm( &hDevMgmtConfirm );
-      return OPEND_STATUS_OK;
+      ret = OPEND_STATUS_OK;
       break;
     default:
       hDevMgmtConfirm.status = OPEND_STATUS_ARGUMENT_INVALID;
       openD_hanfun_devMgmtCfm( &hDevMgmtConfirm );
-      return OPEND_STATUS_ARGUMENT_INVALID;
+      ret = OPEND_STATUS_ARGUMENT_INVALID;
       break;
   }
+
+  return ret;
 }
 
 openD_status_t openD_hanfunApi_fp_bindMgmtRequest( openD_hanfunApi_bindMgmtReq_t *hBindRequest, uint16_t address1, uint16_t address2 )
