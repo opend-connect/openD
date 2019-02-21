@@ -197,7 +197,7 @@ openD_status_t opend_hanfun_registerDevice()
   uint16_t deviceAddress = g_device->address();
   hDevMgmtConfirm.service = OPEND_HANFUNAPI_DEVICE_MANAGEMENT_GET_ADDRESS;
   hDevMgmtConfirm.status = OPEND_STATUS_OK;
-  hDevMgmtConfirm.param.registrationElement.address = deviceAddress;
+  hDevMgmtConfirm.param.getAddress.address = deviceAddress;
   openD_hanfun_devMgmtCfm(&hDevMgmtConfirm);
 
   /* Send a register device request. */

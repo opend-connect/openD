@@ -111,24 +111,36 @@ typedef struct hanfunApiDevMgmt_deregister {
 /**
  * openD HanfunApi device management registration element structure.
  */
-typedef struct hanfunApiDevMgmt_registrationElement {
-  /**
-    * Device address.
-    */
+typedef struct hanfunApiDevMgmt_registrationElement
+{
   uint16_t address;
+  ipui_t uid;
+} hanfunApiDevMgmt_registrationElement_t;
+
+/**
+ * openD HanfunApi device management entries registration element structure.
+ */
+typedef struct hanfunApiDevMgmt_entriesRegistration {
   /**
-    * Addresses of currently registered Devices.
-    */
-  uint16_t addresses[20];
-  /**
-    * UID.
-    */
-  uint8_t uid[100];
+   * Registration element.
+   */
+  hanfunApiDevMgmt_registrationElement_t *registrationElement;
+
   /**
     * Size of currently registered Devices.
     */
   uint16_t size;
-} hanfunApiDevMgmt_registrationElement_t;
+} hanfunApiDevMgmt_entriesRegistration_t;
+
+/**
+ * openD HanfunApi device management get address element structure.
+ */
+typedef struct hanfunApiDevMgmt_getAddress {
+  /**
+    * Device address.
+    */
+  uint16_t address;
+} hanfunApiDevMgmt_getAddress_t;
 
 /*!
  * Network Address.
@@ -291,7 +303,8 @@ typedef struct openD_hanfunApi_devMgmtCfm {
    * openD HanfunApi device management parameters.
    */
   union {
-    hanfunApiDevMgmt_registrationElement_t registrationElement;
+    hanfunApiDevMgmt_entriesRegistration_t entriesRegistration;
+    hanfunApiDevMgmt_getAddress_t getAddress;
   } param;
 } openD_hanfunApi_devMgmtCfm_t;
 

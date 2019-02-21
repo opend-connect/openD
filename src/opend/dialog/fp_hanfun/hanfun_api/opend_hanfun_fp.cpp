@@ -533,27 +533,27 @@ openD_status_t openD_hanfunApi_fp_devMgmtRequest( openD_hanfunApi_devMgmtReq_t *
       }
       break;
     case OPEND_HANFUNAPI_DEVICE_MANAGEMENT_ENTRIES_REGISTRATION:
+      {
       hDevMgmtConfirm.service = OPEND_HANFUNAPI_DEVICE_MANAGEMENT_ENTRIES_REGISTRATION;
-      hDevMgmtConfirm.param.registrationElement.size = (int) devices.size ();
+      hDevMgmtConfirm.param.entriesRegistration.size = (int) devices.size ();
       hDevMgmtConfirm.status = OPEND_STATUS_OK;
+      std::vector<hanfunApiDevMgmt_registrationElement_t> registrationElements;
+
       for(const HF::Core::DeviceManagement::Device &device : devices)
       {
-        hDevMgmtConfirm.param.registrationElement.addresses[i] = device.address;
-
+        HF::UID::DECT *dect;
         if(device.uid.raw ()->type () == HF::UID::DECT_UID)
         {
-          HF::UID::DECT *dect = (HF::UID::DECT *) device.uid.raw ();
-          hDevMgmtConfirm.param.registrationElement.uid[i] = (*dect)[i];
-          hDevMgmtConfirm.param.registrationElement.uid[i+1] = (*dect)[i+1];
-          hDevMgmtConfirm.param.registrationElement.uid[i+2] = (*dect)[i+2];
-          hDevMgmtConfirm.param.registrationElement.uid[i+3] = (*dect)[i+3];
-          hDevMgmtConfirm.param.registrationElement.uid[i+4] = (*dect)[i+4];
+          dect = (HF::UID::DECT *) device.uid.raw ();
+          registrationElements.push_back( {device.address, {(*dect)[0], (*dect)[1], (*dect)[2], (*dect)[3], (*dect)[4] } } );
+        } else {
+          registrationElements.push_back( {device.address, {0, 0, 0, 0, 0} } );
         }
-
-          i++;
-        }
+      }
+      hDevMgmtConfirm.param.entriesRegistration.registrationElement = &*registrationElements.begin();
       openD_hanfun_devMgmtCfm( &hDevMgmtConfirm );
       ret = OPEND_STATUS_OK;
+      }
       break;
     case OPEND_HANFUNAPI_DEVICE_MANAGEMENT_GET_DEVICE_INFORMATION_MANDATORY:
       hDevMgmtConfirm.service = OPEND_HANFUNAPI_DEVICE_MANAGEMENT_GET_DEVICE_INFORMATION_MANDATORY;
@@ -609,22 +609,28 @@ openD_status_t openD_hanfunApi_fp_devMgmtRequest( openD_hanfunApi_devMgmtReq_t *
       }
       break;
     case OPEND_HANFUNAPI_DEVICE_MANAGEMENT_ENTRIES_LINK:
+      {
       hDevMgmtConfirm.service = OPEND_HANFUNAPI_DEVICE_MANAGEMENT_ENTRIES_LINK;
       hDevMgmtConfirm.status = OPEND_STATUS_OK;
+      std::vector<hanfunApiDevMgmt_registrationElement_t> registrationElements;
+
       for(const HF::Transport::Link *link : links)
       {
-        hDevMgmtConfirm.param.registrationElement.addresses[i] = link->address();
-        HF::UID::DECT *dect = (HF::UID::DECT *) link->uid().raw();
-        hDevMgmtConfirm.param.registrationElement.uid[i] = (*dect)[i];
-        hDevMgmtConfirm.param.registrationElement.uid[i+1] = (*dect)[i+1];
-        hDevMgmtConfirm.param.registrationElement.uid[i+2] = (*dect)[i+2];
-        hDevMgmtConfirm.param.registrationElement.uid[i+3] = (*dect)[i+3];
-        hDevMgmtConfirm.param.registrationElement.uid[i+4] = (*dect)[i+4];
+        HF::UID::DECT *dect;
+        if(link->uid().raw ()->type () == HF::UID::DECT_UID)
+        {
+          dect = (HF::UID::DECT *) link->uid().raw ();
+          registrationElements.push_back( {link->address(), {(*dect)[0], (*dect)[1], (*dect)[2], (*dect)[3], (*dect)[4] } } );
+        } else {
+          registrationElements.push_back( {link->address(), {0, 0, 0, 0, 0} } );
+        }
         i++;
       }
-      hDevMgmtConfirm.param.registrationElement.size = i;
+      hDevMgmtConfirm.param.entriesRegistration.size = i;
+      hDevMgmtConfirm.param.entriesRegistration.registrationElement = &*registrationElements.begin();
       openD_hanfun_devMgmtCfm( &hDevMgmtConfirm );
       ret = OPEND_STATUS_OK;
+      }
       break;
     default:
       hDevMgmtConfirm.status = OPEND_STATUS_ARGUMENT_INVALID;
