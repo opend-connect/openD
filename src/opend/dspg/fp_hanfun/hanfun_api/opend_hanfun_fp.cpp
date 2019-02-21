@@ -47,6 +47,11 @@ extern "C"
  */
 static SimpleLight * g_simple_light = nullptr;
 
+/*!
+ * Static and global SimpleOnOffSwitchable profile object.
+ */
+static SimpleSwitch * g_simple_switch = nullptr;
+
 /**
  * HANFUN address of the node device.
  */
@@ -489,11 +494,28 @@ openD_status_t openD_hanfunApi_fp_init( HF::Transport::Layer *transport )
 
   transport->add(fp);
 
-  g_simple_light = new SimpleLight(1, *fp);
-
   app_HanRegularStart(TRUE);
 
   initMsgParserSub(registerSuccessClb, hanfunMessageClb);
+
+  return OPEND_STATUS_OK;
+}
+
+openD_status_t opend_hanfunApi_createProfile(openD_hanfunApi_profile_t opend_profile, uint8_t id)
+{
+  FP * fp = FP::instance();
+
+  switch(opend_profile){
+    case OPEND_HANFUNAPI_SIMPLE_LIGHT:
+      g_simple_light = new SimpleLight(id, *fp);
+      break;
+    case OPEND_HANFUNAPI_SIMPLE_ONOFF_SWITCH:
+      g_simple_switch = new SimpleSwitch(id, *fp);
+      break;
+    default:
+      return OPEND_STATUS_ARGUMENT_INVALID;
+      break;
+  }
 
   return OPEND_STATUS_OK;
 }
@@ -813,26 +835,28 @@ void hanfunMessageClb(void* ptrHanfunData)
 
 static openD_status_t simpleOnOffSwitchService( openD_hanfunApi_profileReq_t *hProfileRequest, HF::Protocol::Address device )
 {
-  FP * fp = FP::instance();
   openD_hanfunApi_profileCfm_t hProfileConfirm;
-  hProfileConfirm.profile = OPEND_HANFUNAPI_SIMPLE_ONOFF_SWITCH;
+
+  if( nullptr == g_simple_switch ) {
+    return OPEND_STATUS_FAIL;
+  }
 
   switch(hProfileRequest->simpleOnOffSwitch.service){
     case OPEND_HANFUN_IONOFF_CLIENT_ON:
-      fp->commands.on_off ().on (device);
+      g_simple_switch->on(device);
       break;
     case OPEND_HANFUN_IONOFF_CLIENT_OFF:
-      fp->commands.on_off ().off (device);
+      g_simple_switch->off(device);
       break;
     case OPEND_HANFUN_IONOFF_CLIENT_TOGGLE:
-      fp->commands.on_off ().toggle (device);
+      g_simple_switch->toggle(device);
       break;
     default:
-      hProfileConfirm.status = OPEND_STATUS_ARGUMENT_INVALID;
-      openD_hanfun_profileCfm(&hProfileConfirm);
-      return OPEND_STATUS_ARGUMENT_INVALID;
+      return OPEND_STATUS_SERVICE_UNKNOWN;
       break;
   }
+
+  hProfileConfirm.profile = OPEND_HANFUNAPI_SIMPLE_ONOFF_SWITCH;
   hProfileConfirm.status = OPEND_STATUS_OK;
   openD_hanfun_profileCfm(&hProfileConfirm);
   return OPEND_STATUS_OK;

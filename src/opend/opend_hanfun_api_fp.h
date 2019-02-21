@@ -214,6 +214,15 @@ class SimpleLight: public HF::Units::Unit<HF::Profiles::SimpleLight>
   void toggle (HF::Protocol::Address &source);
 };
 
+/*!
+ * Simple Switch struct profile for the device.
+ */
+struct SimpleSwitch: public HF::Units::Unit<HF::Profiles::SimpleOnOffSwitch> {
+  SimpleSwitch(uint8_t id, HF::IDevice &device) :
+    HF::Units::Unit<HF::Profiles::SimpleOnOffSwitch>(id, device)
+  {}
+};
+
 namespace Commands
 {
   typedef HF::Interfaces::Alert::Server Alert;

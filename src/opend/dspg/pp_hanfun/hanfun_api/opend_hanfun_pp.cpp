@@ -108,7 +108,7 @@ openD_status_t openD_hanfunApi_pp_devMgmtRequest( openD_hanfunApi_devMgmtReq_t *
   return OPEND_STATUS_ARGUMENT_INVALID;
 }
 
-openD_status_t opend_hanfun_createProfile(openD_hanfunApi_profile_t opend_profile, uint8_t id)
+openD_status_t opend_hanfunApi_createProfile(openD_hanfunApi_profile_t opend_profile, uint8_t id)
 {
   return OPEND_STATUS_OK;
 }

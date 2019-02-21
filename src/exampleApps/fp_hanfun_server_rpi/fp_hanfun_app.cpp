@@ -612,6 +612,11 @@ void HF::Application::Initialize (HF::Transport::Layer &transport, int argc, cha
 
   openD_hanfunApi_fp_init(&transport);
 
+  /* Create simple light profile. */
+  opend_hanfunApi_createProfile( OPEND_HANFUNAPI_SIMPLE_LIGHT, 1 );
+  /* Create simple switch profile. */
+  opend_hanfunApi_createProfile( OPEND_HANFUNAPI_SIMPLE_ONOFF_SWITCH, 2 );
+
   Command::add(&command_ListRegs);
   Command::add(&command_Register);
   Command::add(&command_Deregister);

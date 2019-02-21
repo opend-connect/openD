@@ -73,7 +73,7 @@ TEST_F( ut_dialog_opend_hanfun_createProfile, ut_dialog_opend_hanfun_createProfi
     openD_hanfunApi_profile_t profile = OPEND_HANFUNAPI_SIMPLE_ONOFF_SWITCH;
     uint8_t id;
 
-    EXPECT_EQ( OPEND_STATUS_OK, opend_hanfun_createProfile( profile, id ) );
+    EXPECT_EQ( OPEND_STATUS_OK, opend_hanfunApi_createProfile( profile, id ) );
 }
 
 /*!
@@ -86,5 +86,5 @@ TEST_F( ut_dialog_opend_hanfun_createProfile, ut_dialog_opend_hanfun_createProfi
     openD_hanfunApi_profile_t profile = OPEND_HANFUNAPI_SIMPLE_LIGHT;
     uint8_t id;
 
-    EXPECT_EQ( OPEND_STATUS_OK, opend_hanfun_createProfile( profile, id ) );
+    EXPECT_EQ( OPEND_STATUS_OK, opend_hanfunApi_createProfile( profile, id ) );
 }
