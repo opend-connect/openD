@@ -128,6 +128,18 @@ typedef struct openD_hanfunApiPrimitives {
  */
 openD_status_t openD_hanfunApi_init( openD_hanfunApiPrimitives_t *hPrimitives );
 
+/**
+ * @brief   openD HANFUN API create profile.
+ *
+ * @details Create a profile for the device.
+ *
+ * @param   opend_profile Enum of the HANFUN profile.
+ * @param   id ID of the HANFUN profile.
+ *
+ * @retval  Status of the operation (@ref openD_status_t).
+ */
+openD_status_t opend_hanfunApi_createProfile(openD_hanfunApi_profile_t opend_profile, uint8_t id);
+
 /*! @} defgroup OPEND_HANFUN_API */
 
 #endif /* __OPEND_HANFUN_API_H__ */

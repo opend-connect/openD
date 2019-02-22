@@ -256,6 +256,28 @@ static void openD_callApiCfm_callback( openD_callApiCfm_t *cConfirm ) {
         printf("Subscription failed!\n");
       }
       break;
+
+    case OPEND_CALLAPI_RELEASE:
+      if( OPEND_STATUS_OK == ((openD_callApiCfm_t*) appMessage.param)->status ) {
+        printf("Call APP released!\n");
+        j["version"] = "1.0.0";
+        j["module"] = "legacy";
+        j["primitive"] = "confirmation";
+        j["service"] = "releaseCall";
+        j["status"] = "OK";
+        j["param1"] = "0";
+        j["param2"] = "0";
+        j["param3"] = "0";
+        size_t len = strlen((j.dump()).c_str())+1;
+        udp_send((j.dump()).c_str(), len);
+        msManager_changeState( &appStateCtxt, APP_STATE_STANDBY );
+      } else {
+        printf("Release failed!\n");
+      }
+      break;
+
+    default:
+      break;
   }
 }
 
@@ -578,38 +600,6 @@ bool app_state_connected( void *param ) {
           break;
       }
       break;
-
-    case MESSAGE_PRIMITIVE_CFM:
-      /* OpenD service confirmation. */
-      switch( ((openD_subApiCfm_t*) message->param)->service ) {
-        case OPEND_CALLAPI_RELEASE:
-          if( OPEND_STATUS_OK == ((openD_callApiCfm_t*) message->param)->status ) {
-
-            /* Mute */
-            audioApiReq.service = OPEND_AUDIOAPI_SET_MUTE;
-            audioApiReq.param.setMute.enable = true;
-            openD_audioApi_request( &audioApiReq );
-
-            printf("Call APP released!\n");
-            j["version"] = "1.0.0";
-            j["module"] = "legacy";
-            j["primitive"] = "confirmation";
-            j["service"] = "releaseCall";
-            j["status"] = "OK";
-            j["param1"] = "0";
-            j["param2"] = "0";
-            j["param3"] = "0";
-            size_t len = strlen((j.dump()).c_str())+1;
-            udp_send((j.dump()).c_str(), len);
-            msManager_changeState( &appStateCtxt, APP_STATE_STANDBY );
-          } else {
-            printf("Release failed!\n");
-          }
-          break;
-
-        default:
-          break;
-      }
 
     default:
       break;

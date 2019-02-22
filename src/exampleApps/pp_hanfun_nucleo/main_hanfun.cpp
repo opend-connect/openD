@@ -205,12 +205,12 @@ int main(int argc, char *argv[])
   }
 
 #if defined PROFILE_SIMPLE_LIGHT
-  if(opend_hanfun_createProfile(OPEND_HANFUNAPI_SIMPLE_LIGHT, 1) != OPEND_STATUS_OK)
+  if(opend_hanfunApi_createProfile(OPEND_HANFUNAPI_SIMPLE_LIGHT, 1) != OPEND_STATUS_OK)
   {
 
   }
 #elif defined PROFILE_SIMPLE_SWITCH
-  if(opend_hanfun_createProfile(OPEND_HANFUNAPI_SIMPLE_ONOFF_SWITCH, 1) != OPEND_STATUS_OK)
+  if(opend_hanfunApi_createProfile(OPEND_HANFUNAPI_SIMPLE_ONOFF_SWITCH, 1) != OPEND_STATUS_OK)
   {
 
   }

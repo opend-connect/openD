@@ -98,9 +98,9 @@ void devMgmtConfirmCallback(openD_hanfunApi_devMgmtCfm_t *hDevMgmtConfirm)
 	    confirmAndIndStatusByte = hDevMgmtConfirm->status;
       std::cout.clear (); std::cout << std::setfill (' ');
       std::cout.clear (); std::cout << "HAN-FUN" << "  Currently registered Devices (" <<
-      (int) hDevMgmtConfirm->param.registrationElement.size
+      (int) hDevMgmtConfirm->param.entriesRegistration.size
       << "):" << std::endl; std::cout.clear (); std::cerr.clear ();
-      if((int) hDevMgmtConfirm->param.registrationElement.size == 0)
+      if((int) hDevMgmtConfirm->param.entriesRegistration.size == 0)
       {
         j["version"] = "1.0.0";
         j["module"] = "hanfun";
@@ -113,20 +113,20 @@ void devMgmtConfirmCallback(openD_hanfunApi_devMgmtCfm_t *hDevMgmtConfirm)
         size_t len = strlen((j.dump()).c_str())+1;
         udp_send((j.dump()).c_str(), len);
       }
-      for(int i=0; i < (int) hDevMgmtConfirm->param.registrationElement.size; i++)
+      for(int i=0; i < (int) hDevMgmtConfirm->param.entriesRegistration.size; i++)
       {
         std::cout.clear (); std::cout <<
-        (fp->link (hDevMgmtConfirm->param.registrationElement.addresses[i]) != nullptr ? "+ " : "- ");
+        (fp->link (hDevMgmtConfirm->param.entriesRegistration.registrationElement[i].address) != nullptr ? "+ " : "- ");
         std::cout.clear (); std::cout << std::right << std::setw (5) <<
-        hDevMgmtConfirm->param.registrationElement.addresses[i] << " | ";
-        std::cout.clear (); std::cout << "dect uid: " << hDevMgmtConfirm->param.registrationElement.uid[i] <<
-        hDevMgmtConfirm->param.registrationElement.uid[i+1] << hDevMgmtConfirm->param.registrationElement.uid[i+2] <<
-        hDevMgmtConfirm->param.registrationElement.uid[i+3] << hDevMgmtConfirm->param.registrationElement.uid[i+4] <<
+        hDevMgmtConfirm->param.entriesRegistration.registrationElement[i].address << " | ";
+        std::cout.clear (); std::cout << "dect uid: " << hDevMgmtConfirm->param.entriesRegistration.registrationElement[i].uid[0] <<
+        hDevMgmtConfirm->param.entriesRegistration.registrationElement[i].uid[1] << hDevMgmtConfirm->param.entriesRegistration.registrationElement[i].uid[2] <<
+        hDevMgmtConfirm->param.entriesRegistration.registrationElement[i].uid[3] << hDevMgmtConfirm->param.entriesRegistration.registrationElement[i].uid[4] <<
         std::endl; std::cout.clear (); std::cerr.clear ();
 
-        std::string size = std::to_string(hDevMgmtConfirm->param.registrationElement.size);
-        std::string address = std::to_string(hDevMgmtConfirm->param.registrationElement.addresses[i]);
-        std::string uid = std::to_string(hDevMgmtConfirm->param.registrationElement.uid[i]) + std::to_string(hDevMgmtConfirm->param.registrationElement.uid[i+1]) + std::to_string(hDevMgmtConfirm->param.registrationElement.uid[i+2]) + std::to_string(hDevMgmtConfirm->param.registrationElement.uid[i+3]) + std::to_string(hDevMgmtConfirm->param.registrationElement.uid[i+4]);
+        std::string size = std::to_string(hDevMgmtConfirm->param.entriesRegistration.size);
+        std::string address = std::to_string(hDevMgmtConfirm->param.entriesRegistration.registrationElement[i].address);
+        std::string uid = std::to_string(hDevMgmtConfirm->param.entriesRegistration.registrationElement[i].uid[0]) + std::to_string(hDevMgmtConfirm->param.entriesRegistration.registrationElement[i].uid[1]) + std::to_string(hDevMgmtConfirm->param.entriesRegistration.registrationElement[i].uid[2]) + std::to_string(hDevMgmtConfirm->param.entriesRegistration.registrationElement[i].uid[3]) + std::to_string(hDevMgmtConfirm->param.entriesRegistration.registrationElement[i].uid[4]);
 
         j["version"] = "1.0.0";
         j["module"] = "hanfun";
@@ -141,12 +141,12 @@ void devMgmtConfirmCallback(openD_hanfunApi_devMgmtCfm_t *hDevMgmtConfirm)
       }
 	    break;
     case OPEND_HANFUNAPI_DEVICE_MANAGEMENT_ENTRIES_LINK:
-      for(int i=0; i < (int) hDevMgmtConfirm->param.registrationElement.size; i++)
+      for(int i=0; i < (int) hDevMgmtConfirm->param.entriesRegistration.size; i++)
       {
-        std::cout.clear (); std::cout << std::setw (5) << hDevMgmtConfirm->param.registrationElement.addresses[i]
-        << " | "; std::cout.clear (); std::cout << "dect uid: " << hDevMgmtConfirm->param.registrationElement.uid[i] <<
-        hDevMgmtConfirm->param.registrationElement.uid[i+1] << hDevMgmtConfirm->param.registrationElement.uid[i+2] <<
-        hDevMgmtConfirm->param.registrationElement.uid[i+3] << hDevMgmtConfirm->param.registrationElement.uid[i+4] <<
+        std::cout.clear (); std::cout << std::setw (5) << hDevMgmtConfirm->param.entriesRegistration.registrationElement[i].address
+        << " | "; std::cout.clear (); std::cout << "dect uid: " << hDevMgmtConfirm->param.entriesRegistration.registrationElement[i].uid[0] <<
+        hDevMgmtConfirm->param.entriesRegistration.registrationElement[i].uid[1] << hDevMgmtConfirm->param.entriesRegistration.registrationElement[i].uid[2] <<
+        hDevMgmtConfirm->param.entriesRegistration.registrationElement[i].uid[3] << hDevMgmtConfirm->param.entriesRegistration.registrationElement[i].uid[4] <<
         std::endl; std::cout.clear (); std::cerr.clear ();
       }
       break;
@@ -611,6 +611,11 @@ void HF::Application::Initialize (HF::Transport::Layer &transport, int argc, cha
   transport.initialize ();
 
   openD_hanfunApi_fp_init(&transport);
+
+  /* Create simple light profile. */
+  opend_hanfunApi_createProfile( OPEND_HANFUNAPI_SIMPLE_LIGHT, 1 );
+  /* Create simple switch profile. */
+  opend_hanfunApi_createProfile( OPEND_HANFUNAPI_SIMPLE_ONOFF_SWITCH, 2 );
 
   Command::add(&command_ListRegs);
   Command::add(&command_Register);

@@ -47,6 +47,11 @@ extern "C"
  */
 static SimpleLight * g_simple_light = nullptr;
 
+/*!
+ * Static and global SimpleOnOffSwitchable profile object.
+ */
+static SimpleSwitch * g_simple_switch = nullptr;
+
 /**
  * HANFUN address of the node device.
  */
@@ -489,11 +494,28 @@ openD_status_t openD_hanfunApi_fp_init( HF::Transport::Layer *transport )
 
   transport->add(fp);
 
-  g_simple_light = new SimpleLight(1, *fp);
-
   app_HanRegularStart(TRUE);
 
   initMsgParserSub(registerSuccessClb, hanfunMessageClb);
+
+  return OPEND_STATUS_OK;
+}
+
+openD_status_t opend_hanfunApi_createProfile(openD_hanfunApi_profile_t opend_profile, uint8_t id)
+{
+  FP * fp = FP::instance();
+
+  switch(opend_profile){
+    case OPEND_HANFUNAPI_SIMPLE_LIGHT:
+      g_simple_light = new SimpleLight(id, *fp);
+      break;
+    case OPEND_HANFUNAPI_SIMPLE_ONOFF_SWITCH:
+      g_simple_switch = new SimpleSwitch(id, *fp);
+      break;
+    default:
+      return OPEND_STATUS_ARGUMENT_INVALID;
+      break;
+  }
 
   return OPEND_STATUS_OK;
 }
@@ -505,13 +527,13 @@ uint16_t *getAddress()
 
 openD_status_t openD_hanfunApi_fp_devMgmtRequest( openD_hanfunApi_devMgmtReq_t *hMgmtRequest, uint16_t address, uint8_t dectMode )
 {
+  openD_status_t ret = OPEND_STATUS_FAIL;
   FP * fp = FP::instance();
   HF::Protocol::Address device (address, 0);
   openD_hanfunApi_devMgmtCfm_t hDevMgmtConfirm;
   HF::Core::SessionManagement::Entries<DeviceManagement::Entries> &devices = fp->unit0 ()->device_management ()->entries ();
   uint16_t i = 0;
   HF::Protocol::Message *msg = nullptr;
-  uint8_t ret = 0;
   std::forward_list <HF::Transport::Link *> &links = fp->links();
 
   if(hMgmtRequest == NULL)
@@ -528,17 +550,19 @@ openD_status_t openD_hanfunApi_fp_devMgmtRequest( openD_hanfunApi_devMgmtReq_t *
         fp->unit0 ()->device_management ()->next_address (address);
         hanfunAddress = address;
         app_SrvSubscriptionOpenExt( 120, CMBS_HS_REG_ENABLE_ALL );
+        ret = OPEND_STATUS_OK;
       }
       else
       {
         hDevMgmtConfirm.status = OPEND_STATUS_ARGUMENT_INVALID;
         openD_hanfun_devMgmtCfm( &hDevMgmtConfirm );
-        return OPEND_STATUS_ARGUMENT_INVALID;
+        ret =  OPEND_STATUS_ARGUMENT_INVALID;
       }
       break;
     case OPEND_HANFUNAPI_DEVICE_MANAGEMENT_REGISTER_DISABLE:
       hDevMgmtConfirm.service = OPEND_HANFUNAPI_DEVICE_MANAGEMENT_REGISTER_DISABLE;
       app_SrvSubscriptionClose();
+      ret = OPEND_STATUS_OK;
       break;
     case OPEND_HANFUNAPI_DEVICE_MANAGEMENT_DEREGISTER:
       hDevMgmtConfirm.service = OPEND_HANFUNAPI_DEVICE_MANAGEMENT_DEREGISTER;
@@ -548,37 +572,37 @@ openD_status_t openD_hanfunApi_fp_devMgmtRequest( openD_hanfunApi_devMgmtReq_t *
         hDevMgmtConfirm.status = OPEND_STATUS_OK;
         openD_hanfun_devMgmtCfm( &hDevMgmtConfirm );
         app_DsrHanDeleteDevice(appAddress[address], false);
-        return OPEND_STATUS_OK;
+        ret = OPEND_STATUS_OK;
       }
       else
       {
         hDevMgmtConfirm.status = OPEND_STATUS_FAIL;
         openD_hanfun_devMgmtCfm( &hDevMgmtConfirm );
-        return OPEND_STATUS_FAIL;
+        ret = OPEND_STATUS_FAIL;
       }
       break;
     case OPEND_HANFUNAPI_DEVICE_MANAGEMENT_ENTRIES_REGISTRATION:
+      {
       hDevMgmtConfirm.service = OPEND_HANFUNAPI_DEVICE_MANAGEMENT_ENTRIES_REGISTRATION;
-      hDevMgmtConfirm.param.registrationElement.size = (int) devices.size ();
+      hDevMgmtConfirm.param.entriesRegistration.size = (int) devices.size ();
       hDevMgmtConfirm.status = OPEND_STATUS_OK;
+      std::vector<hanfunApiDevMgmt_registrationElement_t> registrationElements;
+
       for(const HF::Core::DeviceManagement::Device &device : devices)
       {
-        hDevMgmtConfirm.param.registrationElement.addresses[i] = device.address;
-
+        HF::UID::DECT *dect;
         if(device.uid.raw ()->type () == HF::UID::DECT_UID)
         {
-          HF::UID::DECT *dect = (HF::UID::DECT *) device.uid.raw ();
-          hDevMgmtConfirm.param.registrationElement.uid[i] = (*dect)[i];
-          hDevMgmtConfirm.param.registrationElement.uid[i+1] = (*dect)[i+1];
-          hDevMgmtConfirm.param.registrationElement.uid[i+2] = (*dect)[i+2];
-          hDevMgmtConfirm.param.registrationElement.uid[i+3] = (*dect)[i+3];
-          hDevMgmtConfirm.param.registrationElement.uid[i+4] = (*dect)[i+4];
+          dect = (HF::UID::DECT *) device.uid.raw ();
+          registrationElements.push_back( {device.address, {(*dect)[0], (*dect)[1], (*dect)[2], (*dect)[3], (*dect)[4] } } );
+        } else {
+          registrationElements.push_back( {device.address, {0, 0, 0, 0, 0} } );
         }
-
-        i++;
-        }
+      }
+      hDevMgmtConfirm.param.entriesRegistration.registrationElement = &*registrationElements.begin();
       openD_hanfun_devMgmtCfm( &hDevMgmtConfirm );
-      return OPEND_STATUS_OK;
+      ret = OPEND_STATUS_OK;
+      }
       break;
     case OPEND_HANFUNAPI_DEVICE_MANAGEMENT_GET_DEVICE_INFORMATION_MANDATORY:
       hDevMgmtConfirm.service = OPEND_HANFUNAPI_DEVICE_MANAGEMENT_GET_DEVICE_INFORMATION_MANDATORY;
@@ -586,77 +610,73 @@ openD_status_t openD_hanfunApi_fp_devMgmtRequest( openD_hanfunApi_devMgmtReq_t *
       if (msg != nullptr)
       {
         fp->commands.send (device, *msg, nullptr);
+        delete msg;
         hDevMgmtConfirm.status = OPEND_STATUS_OK;
         openD_hanfun_devMgmtCfm( &hDevMgmtConfirm );
-        return OPEND_STATUS_OK;
       }
       else
       {
         hDevMgmtConfirm.status = OPEND_STATUS_FAIL;
         openD_hanfun_devMgmtCfm( &hDevMgmtConfirm );
-        return OPEND_STATUS_FAIL;
       }
-      delete msg;
+      ret = OPEND_STATUS_OK;
+      break;
     case OPEND_HANFUNAPI_DEVICE_MANAGEMENT_GET_DEVICE_INFORMATION_ALL:
       hDevMgmtConfirm.service = OPEND_HANFUNAPI_DEVICE_MANAGEMENT_GET_DEVICE_INFORMATION_ALL;
       msg = HF::Core::DeviceInformation::all ();
       if (msg != nullptr)
       {
         fp->commands.send (device, *msg, nullptr);
+        delete msg;
         hDevMgmtConfirm.status = OPEND_STATUS_OK;
         openD_hanfun_devMgmtCfm( &hDevMgmtConfirm );
-        return OPEND_STATUS_OK;
       }
       else
       {
         hDevMgmtConfirm.status = OPEND_STATUS_FAIL;
         openD_hanfun_devMgmtCfm( &hDevMgmtConfirm );
-        return OPEND_STATUS_FAIL;
       }
-      delete msg;
+      ret = OPEND_STATUS_OK;
       break;
     case OPEND_HANFUNAPI_DEVICE_MANAGEMENT_CHANGE_CONCENTRATOR_DECT_MODE:
       hDevMgmtConfirm.service = OPEND_HANFUNAPI_DEVICE_MANAGEMENT_CHANGE_CONCENTRATOR_DECT_MODE;
       hDevMgmtConfirm.status = OPEND_STATUS_OK;
-      /* Default return value. */
-      ret = 0;
-      /* Kill application after successfully action. */
-	    if (ret == 0)
-	    {
-        openD_hanfun_devMgmtCfm( &hDevMgmtConfirm );
-        return OPEND_STATUS_OK;
-	    }
-      else
-      {
-        hDevMgmtConfirm.status = OPEND_STATUS_FAIL;
-        openD_hanfun_devMgmtCfm( &hDevMgmtConfirm );
-        return OPEND_STATUS_FAIL;
-      }
+
+      openD_hanfun_devMgmtCfm( &hDevMgmtConfirm );
+      ret = OPEND_STATUS_OK;
       break;
     case OPEND_HANFUNAPI_DEVICE_MANAGEMENT_ENTRIES_LINK:
+      {
       hDevMgmtConfirm.service = OPEND_HANFUNAPI_DEVICE_MANAGEMENT_ENTRIES_LINK;
       hDevMgmtConfirm.status = OPEND_STATUS_OK;
+      std::vector<hanfunApiDevMgmt_registrationElement_t> registrationElements;
+
       for(const HF::Transport::Link *link : links)
       {
-        hDevMgmtConfirm.param.registrationElement.addresses[i] = link->address();
-        HF::UID::DECT *dect = (HF::UID::DECT *) link->uid().raw();
-        hDevMgmtConfirm.param.registrationElement.uid[i] = (*dect)[i];
-        hDevMgmtConfirm.param.registrationElement.uid[i+1] = (*dect)[i+1];
-        hDevMgmtConfirm.param.registrationElement.uid[i+2] = (*dect)[i+2];
-        hDevMgmtConfirm.param.registrationElement.uid[i+3] = (*dect)[i+3];
-        hDevMgmtConfirm.param.registrationElement.uid[i+4] = (*dect)[i+4];
+        HF::UID::DECT *dect;
+        if(link->uid().raw ()->type () == HF::UID::DECT_UID)
+        {
+          dect = (HF::UID::DECT *) link->uid().raw ();
+          registrationElements.push_back( {link->address(), {(*dect)[0], (*dect)[1], (*dect)[2], (*dect)[3], (*dect)[4] } } );
+        } else {
+          registrationElements.push_back( {link->address(), {0, 0, 0, 0, 0} } );
+        }
         i++;
       }
-      hDevMgmtConfirm.param.registrationElement.size = i;
+      hDevMgmtConfirm.param.entriesRegistration.size = i;
+      hDevMgmtConfirm.param.entriesRegistration.registrationElement = &*registrationElements.begin();
       openD_hanfun_devMgmtCfm( &hDevMgmtConfirm );
-      return OPEND_STATUS_OK;
+      ret = OPEND_STATUS_OK;
+      }
       break;
     default:
       hDevMgmtConfirm.status = OPEND_STATUS_ARGUMENT_INVALID;
       openD_hanfun_devMgmtCfm( &hDevMgmtConfirm );
-      return OPEND_STATUS_ARGUMENT_INVALID;
+      ret = OPEND_STATUS_ARGUMENT_INVALID;
       break;
   }
+
+  return ret;
 }
 
 openD_status_t openD_hanfunApi_fp_bindMgmtRequest( openD_hanfunApi_bindMgmtReq_t *hBindRequest, uint16_t address1, uint16_t address2 )
@@ -815,26 +835,28 @@ void hanfunMessageClb(void* ptrHanfunData)
 
 static openD_status_t simpleOnOffSwitchService( openD_hanfunApi_profileReq_t *hProfileRequest, HF::Protocol::Address device )
 {
-  FP * fp = FP::instance();
   openD_hanfunApi_profileCfm_t hProfileConfirm;
-  hProfileConfirm.profile = OPEND_HANFUNAPI_SIMPLE_ONOFF_SWITCH;
+
+  if( nullptr == g_simple_switch ) {
+    return OPEND_STATUS_FAIL;
+  }
 
   switch(hProfileRequest->simpleOnOffSwitch.service){
     case OPEND_HANFUN_IONOFF_CLIENT_ON:
-      fp->commands.on_off ().on (device);
+      g_simple_switch->on(device);
       break;
     case OPEND_HANFUN_IONOFF_CLIENT_OFF:
-      fp->commands.on_off ().off (device);
+      g_simple_switch->off(device);
       break;
     case OPEND_HANFUN_IONOFF_CLIENT_TOGGLE:
-      fp->commands.on_off ().toggle (device);
+      g_simple_switch->toggle(device);
       break;
     default:
-      hProfileConfirm.status = OPEND_STATUS_ARGUMENT_INVALID;
-      openD_hanfun_profileCfm(&hProfileConfirm);
-      return OPEND_STATUS_ARGUMENT_INVALID;
+      return OPEND_STATUS_SERVICE_UNKNOWN;
       break;
   }
+
+  hProfileConfirm.profile = OPEND_HANFUNAPI_SIMPLE_ONOFF_SWITCH;
   hProfileConfirm.status = OPEND_STATUS_OK;
   openD_hanfun_profileCfm(&hProfileConfirm);
   return OPEND_STATUS_OK;

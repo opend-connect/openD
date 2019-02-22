@@ -151,7 +151,7 @@ openD_status_t openD_hanfunApi_pp_init()
   return OPEND_STATUS_OK;
 }
 
-openD_status_t opend_hanfun_createProfile(openD_hanfunApi_profile_t opend_profile, uint8_t id)
+openD_status_t opend_hanfunApi_createProfile(openD_hanfunApi_profile_t opend_profile, uint8_t id)
 {
   Device * g_device = Device::instance();
 
@@ -197,7 +197,7 @@ openD_status_t opend_hanfun_registerDevice()
   uint16_t deviceAddress = g_device->address();
   hDevMgmtConfirm.service = OPEND_HANFUNAPI_DEVICE_MANAGEMENT_GET_ADDRESS;
   hDevMgmtConfirm.status = OPEND_STATUS_OK;
-  hDevMgmtConfirm.param.registrationElement.address = deviceAddress;
+  hDevMgmtConfirm.param.getAddress.address = deviceAddress;
   openD_hanfun_devMgmtCfm(&hDevMgmtConfirm);
 
   /* Send a register device request. */
