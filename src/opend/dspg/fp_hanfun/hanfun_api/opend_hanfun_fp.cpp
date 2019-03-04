@@ -549,7 +549,7 @@ openD_status_t openD_hanfunApi_fp_devMgmtRequest( openD_hanfunApi_devMgmtReq_t *
       {
         fp->unit0 ()->device_management ()->next_address (address);
         hanfunAddress = address;
-        app_SrvSubscriptionOpenExt( 120, CMBS_HS_REG_ENABLE_ALL );
+        app_SrvSubscriptionOpenExt( 120, CMBS_HS_REG_ENABLE_ULE );
         ret = OPEND_STATUS_OK;
       }
       else
