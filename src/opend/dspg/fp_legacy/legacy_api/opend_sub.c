@@ -98,6 +98,9 @@ openD_status_t openD_subApi_request( openD_subApiReq_t *sRequest )
             cmbs_ret = cmbs_dsr_hs_Delete(g_cmbsappl.pv_CMBSRef, 0xFFFF);
             break;
 
+        case OPEND_SUBAPI_SET_AC:
+            /* Set authentication PIN code. */
+            cmbs_ret = cmbs_dsr_param_Set(g_cmbsappl.pv_CMBSRef, CMBS_PARAM_TYPE_EEPROM, CMBS_PARAM_AUTH_PIN, sRequest->param.setAc.ac, CMBS_PARAM_PIN_CODE_LENGTH);
             break;
 
         default:
