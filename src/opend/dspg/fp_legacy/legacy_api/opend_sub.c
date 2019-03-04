@@ -54,9 +54,6 @@ openD_status_t openD_subApi_init( openD_subApiPrimitives_t *sPrimitives )
     _sPrimitives.openD_subApiCfm = sPrimitives->openD_subApiCfm;
     _sPrimitives.openD_subApiInd = sPrimitives->openD_subApiInd;
 
-    initMsgParserSub(registerSuccessClb);
-    initMsgParserDeSub(opend_deregistration_finished_cllb);
-
     return OPEND_STATUS_OK;
 }
 
