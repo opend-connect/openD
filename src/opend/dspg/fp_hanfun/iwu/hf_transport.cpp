@@ -43,6 +43,9 @@ extern "C"
 }
 
 
+/** Message sequence. */
+static uint8_t msgSequence = 0U;
+
 /* Setup TDM interface. */
 ST_TDM_CONFIG g_st_TdmCfg;
 
@@ -153,22 +156,25 @@ HF::ULE::Link * HF::ULE::Transport::find_by_address (uint16_t address)
 
 void HF::ULE::Link::send (HF::Common::ByteArray &array)
 {
-  ST_IE_HAN_MSG			  stIe_Msg = {0};
-  ST_IE_HAN_MSG_CTL 	st_HANMsgCtl = { 0,0,0 };
+  ST_IE_HAN_MSG stIe_Msg = {0};
+  ST_IE_HAN_MSG_CTL st_HANMsgCtl = { 0,0,0 };
 
   /* Parse the bytes like in the hanfun specification. */
-  stIe_Msg.u16_SrcDeviceId	            = array.at(0);
-  stIe_Msg.u8_SrcUnitId		              = array.at(2);
-  stIe_Msg.u16_DstDeviceId              = getAddress()[array.at(4)];
+  stIe_Msg.u16_SrcDeviceId              = ((uint16_t) array.at(0) << 0x08) | (array.at(1) & 0x00FF);
+  stIe_Msg.u8_SrcUnitId                 = array.at(2);
+  stIe_Msg.u8_DstAddressType            = (array.at(3) >> 0x07) & 0x01;
+  stIe_Msg.u16_DstDeviceId              = dev_id;
   stIe_Msg.u8_DstUnitId                 = array.at(5);
-  stIe_Msg.u8_DstAddressType            = (array.at(3) >> 7) & 0x0001;
-  stIe_Msg.st_MsgTransport.u16_Reserved	= 0;
-  stIe_Msg.u8_MsgSequence				        = 53;
-  stIe_Msg.e_MsgType					          = array.at(9);
-  stIe_Msg.u8_InterfaceType				      = (array.at(10) >> 7) & 0x0001;
-  stIe_Msg.u16_InterfaceId				      = (array.at(10) & 0x7F) << 8;
+  stIe_Msg.st_MsgTransport.u16_Reserved = 0x0000;
+  stIe_Msg.u8_MsgSequence               = msgSequence++;
+  stIe_Msg.e_MsgType                    = array.at(9);
+  stIe_Msg.u8_InterfaceType             = (array.at(10) >> 0x07) & 0x01;
+  stIe_Msg.u16_InterfaceId              = (((uint16_t) array.at(10) & 0x007F) << 0x08) | (array.at(11) & 0x00FF);
   stIe_Msg.u8_InterfaceMember           = array.at(12);
-  stIe_Msg.u16_DataLen                  = array.at(14);
+  stIe_Msg.u16_DataLen                  = ((uint16_t) array.at(13) << 0x08) | (array.at(14) & 0x00FF);
+  if( stIe_Msg.u16_DataLen > 0U ) {
+    stIe_Msg.pu8_Data                   = &array.at(15);
+  }
 
 	/* Tx request: */
 
