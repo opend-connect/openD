@@ -30,6 +30,8 @@ extern "C"
 #include "opend_api.h"
 #include "opend_sub.h"
 #include "opend_sub_api.h"
+#include "cmbs_api.h"
+#include "appcmbs.h"
 #include "apphan.h"
 #include "appmsgparser.h"
 #include "appsrv.h"
@@ -38,6 +40,7 @@ extern "C"
 
 openD_subApiPrimitives_t _sPrimitives;
 
+extern ST_CMBS_APPL g_cmbsappl;
 static void opend_deregistration_finished_cllb();
 
 void registerSuccessClb(uint16_t address, uint8_t handsetId);
@@ -75,7 +78,8 @@ static void opend_deregistration_finished_cllb(void *param)
 
 openD_status_t openD_subApi_request( openD_subApiReq_t *sRequest )
 {
-    openD_status_t ret;
+    openD_status_t ret = OPEND_STATUS_FAIL;
+    E_CMBS_RC cmbs_ret;
 
     if(!sRequest)
     {
@@ -85,10 +89,8 @@ openD_status_t openD_subApi_request( openD_subApiReq_t *sRequest )
     switch( sRequest->service ) {
 
         case OPEND_SUBAPI_SUBSCRIBE_ENABLE:
-
-            app_SrvSubscriptionOpenExt( 120, CMBS_HS_REG_ENABLE_ALL );
-
-            ret = OPEND_STATUS_OK;
+            /* Open registration. */
+            cmbs_ret = cmbs_dsr_cord_OpenRegistrationExt(g_cmbsappl.pv_CMBSRef, 120, CMBS_HS_REG_ENABLE_ALL);
             break;
 
         case OPEND_SUBAPI_SUBSCRIPTION_DELETE:
@@ -98,14 +100,28 @@ openD_status_t openD_subApi_request( openD_subApiReq_t *sRequest )
             ret = OPEND_STATUS_OK;
             break;
 
-        case OPEND_SUBAPI_GET_REGISTRATION_STATE:
-
-            ret = OPEND_STATUS_OK;
-
             break;
 
         default:
             ret = OPEND_STATUS_SERVICE_UNKNOWN;
+            break;
+    }
+
+    if( OPEND_STATUS_SERVICE_UNKNOWN != ret ) {
+        switch(cmbs_ret)
+        {
+            case CMBS_RC_OK:
+                ret = OPEND_STATUS_OK;
+                break;
+            case CMBS_RC_ERROR_PARAMETER:
+                ret = OPEND_STATUS_ARGUMENT_INVALID;
+                break;
+            case CMBS_RC_ERROR_MEDIA_BUSY:
+                ret = OPEND_STATUS_BUSY;
+            default:
+                ret = OPEND_STATUS_FAIL;
+                break;
+        }
     }
 
     return ret;
