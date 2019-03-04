@@ -85,7 +85,7 @@ void HF::ULE::Transport::destroy ()
   /* Can be used for destroy the iwu initialization. */
 }
 
-void HF::ULE::Transport::connected (uint8_t dev_id, uint8_t _ipui[5])
+void HF::ULE::Transport::connected (uint16_t dev_id, uint8_t _ipui[5])
 {
    Link * link = this->find_by_id(dev_id);
 
@@ -102,7 +102,7 @@ void HF::ULE::Transport::connected (uint8_t dev_id, uint8_t _ipui[5])
    }
 }
 
-void HF::ULE::Transport::receive (const uint8_t dev_id, const uint8_t data[], size_t size)
+void HF::ULE::Transport::receive (const uint16_t dev_id, const uint8_t data[], size_t size)
 {
    HF::Common::ByteArray payload(data, size);
 

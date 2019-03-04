@@ -95,9 +95,9 @@ namespace HF
 
          void destroy ();
 
-         void connected (uint8_t dev_id, uint8_t ipui[5]);
+         void connected (uint16_t dev_id, uint8_t ipui[5]);
 
-         void receive(const uint8_t dev_id, const uint8_t data[], size_t size);
+         void receive(const uint16_t dev_id, const uint8_t data[], size_t size);
 
          Link * find_by_id(uint16_t dev);
 
