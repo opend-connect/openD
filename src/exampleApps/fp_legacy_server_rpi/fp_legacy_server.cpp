@@ -523,9 +523,19 @@ bool app_state_standby( void *param ) {
           break;
 
         case OPEND_SUBAPI_SUBSCRIPTION_DELETE:
-          if( OPEND_STATUS_OK == ((openD_callApiCfm_t*) message->param)->status ) {
+          if( OPEND_STATUS_OK == ((openD_subApiCfm_t*) message->param)->status ) {
             printf("Deregistration APP finished!\n");
             msManager_changeState( &appStateCtxt, APP_STATE_UNREGISTERED );
+            j["version"] = "1.0.0";
+            j["module"] = "legacy";
+            j["primitive"] = "confirmation";
+            j["service"] = "subscriptionDelete";
+            j["status"] = "OK";
+            j["param1"] = "0";
+            j["param2"] = "0";
+            j["param3"] = "0";
+            size_t len = strlen((j.dump()).c_str())+1;
+            udp_send((j.dump()).c_str(), len);
           } else {
             printf("Subscription delete failed!\n");
           }
