@@ -94,10 +94,8 @@ openD_status_t openD_subApi_request( openD_subApiReq_t *sRequest )
             break;
 
         case OPEND_SUBAPI_SUBSCRIPTION_DELETE:
-
-            app_DsrHanDeleteDevice(1, false);
-
-            ret = OPEND_STATUS_OK;
+            /* Delete all registered handsets. */
+            cmbs_ret = cmbs_dsr_hs_Delete(g_cmbsappl.pv_CMBSRef, 0xFFFF);
             break;
 
             break;
