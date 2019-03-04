@@ -40,8 +40,30 @@ extern "C"
 #include "tcx_eep.h"
 #include "tcx_util.h"
 #include "appCallRouter.h"
+
+#include "cmbs_han.h"
+#include "cmbs_han_ie.h"
 }
 
+/** Specifies the header length of a HANFUN message. */
+#define HANFUN_HEADER_SIZE 15U
+
+/**
+ * @brief   CMBS message callback.
+ *
+ * @details Handle the CMBS message callback.
+ *
+ * @param   pv_AppRef Pointer of the app reference.
+ * @param   eventId Event ID of the CMBS.
+ * @param   ie_data Pointer to IE of the CMBS.
+ */
+static int appcmbs_opend_callback( void *pv_AppRef, E_CMBS_EVENT_ID eventId, void *ie_data);
+
+/** HANFUN buffer for CMBS. */
+static uint8_t cmbs_hanFunBuffer[CMBS_HAN_MAX_MSG_LEN*2];
+
+/* Holds the data of the registration state 1. */
+static ST_HAN_REG_STAGE_1_STATUS regStage1Status;
 
 /** Message sequence. */
 static uint8_t msgSequence = 0U;
@@ -176,14 +198,18 @@ void HF::ULE::Link::send (HF::Common::ByteArray &array)
     stIe_Msg.pu8_Data                   = &array.at(15);
   }
 
-	/* Tx request: */
+  /* Push message to fifo. */
+  cmbs_util_FifoPush(Get_UleMsgFifo(dev_id), &stIe_Msg);
 
-	app_DsrHanMsgSendTxRequest(stIe_Msg.u16_DstDeviceId);
-  SleepMs(3000);
+#ifdef TRY_TO_SEND_DIRECTLY
+  /* Try to send message directly. */
+  app_DsrHanMsgSend(1, 0, &st_HANMsgCtl, &stIe_Msg);
+#else
+  /* Tx request: */
+  app_DsrHanMsgSendTxRequest( dev_id );
+#endif
 
-  /* Send the hanfun commando. */
-
-  app_DsrHanMsgSend(12, stIe_Msg.u16_DstDeviceId, &st_HANMsgCtl, &stIe_Msg);
+  return;
 }
 
 bool HF::Application::Registration (bool mode)
@@ -204,6 +230,8 @@ void initUleApp(int argc, char **argv)
   bool SYPO_enabled = FALSE;
   int menu = 1;
   u16 u16_TargetVersion;
+
+  appcmbs_opend_setCallbackFct( &appcmbs_opend_callback );
 
   memset(&SYPOParameters, 0, sizeof(SYPOParameters));
   /* Use USB communication. */
@@ -303,4 +331,320 @@ void initUleApp(int argc, char **argv)
   tcx_LogOutputDestroy();
   printf("Press ENTER to exit...");
   exit(1);
+}
+
+static void cmbs_hanFunMsgRegState1Notification( void* ie_data )
+{
+  void* ie = NULL;
+  uint16_t ieType = 0U, deviceId = 0U;
+  ST_HAN_GENERAL_STATUS status;
+  ST_HAN_REG_STAGE_1_STATUS regStatus;
+
+  if(!ie_data) {
+    return;
+  }
+
+  cmbs_api_ie_GetFirst( ie_data, &ie, &ieType );
+
+  while ( ie )
+  {
+    switch ( ieType )
+    {
+      case CMBS_IE_HAN_GENERAL_STATUS:
+        cmbs_api_ie_HANGeneralStatusGet( ie, &status );
+        break;
+      case CMBS_IE_HAN_DEVICE:
+        cmbs_api_ie_HANDeviceGet( ie, &deviceId );
+        break;
+      case CMBS_IE_HAN_DEVICE_REG_STAGE1_OK_STATUS_PARAMS:
+        cmbs_api_ie_HANRegStage1OKResParamsGet ( ie, &regStage1Status );
+        break;
+      default:
+        break;
+    }
+    cmbs_api_ie_GetNext( ie_data, &ie, &ieType );
+  }
+
+  return;
+}
+
+static void cmbs_hanFunMsgRegState3Notification( void* ie_data )
+{
+  void* ie = NULL;
+  uint16_t ieType = 0U, deviceId = 0U;
+  ST_HAN_GENERAL_STATUS status;
+
+  if(!ie_data) {
+    return;
+  }
+
+  cmbs_api_ie_GetFirst( ie_data, &ie, &ieType );
+
+  while ( ie )
+  {
+    switch ( ieType )
+    {
+      case CMBS_IE_HAN_GENERAL_STATUS:
+        cmbs_api_ie_HANGeneralStatusGet( ie, &status );
+        break;
+      case CMBS_IE_HAN_DEVICE:
+        cmbs_api_ie_HANDeviceGet( ie, &deviceId );
+        break;
+    }
+    cmbs_api_ie_GetNext( ie_data, &ie, &ieType );
+  }
+
+  if( CMBS_RESPONSE_OK == status.u16_Status )
+  {
+
+    /* HAN-FUN Transport Layer over Dialog's ULE Stack. */
+    HF::ULE::Transport * transport = HF::ULE::Transport::instance();
+
+    /* Data for the register finished indication. */
+    const uint8_t data[] = { 0x7F, 0xFF, 0, 0, 0, 0, 0, 0, 0, 1, 0x80, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+
+    /* Size of the register finished data. */
+    size_t size = sizeof(data);
+
+    /* Notify the HANFUN library about the connected device. */
+    transport->connected(deviceId, regStage1Status.u8_IPUI);
+
+    /* Register finished indication received. */
+    transport->receive(deviceId, data, size);
+  }
+
+  return;
+}
+
+static int8_t cmbs_hanFunMsgSendTxStartRequestRes( void* ie_data )
+{
+  void* ie = NULL;
+  uint16_t ieType = 0U, deviceId = 0U, fail_reason = 0U;
+  ST_IE_RESPONSE ieResponse;
+
+  cmbs_api_ie_GetFirst( ie_data, &ie, &ieType );
+
+  while( ie != NULL )
+  {
+    switch ( ieType )
+    {
+      case CMBS_IE_RESPONSE:
+        cmbs_api_ie_ResponseGet( ie, &ieResponse);
+        break;
+      case CMBS_IE_HAN_DEVICE:
+        cmbs_api_ie_HANDeviceGet( ie, &deviceId);
+        break;
+      case CMBS_IE_HAN_TX_REQ_RES_REASON:
+        cmbs_api_ie_HANTxReqResReasonGet( ie, (uint16_t*) &fail_reason);
+        break;
+    }
+    cmbs_api_ie_GetNext( ie_data, &ie, &ieType );
+  }
+
+  if( CMBS_RESPONSE_OK != ieResponse.e_Response )
+  {
+    if( CMBS_HAN_ULE_TX_REQ_RES_DEVICE_ALREADY_IN_LINK == fail_reason )
+    {
+      /* Send Tx request. */
+      ST_IE_HAN_MSG *stIe_Msg;
+      ST_IE_HAN_MSG_CTL st_HANMsgCtl = { 0,0,0 };
+
+      stIe_Msg = (ST_IE_HAN_MSG*) cmbs_util_FifoGet(Get_UleMsgFifo(deviceId));
+      if(stIe_Msg) {
+        app_DsrHanMsgSend(1, 0, &st_HANMsgCtl, stIe_Msg);
+      }
+
+      return 0;
+    } else {
+      cmbs_util_FifoPop(Get_UleMsgFifo(deviceId));
+      return -1;
+    }
+  }
+
+  return 0;
+}
+
+static int8_t cmbs_hanFunMsgSendRes( void* ie_data )
+{
+  void* ie = NULL;
+  uint16_t ieType = 0U, deviceId = 0U;
+  E_CMBS_IE_TYPE fail_reason = CMBS_IE_UNDEF;
+  ST_IE_RESPONSE ieResponse;
+  int8_t ret = -1;
+
+  cmbs_api_ie_GetFirst( ie_data, &ie, &ieType );
+
+  while( ie != NULL )
+  {
+    switch ( ieType )
+    {
+      case  CMBS_IE_RESPONSE:
+        cmbs_api_ie_ResponseGet( ie, &ieResponse);
+        break;
+      case CMBS_IE_HAN_DEVICE:
+        cmbs_api_ie_HANDeviceGet( ie, &deviceId);
+        break;
+      case CMBS_IE_HAN_SEND_FAIL_REASON:
+        cmbs_api_ie_HANSendErrorReasonGet( ie, (uint16_t*) &fail_reason);
+        break;
+    }
+    cmbs_api_ie_GetNext( ie_data, &ie, &ieType );
+  }
+
+  if( CMBS_RESPONSE_OK != ieResponse.e_Response )
+  {
+    if( (CMBS_HAN_SEND_MSG_REASON_DEVICE_NOT_IN_LINK_ERROR == fail_reason) ||
+        (CMBS_HAN_SEND_MSG_REASON_NO_TX_REQUEST == fail_reason) )
+    {
+      /* Send Tx request. */
+      app_DsrHanMsgSendTxRequest( deviceId );
+      ret = 1;
+    } else {
+      /* Tx error, Tx abort. */
+      ret = -1;
+    }
+  } else {
+    /* Tx success. */
+    ret = 0;
+  }
+
+  cmbs_util_FifoPop(Get_UleMsgFifo(deviceId));
+  app_DsrHanMsgSendTxEnd( deviceId );
+  return ret;
+}
+
+static void cmbs_hanFunMsgSendTxReady( void* ie_data )
+{
+  void* ie = NULL;
+  uint16_t ieType = 0U, deviceId = 0U;
+  ST_IE_HAN_MSG_CTL st_HANMsgCtl = { 0,0,0 };
+  ST_IE_HAN_MSG *stIe_Msg;
+
+  cmbs_api_ie_GetFirst( ie_data, &ie, &ieType );
+
+  while( ie != NULL )
+  {
+    switch ( ieType )
+    {
+      case CMBS_IE_HAN_DEVICE:
+        cmbs_api_ie_HANDeviceGet( ie, &deviceId);
+        break;
+      default:
+        break;
+    }
+    cmbs_api_ie_GetNext( ie_data, &ie, &ieType );
+  }
+
+  /* Send message. */
+  stIe_Msg = (ST_IE_HAN_MSG*) cmbs_util_FifoGet(Get_UleMsgFifo( deviceId ));
+  if(stIe_Msg) {
+    app_DsrHanMsgSend(1, 0, &st_HANMsgCtl, stIe_Msg);
+  }
+
+  return;
+}
+
+static int8_t cmbs_hanFunMsgRecv( void* ie_data )
+{
+  void* ie = NULL;
+  uint16_t ieType = 0U, deviceId = 0U;
+  ST_IE_HAN_MSG ie_han_msg;
+  bool ieReceived = FALSE;
+
+  ie_han_msg.pu8_Data = cmbs_hanFunBuffer + 15U;
+  cmbs_api_ie_GetFirst(ie_data, &ie, &ieType);
+  while(ie != NULL)
+  {
+    if ( CMBS_IE_HAN_MSG == ieType )
+    {
+      cmbs_api_ie_HANMsgGet(ie, &ie_han_msg);
+      ieReceived = TRUE;
+    }
+    cmbs_api_ie_GetNext(ie_data, &ie, &ieType);
+  }
+
+  if(!ieReceived)
+  {
+    return -1;
+  }
+
+  /* Generate original HANFUN packet. */
+  cmbs_hanFunBuffer[0] = (uint8_t) (ie_han_msg.u16_SrcDeviceId >> 8U);
+  cmbs_hanFunBuffer[1] = (uint8_t) ie_han_msg.u16_SrcDeviceId;
+  cmbs_hanFunBuffer[2] = ie_han_msg.u8_SrcUnitId;
+  cmbs_hanFunBuffer[3] = (ie_han_msg.u8_DstAddressType << 7 ) & 0x80;
+  cmbs_hanFunBuffer[3] |= (uint8_t) ((ie_han_msg.u16_DstDeviceId >> 8U) & 0x7F);
+  cmbs_hanFunBuffer[4] = (uint8_t) ie_han_msg.u16_DstDeviceId;
+  cmbs_hanFunBuffer[5] = ie_han_msg.u8_DstUnitId;
+  cmbs_hanFunBuffer[6] = 0x00; /* RFU */
+  cmbs_hanFunBuffer[7] = 0x00; /* RFU */
+  cmbs_hanFunBuffer[8] = ie_han_msg.u8_MsgSequence;
+  cmbs_hanFunBuffer[9] = ie_han_msg.e_MsgType;
+  cmbs_hanFunBuffer[10] = (ie_han_msg.u8_InterfaceType << 7 ) & 0x80;
+  cmbs_hanFunBuffer[10] |= (uint8_t) ((ie_han_msg.u16_InterfaceId >> 8U) & 0x7F);
+  cmbs_hanFunBuffer[11] = (uint8_t) ie_han_msg.u16_InterfaceId;
+  cmbs_hanFunBuffer[12] = (uint8_t) ie_han_msg.u8_InterfaceMember;
+  cmbs_hanFunBuffer[13] = (uint8_t) (ie_han_msg.u16_DataLen >> 8U);
+  cmbs_hanFunBuffer[14] = (uint8_t) ie_han_msg.u16_DataLen;
+
+  /* HAN-FUN Transport Layer over Dialog's ULE Stack. */
+  HF::ULE::Transport * transport = HF::ULE::Transport::instance();
+
+  /* Size of the register finished data. */
+  size_t size = ie_han_msg.u16_DataLen + HANFUN_HEADER_SIZE;
+
+  /* Register finished indication received. */
+  transport->receive(ie_han_msg.u16_SrcDeviceId, cmbs_hanFunBuffer, size);
+
+  return 0;
+}
+
+static int appcmbs_opend_callback( void *pv_AppRef, E_CMBS_EVENT_ID eventId, void *ie_data)
+{
+  int8_t ret;
+
+  switch(eventId)
+  {
+    case CMBS_EV_DSR_HAN_MSG_RECV:
+      cmbs_hanFunMsgRecv( ie_data );
+      break;
+
+    case CMBS_EV_DSR_HAN_DEVICE_REG_STAGE_1_NOTIFICATION:
+      cmbs_hanFunMsgRegState1Notification( ie_data );
+      break;
+
+    case CMBS_EV_DSR_HAN_DEVICE_REG_STAGE_3_NOTIFICATION:
+      cmbs_hanFunMsgRegState3Notification( ie_data );
+      break;
+
+    case CMBS_EV_DSR_HAN_MSG_SEND_TX_START_REQUEST_RES:
+      ret = cmbs_hanFunMsgSendTxStartRequestRes( ie_data );
+      if ( 0 > ret ) {
+        /* TX error. */
+      }
+      break;
+
+    case CMBS_EV_DSR_HAN_MSG_SEND_TX_READY:
+      /* Send message. */
+      cmbs_hanFunMsgSendTxReady( ie_data );
+      break;
+
+    case CMBS_EV_DSR_HAN_MSG_SEND_RES:
+      /* Check the send response. */
+      ret = cmbs_hanFunMsgSendRes( ie_data );
+      if( 0 == ret ) {
+        /* TX success. */
+      } else if ( 0 > ret ) {
+         /* TX error. */
+      }
+      break;
+
+    case CMBS_EV_DSR_HAN_MSG_SEND_TX_ENDED:
+      break;
+
+    default:
+      break;
+  }
+
+  return 0;
 }
