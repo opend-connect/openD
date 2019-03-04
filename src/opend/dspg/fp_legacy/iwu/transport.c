@@ -286,6 +286,14 @@ int appcmbs_opend_callback(void *pv_AppRef, E_CMBS_EVENT_ID eventId, void *ie_da
       cmbs_onHandsetRegistered( ie_data );
       break;
 
+    case CMBS_EV_DSR_PARAM_SET_RES:
+      sConfirm.service = OPEND_SUBAPI_SET_AC;
+      if( cmbs_checkResponse( ie_data ) ) {
+        sConfirm.status = OPEND_STATUS_OK;
+      }
+      openD_sub_confirmation( &sConfirm );
+      break;
+
     default:
       break;
   }
