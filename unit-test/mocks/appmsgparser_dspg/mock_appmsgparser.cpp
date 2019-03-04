@@ -32,9 +32,9 @@ AppMsgParser *ObjAppMsgParser;
 
 extern "C"{
 
-  void initMsgParserSub(hsSuccessfullyRegistered registeredClb, hsHanfunMessageData hanMsgClb){
+  void initMsgParserSub(hsSuccessfullyRegistered registeredClb){
       assert(ObjAppMsgParser!=NULL);
-      ObjAppMsgParser->initMsgParserSub(registeredClb, hanMsgClb);
+      ObjAppMsgParser->initMsgParserSub(registeredClb);
   } 
 
   void initMsgParserCall(hsSuccessfullyConnected connectedClb, hsSuccessfullyReleased releasedClb){
