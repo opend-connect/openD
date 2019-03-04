@@ -61,8 +61,8 @@ add_executable(ut_dspg_fp_openD_subApi_request ${FILE_UNDER_TEST} ut_openD_subAp
 ##
 ## Link targets
 ##
-target_link_libraries(ut_dspg_fp_openD_subApi_init libgmock pthread libApp libMockDspgTestLib mockDspgAppMsgParser)
-target_link_libraries(ut_dspg_fp_openD_subApi_request libgmock pthread libApp libMockDspgTestLib mockDspgAppMsgParser)
+target_link_libraries(ut_dspg_fp_openD_subApi_init libgmock pthread libApp libMockDspgTestLib)
+target_link_libraries(ut_dspg_fp_openD_subApi_request libgmock pthread libApp libMockDspgTestLib)
 
 ##
 ## Add tests
