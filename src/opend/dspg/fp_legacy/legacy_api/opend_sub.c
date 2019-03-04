@@ -40,8 +40,6 @@ openD_subApiPrimitives_t _sPrimitives;
 
 static void opend_deregistration_finished_cllb();
 
-static void opend_get_registration_state_cllb(void *param);
-
 void registerSuccessClb(uint16_t address, uint8_t handsetId);
 
 openD_status_t openD_subApi_init( openD_subApiPrimitives_t *sPrimitives )
@@ -72,26 +70,6 @@ static void opend_deregistration_finished_cllb(void *param)
   openD_subApiCfm.service = OPEND_SUBAPI_SUBSCRIPTION_DELETE;
   openD_subApiCfm.status = OPEND_STATUS_OK;
   openD_subApiCfm.param.registrationState.isRegistered = false;
-  _sPrimitives.openD_subApiCfm(&openD_subApiCfm);
-}
-
-static void opend_get_registration_state_cllb(void *param)
-{
-  uint8_t *success = (uint8_t*) (param+8);
-
-  openD_subApiCfm_t openD_subApiCfm;
-  openD_subApiCfm.service = OPEND_SUBAPI_GET_REGISTRATION_STATE;
-  openD_subApiCfm.status = OPEND_STATUS_OK;
-
-  if(memcmp(success, "1", 1) == 0)
-  {
-    openD_subApiCfm.param.registrationState.isRegistered = true;
-  }
-  else
-  {
-    openD_subApiCfm.param.registrationState.isRegistered = false;
-  }
-
   _sPrimitives.openD_subApiCfm(&openD_subApiCfm);
 }
 
