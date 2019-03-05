@@ -166,7 +166,7 @@ void legacy_state_machine_callback( rx_states_t state, void *param )
     case OK:
       if(legacy_last_state == AUDIO_INIT)
       {
-        atCmdBuffer.dataWritten = send_at_command(AUDIO_FDHF, atCmdBuffer.dataBuffer);
+        atCmdBuffer.dataWritten = at_commands_create(AUDIO_FDHF, NULL, atCmdBuffer.dataBuffer, DATA_BUFFER_SIZE);
         iwu_serial_send(atCmdBuffer.dataBuffer, atCmdBuffer.dataWritten);
         legacy_last_state = AUDIO_FDHF;
       }
@@ -250,8 +250,8 @@ bool opend_state_init( void *param )
   switch( message->primitive )
   {
     case MESSAGE_PRIMITIVE_INIT:
-      iwu_serial_init(&receive_at_command);
-      init_at_commands(legacy_state_machine_callback);
+      iwu_serial_init(&at_commands_parse);
+      at_commands_init(legacy_state_machine_callback);
       msManager_changeState( &iwu_msManager_ctxt, OPEND_STATE_UNREGISTERED );
       break;
     default:
@@ -274,13 +274,13 @@ bool opend_state_unregistered( void *param )
       switch( (*((char*) message->param)) ) {
         case 0x72:
           /* Key 'r' KEY_REG */
-          atCmdBuffer.dataWritten = send_at_command(REGISTRATION_SEARCH_BASE, atCmdBuffer.dataBuffer);
+          atCmdBuffer.dataWritten = at_commands_create(REGISTRATION_SEARCH_BASE, NULL, atCmdBuffer.dataBuffer, DATA_BUFFER_SIZE);
           iwu_serial_send(atCmdBuffer.dataBuffer, atCmdBuffer.dataWritten);
           legacy_last_state = REGISTRATION_SEARCH_BASE;
           break;
         case 0x67:
           /* Key 'g' KEY_GET_REG */
-          atCmdBuffer.dataWritten = send_at_command(GET_REGISTRATION_STATE, atCmdBuffer.dataBuffer);
+          atCmdBuffer.dataWritten = at_commands_create(GET_REGISTRATION_STATE, NULL, atCmdBuffer.dataBuffer, DATA_BUFFER_SIZE);
           iwu_serial_send(atCmdBuffer.dataBuffer, atCmdBuffer.dataWritten);
           legacy_last_state = GET_REGISTRATION_STATE;
           break;
@@ -307,7 +307,7 @@ bool opend_state_unregistered( void *param )
       /* Check the last state. */
       if(legacy_last_state == REGISTRATION_SEARCH_BASE)
       {
-        atCmdBuffer.dataWritten = send_at_command(REGISTRATION_SEARCH_BASE_PIN, atCmdBuffer.dataBuffer);
+        atCmdBuffer.dataWritten = at_commands_create(REGISTRATION_SEARCH_BASE_PIN, (void*) pinCode, atCmdBuffer.dataBuffer, DATA_BUFFER_SIZE);
         iwu_serial_send(atCmdBuffer.dataBuffer, atCmdBuffer.dataWritten);
         legacy_last_state = REGISTRATION_SEARCH_BASE_PIN;
       }
@@ -346,7 +346,7 @@ bool opend_state_registered( void *param )
       switch( (*((char*) message->param)) ) {
         case 0x65:
           /* Key 'e' KEY_DEREG */
-          atCmdBuffer.dataWritten = send_at_command(DEREGISTRATION, atCmdBuffer.dataBuffer);
+          atCmdBuffer.dataWritten = at_commands_create(DEREGISTRATION, NULL, atCmdBuffer.dataBuffer, DATA_BUFFER_SIZE);
           iwu_serial_send(atCmdBuffer.dataBuffer, atCmdBuffer.dataWritten);
           legacy_last_state = DEREGISTRATION;
           break;
@@ -354,14 +354,14 @@ bool opend_state_registered( void *param )
           if(legacy_RX_last_state == ALRT)
           {
             /* Key 'r' ANSWER_CALL */
-            atCmdBuffer.dataWritten = send_at_command(ANSWER_CALL, atCmdBuffer.dataBuffer);
+            atCmdBuffer.dataWritten = at_commands_create(ANSWER_CALL, NULL, atCmdBuffer.dataBuffer, DATA_BUFFER_SIZE);
             iwu_serial_send(atCmdBuffer.dataBuffer, atCmdBuffer.dataWritten);
             legacy_last_state = ANSWER_CALL;
           }
           else
           {
             /* Key 'w' Setup call */
-            atCmdBuffer.dataWritten = send_at_command(CALL_SETUP, atCmdBuffer.dataBuffer);
+            atCmdBuffer.dataWritten = at_commands_create(CALL_SETUP, NULL, atCmdBuffer.dataBuffer, DATA_BUFFER_SIZE);
             iwu_serial_send(atCmdBuffer.dataBuffer, atCmdBuffer.dataWritten);
             legacy_last_state = CALL_SETUP;
           }
@@ -428,7 +428,7 @@ bool opend_state_connected( void *param )
       switch( (*((char*) message->param)) ) {
         case 0x77:
           /* Key 'w' Release call */
-          atCmdBuffer.dataWritten = send_at_command(TERMINATE_CALL, atCmdBuffer.dataBuffer);
+          atCmdBuffer.dataWritten = at_commands_create(TERMINATE_CALL, NULL, atCmdBuffer.dataBuffer, DATA_BUFFER_SIZE);
           iwu_serial_send(atCmdBuffer.dataBuffer, atCmdBuffer.dataWritten);
           legacy_last_state = TERMINATE_CALL;
           break;
@@ -478,7 +478,7 @@ void opend_iwu_init()
 
 void opend_iwu_audio_init()
 {
-  atCmdBuffer.dataWritten = send_at_command(AUDIO_SMOD, atCmdBuffer.dataBuffer);
+  atCmdBuffer.dataWritten = at_commands_create(AUDIO_SMOD, NULL, atCmdBuffer.dataBuffer, DATA_BUFFER_SIZE);
   iwu_serial_send(atCmdBuffer.dataBuffer, atCmdBuffer.dataWritten);
   legacy_last_state = AUDIO_INIT;
 }
