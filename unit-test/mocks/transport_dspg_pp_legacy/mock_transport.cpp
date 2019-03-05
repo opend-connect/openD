@@ -70,6 +70,11 @@ void opend_iwu_register_request() {
    g_transport->opend_iwu_register_request();
 } /* opend_iwu_register_request */
 
+int8_t opend_iwu_set_registration_pin(uint8_t data[4]) {
+   assert(g_transport != NULL);
+   g_transport->opend_iwu_set_registration_pin( data );
+}
+
 void opend_iwu_release_call() {
    assert(g_transport != NULL);
    g_transport->opend_iwu_release_call();

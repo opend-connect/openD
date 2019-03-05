@@ -30,6 +30,8 @@
 #include "at_commands.h"
 #include "transport.h"
 
+#include "opend_sub.h"
+
 #include "msManager.h"
 
 /*!
@@ -37,7 +39,11 @@
  */
 #define ARRAY_SIZEOF(x)  (sizeof(x) / sizeof((x)[0]))
 
+#define DATA_BUFFER_SIZE 255U
+
 char callHandsetId;
+
+static uint8_t pinCode[4] = {0U, 0U, 0U, 0U};
 
 /*!
  * States for the legacy iwu state machine.
@@ -51,7 +57,7 @@ typedef enum {
 
 /* Structure to store outgoing AT commands. */
 typedef struct{
-  uint8_t dataBuffer[256];
+  uint8_t dataBuffer[DATA_BUFFER_SIZE];
   uint16_t dataWritten;
 } atCmdBuffer_t;
 
@@ -497,6 +503,35 @@ void opend_iwu_get_registration_state()
   iwuMessage.primitive = MESSAGE_PRIMITIVE_USER;
   iwuMessage.param = (void*) "g";
   msManager_handleService( &iwu_msManager_ctxt, &iwuMessage );
+}
+
+int8_t opend_iwu_set_registration_pin( uint8_t data[4] )
+{
+  int8_t ret = 0;
+
+  /* Convert pin. */
+  pinCode[0] = ((uint8_t*) data)[2] >> 4;
+  pinCode[1] = ((uint8_t*) data)[2] & 3;
+  pinCode[2] = ((uint8_t*) data)[3] >> 4;
+  pinCode[3] = ((uint8_t*) data)[3] & 3;
+
+  /* Set pin code. */
+  for(uint8_t i = 0; i < 4; i++) {
+    if( pinCode[i] >= 0 && pinCode[i] <= 9 ) {
+      pinCode[i] = '0' + pinCode[i];
+    } else {
+      ret = -1;
+    }
+  }
+
+  if( 0 == ret ) {
+    openD_subApiCfm_t subApiCfm;
+    subApiCfm.service = OPEND_SUBAPI_SET_AC;
+    subApiCfm.status = OPEND_STATUS_OK;
+    openD_sub_confirmation( &subApiCfm );
+  }
+
+  return ret;
 }
 
 void opend_iwu_call_request(char setupCallHandsetId)
