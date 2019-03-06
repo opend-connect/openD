@@ -29,6 +29,8 @@
 #include <application.h>
 #include "hf_transport.h"
 
+#include "opend_hanfun.h"
+
 extern "C"
 {
 #include "apphan.h"
@@ -58,6 +60,13 @@ extern "C"
  * @param   ie_data Pointer to IE of the CMBS.
  */
 static int appcmbs_opend_callback( void *pv_AppRef, E_CMBS_EVENT_ID eventId, void *ie_data);
+
+static int8_t cmbs_hanFunMsgRecv( void* ie_data );
+static void cmbs_hanFunMsgSendTxReady( void* ie_data );
+static int8_t cmbs_hanFunMsgSendRes( void* ie_data );
+static int8_t cmbs_hanFunMsgSendTxStartRequestRes( void* ie_data );
+static void cmbs_hanFunMsgRegState3Notification( void* ie_data );
+static void cmbs_hanFunMsgRegState1Notification( void* ie_data );
 
 /** HANFUN buffer for CMBS. */
 static uint8_t cmbs_hanFunBuffer[CMBS_HAN_MAX_MSG_LEN*2];
@@ -599,6 +608,29 @@ static int8_t cmbs_hanFunMsgRecv( void* ie_data )
   return 0;
 }
 
+static void cmbs_onRegistrationClose( void* ie_data )
+{
+  void* ie = NULL;
+  uint16_t ieType = 0U;
+  openD_hanfunApi_devMgmtInd_t hDevMgmtIndication;
+  ST_IE_REG_CLOSE_REASON regCloseReason;
+
+  if( ie_data ) {
+    cmbs_api_ie_GetFirst(ie_data, &ie, &ieType);
+
+    while(ie != NULL) {
+      if( CMBS_IE_REG_CLOSE_REASON == ieType ) {
+        cmbs_api_ie_RegCloseReasonGet(ie, &regCloseReason);
+      }
+      cmbs_api_ie_GetNext(ie_data, &ie, &ieType);
+    }
+  }
+
+  hDevMgmtIndication.service = OPEND_HANFUNAPI_DEVICE_MANAGEMENT_REGISTER_DISABLE;
+  openD_hanfun_devMgmtInd( &hDevMgmtIndication );
+  return;
+}
+
 static int appcmbs_opend_callback( void *pv_AppRef, E_CMBS_EVENT_ID eventId, void *ie_data)
 {
   int8_t ret;
@@ -619,9 +651,6 @@ static int appcmbs_opend_callback( void *pv_AppRef, E_CMBS_EVENT_ID eventId, voi
 
     case CMBS_EV_DSR_HAN_MSG_SEND_TX_START_REQUEST_RES:
       ret = cmbs_hanFunMsgSendTxStartRequestRes( ie_data );
-      if ( 0 > ret ) {
-        /* TX error. */
-      }
       break;
 
     case CMBS_EV_DSR_HAN_MSG_SEND_TX_READY:
@@ -632,14 +661,13 @@ static int appcmbs_opend_callback( void *pv_AppRef, E_CMBS_EVENT_ID eventId, voi
     case CMBS_EV_DSR_HAN_MSG_SEND_RES:
       /* Check the send response. */
       ret = cmbs_hanFunMsgSendRes( ie_data );
-      if( 0 == ret ) {
-        /* TX success. */
-      } else if ( 0 > ret ) {
-         /* TX error. */
-      }
       break;
 
     case CMBS_EV_DSR_HAN_MSG_SEND_TX_ENDED:
+      break;
+
+    case CMBS_EV_DSR_CORD_CLOSEREG:
+      cmbs_onRegistrationClose( ie_data );
       break;
 
     default:

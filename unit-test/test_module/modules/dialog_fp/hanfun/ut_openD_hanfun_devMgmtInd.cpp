@@ -63,5 +63,5 @@ class ut_opend_hanfun_devmgmtind: public testing::Test
  */
 TEST_F( ut_opend_hanfun_devmgmtind, ut_opend_hanfun_devmgmtind_NULL_Pointer )
 {
-  EXPECT_EQ( OPEND_STATUS_OK, openD_hanfun_devMgmtInd( NULL ) );
+  EXPECT_EQ( OPEND_STATUS_FAIL, openD_hanfun_devMgmtInd( NULL ) );
 }

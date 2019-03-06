@@ -55,7 +55,8 @@ UleErr_e ULE_Get_Access_Code_Force(rsuint8 *Ac_1Ptr, rsuint8 *Ac_2Ptr, rsuint8 *
 // Used to get the list of ULE sensors currently registered
 UleErr_e ULE_Get_Registration_Count(rsuint8 *Registered,rsuint8 *MaxSupported);
 // Used to put CVM in registration mode
-UleErr_e ULE_Enable_Registration(rsuint32 registration_timeout);
+typedef void (*ULE_Enable_Registration_Timeout_t)( void );
+UleErr_e ULE_Enable_Registration(rsuint32 registration_timeout, ULE_Enable_Registration_Timeout_t ULE_Enable_Registration_Timeout_Clb );
 // Used to release CVM from  registration mode
 UleErr_e ULE_Disable_Registration();
 // Used to read current registration mode

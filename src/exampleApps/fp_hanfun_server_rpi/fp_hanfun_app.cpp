@@ -81,6 +81,15 @@ void profileConfirmCallback(openD_hanfunApi_profileCfm_t *hProfileConfirm);
  */
 void bindMgmtConfirmCallback(openD_hanfunApi_bindMgmtCfm_t *hBindMgmtConfirm);
 
+/**
+ * @brief   Device management indication callback.
+ *
+ * @details Executes the service specific device management indication.
+ *
+ * @param   hDevMgmtIndication Pointer to the device management indication structure.
+ */
+void devMgmtIndicationCallback(openD_hanfunApi_devMgmtInd_t *hDevMgmtIndication);
+
 
 void devMgmtConfirmCallback(openD_hanfunApi_devMgmtCfm_t *hDevMgmtConfirm)
 {
@@ -158,6 +167,36 @@ void devMgmtConfirmCallback(openD_hanfunApi_devMgmtCfm_t *hDevMgmtConfirm)
       confirmAndIndStatusByte = OPEND_STATUS_ARGUMENT_INVALID;
 	    break;
   }
+}
+
+void devMgmtIndicationCallback(openD_hanfunApi_devMgmtInd_t *hDevMgmtIndication)
+{
+  if(!hDevMgmtIndication)
+  {
+    return;
+  }
+
+  switch(hDevMgmtIndication->service)
+  {
+    case OPEND_HANFUNAPI_DEVICE_MANAGEMENT_REGISTER_DISABLE:
+      std::cout.clear (); std::cout << "[INFO ] " << "Registration mode disabled." <<
+      std::endl; std::cout.clear (); std::cerr.clear ();
+      j["version"] = "1.0.0";
+      j["module"] = "hanfun";
+      j["primitive"] = "indication";
+      j["service"] = "deviceManagementRegisterDisable";
+      j["status"] = "OK";
+      j["param1"] = "0";
+      j["param2"] = "0";
+      j["param3"] = "0";
+      udp_send((j.dump()).c_str(), strlen((j.dump()).c_str())+1);
+      break;
+
+    default:
+      break;
+  }
+
+  return;
 }
 
 void profileIndCallback( openD_hanfunApi_profileInd_t *hProfileInd )
@@ -594,8 +633,9 @@ void HF::Application::Initialize (HF::Transport::Layer &transport, int argc, cha
 
   /* Set the confirmation and indication callbacks. */
   openD_hanfunApiPrimitives.openD_hanfunApiProfileCfm = profileConfirmCallback;
-	openD_hanfunApiPrimitives.openD_hanfunApi_mgmtCfm = devMgmtConfirmCallback;
-	openD_hanfunApiPrimitives.openD_hanfunApiProfileInd = profileIndCallback;
+  openD_hanfunApiPrimitives.openD_hanfunApiProfileInd = profileIndCallback;
+  openD_hanfunApiPrimitives.openD_hanfunApi_mgmtCfm = devMgmtConfirmCallback;
+  openD_hanfunApiPrimitives.openD_hanfunApi_mgmtInd = devMgmtIndicationCallback;
   openD_hanfunApiPrimitives.openD_hanfunApi_bindCfm = bindMgmtConfirmCallback;
 
   /* Initialize the openD HANFUN API primitives. */
