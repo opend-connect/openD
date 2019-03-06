@@ -101,9 +101,6 @@ TEST_F( ut_dspg_openD_hanfunApi_fp_init, ut_dspg_openD_hanfunApi_fp_init_valid_P
     // Setup mock
     EXPECT_CALL( ObjMockTestLib, app_HanRegularStart( TRUE) )
     .Times( 1 );
-    // Setup mock
-    EXPECT_CALL( ObjAppMsgParser, initMsgParserSub( _, _ ) )
-    .Times( 1 );
 
     result = openD_hanfunApi_fp_init( transport );
 

@@ -28,9 +28,7 @@ class AppMsgParser
 {
   public:
     virtual ~AppMsgParser() {}
-    virtual void initMsgParserSub(hsSuccessfullyRegistered registeredClb, hsHanfunMessageData hanMsgClb) = 0;
     virtual void initMsgParserCall(hsSuccessfullyConnected connectedClb, hsSuccessfullyReleased releasedClb) = 0;
-    virtual void initMsgParserDeSub(hsSuccessfullyDeregistered deregisteredClb) = 0;
 };
 
 
@@ -38,9 +36,7 @@ class AppMsgParser
 class MockAppMsgParser : public AppMsgParser
 {
   public:
-    MOCK_METHOD2( initMsgParserSub, void( hsSuccessfullyRegistered registeredClb, hsHanfunMessageData hanMsgClb ) );
     MOCK_METHOD2( initMsgParserCall, void( hsSuccessfullyConnected connectedClb, hsSuccessfullyReleased releasedClb) );
-    MOCK_METHOD1( initMsgParserDeSub, void( hsSuccessfullyDeregistered deregisteredClb ) );
 }; 
 
 void setMockAppMsgParserReference(AppMsgParser *ref);

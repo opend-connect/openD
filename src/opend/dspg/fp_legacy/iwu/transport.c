@@ -36,6 +36,8 @@
 #include "tcx_util.h"
 #include "appCallRouter.h"
 
+#include "opend_sub.h"
+
 /* Setup TDM interface. */
 ST_TDM_CONFIG g_st_TdmCfg;
 
@@ -61,6 +63,16 @@ ST_UART_CONFIG g_st_UartCfg;
 /* Device control. */
 ST_CMBS_DEV g_st_DevCtl;
 
+/**
+ * @brief   CMBS message callback.
+ *
+ * @details Handle the CMBS message callback.
+ *
+ * @param   pv_AppRef Pointer of the app reference.
+ * @param   eventId Event ID of the CMBS.
+ * @param   ie_data Pointer to IE of the CMBS.
+ */
+static int appcmbs_opend_callback( void *pv_AppRef, E_CMBS_EVENT_ID eventId, void *ie_data);
 
 
 void transport_init( )
@@ -71,6 +83,8 @@ void transport_init( )
   bool SYPO_enabled = FALSE;
   int menu = 1;
   u16 u16_TargetVersion;
+
+  appcmbs_opend_setCallbackFct( &appcmbs_opend_callback );
 
   memset(&SYPOParameters, 0, sizeof(SYPOParameters));
   /* Use USB communication. */
@@ -170,4 +184,119 @@ void transport_init( )
   tcx_LogOutputDestroy();
   printf("Press ENTER to exit...");
   exit(1);
+}
+
+static bool cmbs_checkResponse( void* ie_data )
+{
+  void* ie = NULL;
+  uint16_t ieType = 0U;
+  ST_IE_RESPONSE ieResponse;
+  ieResponse.e_Response = CMBS_RESPONSE_ERROR;
+  bool ret = false;
+
+  if( ie_data )
+  {
+    cmbs_api_ie_GetFirst(ie_data, &ie, &ieType);
+
+    while(ie != NULL)
+    {
+      if( CMBS_IE_RESPONSE == ieType )
+      {
+        cmbs_api_ie_ResponseGet(ie, &ieResponse);
+        if( CMBS_RESPONSE_OK == ieResponse.e_Response )
+        {
+          ret = true;
+          ie = NULL;
+        }
+      }
+      cmbs_api_ie_GetNext(ie_data, &ie, &ieType);
+    }
+  }
+
+  return ret;
+}
+
+static void cmbs_onHandsetRegistered( void* ie_data )
+{
+  void* ie = NULL;
+  uint16_t ieType = 0U;
+  ST_IE_HANDSETINFO hsInfo;
+  openD_subApiInd_t sIndication;
+  openD_subApiCfm_t sConfirm;
+  ST_IE_RESPONSE ieResponse;
+  ieResponse.e_Response = CMBS_RESPONSE_ERROR;
+  sConfirm.status = OPEND_STATUS_FAIL;
+
+  memset(&hsInfo, 0, sizeof(ST_IE_HANDSETINFO));
+
+  if( ie_data )
+  {
+    cmbs_api_ie_GetFirst(ie_data, &ie, &ieType);
+
+    cmbs_api_ie_HandsetInfoGet(ie, &hsInfo);
+    cmbs_api_ie_ResponseGet(ie, &ieResponse);
+
+    if ( ieResponse.e_Response == CMBS_RESPONSE_OK )
+    {
+      if ( hsInfo.u8_State == CMBS_HS_REG_STATE_REGISTERED )
+      {
+        sIndication.service = OPEND_SUBAPI_SUBSCRIBE;
+        sIndication.param.subscribe.pmid[0] = hsInfo.u8_Hs;
+        sIndication.param.subscribe.ipui[0] = hsInfo.u8_IPEI[0];
+        sIndication.param.subscribe.ipui[1] = hsInfo.u8_IPEI[1];
+        sIndication.param.subscribe.ipui[2] = hsInfo.u8_IPEI[2];
+        sIndication.param.subscribe.ipui[3] = hsInfo.u8_IPEI[3];
+        sIndication.param.subscribe.ipui[4] = hsInfo.u8_IPEI[4];
+
+        openD_sub_indication( &sIndication );
+      } else if ( hsInfo.u8_State == CMBS_HS_REG_STATE_UNREGISTERED ) {
+        sConfirm.service = OPEND_SUBAPI_SUBSCRIPTION_DELETE;
+        sConfirm.status = OPEND_STATUS_OK;
+        openD_sub_confirmation( &sConfirm );
+      }
+    }
+  }
+}
+
+int appcmbs_opend_callback(void *pv_AppRef, E_CMBS_EVENT_ID eventId, void *ie_data)
+{
+  openD_subApiCfm_t sConfirm;
+  sConfirm.status = OPEND_STATUS_FAIL;
+
+  /* Map confirmation and indication callbacks. */
+  switch( eventId )
+  {
+    case CMBS_EV_DSR_CORD_OPENREG_RES:
+      sConfirm.service = OPEND_SUBAPI_SUBSCRIBE_ENABLE;
+      if( cmbs_checkResponse( ie_data ) ) {
+        sConfirm.status = OPEND_STATUS_OK;
+      }
+      openD_sub_confirmation( &sConfirm );
+      break;
+
+    case CMBS_EV_DSR_HS_DELETE_RES:
+      sConfirm.service = OPEND_SUBAPI_SUBSCRIPTION_DELETE;
+      if( cmbs_checkResponse( ie_data ) ) {
+        sConfirm.status = OPEND_STATUS_OK;
+      }
+      openD_sub_confirmation( &sConfirm );
+      break;
+
+    case CMBS_EV_DSR_HS_REGISTERED:
+      cmbs_onHandsetRegistered( ie_data );
+      break;
+
+    case CMBS_EV_DSR_PARAM_SET_RES:
+      sConfirm.service = OPEND_SUBAPI_SET_AC;
+      if( cmbs_checkResponse( ie_data ) ) {
+        sConfirm.status = OPEND_STATUS_OK;
+      }
+      openD_sub_confirmation( &sConfirm );
+      break;
+
+    default:
+      break;
+  }
+
+  return 0;
 }

@@ -30,6 +30,8 @@
 #include "at_commands.h"
 #include "transport.h"
 
+#include "opend_sub.h"
+
 #include "msManager.h"
 
 /*!
@@ -37,7 +39,11 @@
  */
 #define ARRAY_SIZEOF(x)  (sizeof(x) / sizeof((x)[0]))
 
+#define DATA_BUFFER_SIZE 255U
+
 char callHandsetId;
+
+static uint8_t pinCode[4] = {0U, 0U, 0U, 0U};
 
 /*!
  * States for the legacy iwu state machine.
@@ -51,7 +57,7 @@ typedef enum {
 
 /* Structure to store outgoing AT commands. */
 typedef struct{
-  uint8_t dataBuffer[256];
+  uint8_t dataBuffer[DATA_BUFFER_SIZE];
   uint16_t dataWritten;
 } atCmdBuffer_t;
 
@@ -166,7 +172,7 @@ void legacy_state_machine_callback( rx_states_t state, void *param )
     case OK:
       if(legacy_last_state == AUDIO_INIT)
       {
-        atCmdBuffer.dataWritten = send_at_command(AUDIO_FDHF, atCmdBuffer.dataBuffer);
+        atCmdBuffer.dataWritten = at_commands_create(AUDIO_FDHF, NULL, atCmdBuffer.dataBuffer, DATA_BUFFER_SIZE);
         iwu_serial_send(atCmdBuffer.dataBuffer, atCmdBuffer.dataWritten);
         legacy_last_state = AUDIO_FDHF;
       }
@@ -250,8 +256,8 @@ bool opend_state_init( void *param )
   switch( message->primitive )
   {
     case MESSAGE_PRIMITIVE_INIT:
-      iwu_serial_init(&receive_at_command);
-      init_at_commands(legacy_state_machine_callback);
+      iwu_serial_init(&at_commands_parse);
+      at_commands_init(legacy_state_machine_callback);
       msManager_changeState( &iwu_msManager_ctxt, OPEND_STATE_UNREGISTERED );
       break;
     default:
@@ -274,13 +280,13 @@ bool opend_state_unregistered( void *param )
       switch( (*((char*) message->param)) ) {
         case 0x72:
           /* Key 'r' KEY_REG */
-          atCmdBuffer.dataWritten = send_at_command(REGISTRATION_SEARCH_BASE, atCmdBuffer.dataBuffer);
+          atCmdBuffer.dataWritten = at_commands_create(REGISTRATION_SEARCH_BASE, NULL, atCmdBuffer.dataBuffer, DATA_BUFFER_SIZE);
           iwu_serial_send(atCmdBuffer.dataBuffer, atCmdBuffer.dataWritten);
           legacy_last_state = REGISTRATION_SEARCH_BASE;
           break;
         case 0x67:
           /* Key 'g' KEY_GET_REG */
-          atCmdBuffer.dataWritten = send_at_command(GET_REGISTRATION_STATE, atCmdBuffer.dataBuffer);
+          atCmdBuffer.dataWritten = at_commands_create(GET_REGISTRATION_STATE, NULL, atCmdBuffer.dataBuffer, DATA_BUFFER_SIZE);
           iwu_serial_send(atCmdBuffer.dataBuffer, atCmdBuffer.dataWritten);
           legacy_last_state = GET_REGISTRATION_STATE;
           break;
@@ -307,7 +313,7 @@ bool opend_state_unregistered( void *param )
       /* Check the last state. */
       if(legacy_last_state == REGISTRATION_SEARCH_BASE)
       {
-        atCmdBuffer.dataWritten = send_at_command(REGISTRATION_SEARCH_BASE_PIN, atCmdBuffer.dataBuffer);
+        atCmdBuffer.dataWritten = at_commands_create(REGISTRATION_SEARCH_BASE_PIN, (void*) pinCode, atCmdBuffer.dataBuffer, DATA_BUFFER_SIZE);
         iwu_serial_send(atCmdBuffer.dataBuffer, atCmdBuffer.dataWritten);
         legacy_last_state = REGISTRATION_SEARCH_BASE_PIN;
       }
@@ -346,7 +352,7 @@ bool opend_state_registered( void *param )
       switch( (*((char*) message->param)) ) {
         case 0x65:
           /* Key 'e' KEY_DEREG */
-          atCmdBuffer.dataWritten = send_at_command(DEREGISTRATION, atCmdBuffer.dataBuffer);
+          atCmdBuffer.dataWritten = at_commands_create(DEREGISTRATION, NULL, atCmdBuffer.dataBuffer, DATA_BUFFER_SIZE);
           iwu_serial_send(atCmdBuffer.dataBuffer, atCmdBuffer.dataWritten);
           legacy_last_state = DEREGISTRATION;
           break;
@@ -354,14 +360,14 @@ bool opend_state_registered( void *param )
           if(legacy_RX_last_state == ALRT)
           {
             /* Key 'r' ANSWER_CALL */
-            atCmdBuffer.dataWritten = send_at_command(ANSWER_CALL, atCmdBuffer.dataBuffer);
+            atCmdBuffer.dataWritten = at_commands_create(ANSWER_CALL, NULL, atCmdBuffer.dataBuffer, DATA_BUFFER_SIZE);
             iwu_serial_send(atCmdBuffer.dataBuffer, atCmdBuffer.dataWritten);
             legacy_last_state = ANSWER_CALL;
           }
           else
           {
             /* Key 'w' Setup call */
-            atCmdBuffer.dataWritten = send_at_command(CALL_SETUP, atCmdBuffer.dataBuffer);
+            atCmdBuffer.dataWritten = at_commands_create(CALL_SETUP, NULL, atCmdBuffer.dataBuffer, DATA_BUFFER_SIZE);
             iwu_serial_send(atCmdBuffer.dataBuffer, atCmdBuffer.dataWritten);
             legacy_last_state = CALL_SETUP;
           }
@@ -428,7 +434,7 @@ bool opend_state_connected( void *param )
       switch( (*((char*) message->param)) ) {
         case 0x77:
           /* Key 'w' Release call */
-          atCmdBuffer.dataWritten = send_at_command(TERMINATE_CALL, atCmdBuffer.dataBuffer);
+          atCmdBuffer.dataWritten = at_commands_create(TERMINATE_CALL, NULL, atCmdBuffer.dataBuffer, DATA_BUFFER_SIZE);
           iwu_serial_send(atCmdBuffer.dataBuffer, atCmdBuffer.dataWritten);
           legacy_last_state = TERMINATE_CALL;
           break;
@@ -478,7 +484,7 @@ void opend_iwu_init()
 
 void opend_iwu_audio_init()
 {
-  atCmdBuffer.dataWritten = send_at_command(AUDIO_SMOD, atCmdBuffer.dataBuffer);
+  atCmdBuffer.dataWritten = at_commands_create(AUDIO_SMOD, NULL, atCmdBuffer.dataBuffer, DATA_BUFFER_SIZE);
   iwu_serial_send(atCmdBuffer.dataBuffer, atCmdBuffer.dataWritten);
   legacy_last_state = AUDIO_INIT;
 }
@@ -497,6 +503,35 @@ void opend_iwu_get_registration_state()
   iwuMessage.primitive = MESSAGE_PRIMITIVE_USER;
   iwuMessage.param = (void*) "g";
   msManager_handleService( &iwu_msManager_ctxt, &iwuMessage );
+}
+
+int8_t opend_iwu_set_registration_pin( uint8_t data[4] )
+{
+  int8_t ret = 0;
+
+  /* Convert pin. */
+  pinCode[0] = ((uint8_t*) data)[2] >> 4;
+  pinCode[1] = ((uint8_t*) data)[2] & 3;
+  pinCode[2] = ((uint8_t*) data)[3] >> 4;
+  pinCode[3] = ((uint8_t*) data)[3] & 3;
+
+  /* Set pin code. */
+  for(uint8_t i = 0; i < 4; i++) {
+    if( pinCode[i] >= 0 && pinCode[i] <= 9 ) {
+      pinCode[i] = '0' + pinCode[i];
+    } else {
+      ret = -1;
+    }
+  }
+
+  if( 0 == ret ) {
+    openD_subApiCfm_t subApiCfm;
+    subApiCfm.service = OPEND_SUBAPI_SET_AC;
+    subApiCfm.status = OPEND_STATUS_OK;
+    openD_sub_confirmation( &subApiCfm );
+  }
+
+  return ret;
 }
 
 void opend_iwu_call_request(char setupCallHandsetId)

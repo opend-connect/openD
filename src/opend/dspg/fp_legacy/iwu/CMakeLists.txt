@@ -35,6 +35,10 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
+target_include_directories(${PROJECT_NAME} PRIVATE
+    $<TARGET_PROPERTY:opendApiPrv,INTERFACE_INCLUDE_DIRECTORIES>
+)
+
 #---------------------------------------------------------------------------------------
 # Link
 #---------------------------------------------------------------------------------------
