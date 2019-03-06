@@ -370,6 +370,20 @@ static void openD_subApiInd_callback( openD_subApiInd_t *sIndication ) {
       msManager_changeState( &appStateCtxt, APP_STATE_STANDBY );
       break;
 
+    case OPEND_SUBAPI_SUBSCRIBE_DISABLE:
+      printf("Registration mode disabled!\n");
+      j["version"] = "1.0.0";
+      j["module"] = "legacy";
+      j["primitive"] = "indication";
+      j["service"] = "disabledRegistrationWindow";
+      j["status"] = "OK";
+      j["param1"] = "0";
+      j["param2"] = "0";
+      j["param3"] = "0";
+      len = strlen((j.dump()).c_str())+1;
+      udp_send((j.dump()).c_str(), len);
+      break;
+
     default:
       break;
   }

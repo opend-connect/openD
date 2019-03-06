@@ -74,6 +74,9 @@ ST_CMBS_DEV g_st_DevCtl;
  */
 static int appcmbs_opend_callback( void *pv_AppRef, E_CMBS_EVENT_ID eventId, void *ie_data);
 
+static void cmbs_onRegistrationClose( void* ie_data );
+static void cmbs_onHandsetRegistered( void* ie_data );
+static bool cmbs_checkResponse( void* ie_data );
 
 void transport_init( )
 {
@@ -258,6 +261,29 @@ static void cmbs_onHandsetRegistered( void* ie_data )
   }
 }
 
+static void cmbs_onRegistrationClose( void* ie_data )
+{
+  void* ie = NULL;
+  uint16_t ieType = 0U;
+  openD_subApiInd_t sIndication;
+  ST_IE_REG_CLOSE_REASON regCloseReason;
+
+  if( ie_data ) {
+    cmbs_api_ie_GetFirst(ie_data, &ie, &ieType);
+
+    while(ie != NULL) {
+      if( CMBS_IE_REG_CLOSE_REASON == ieType ) {
+        cmbs_api_ie_RegCloseReasonGet(ie, &regCloseReason);
+      }
+      cmbs_api_ie_GetNext(ie_data, &ie, &ieType);
+    }
+  }
+
+  sIndication.service = OPEND_SUBAPI_SUBSCRIBE_DISABLE;
+  openD_sub_indication( &sIndication );
+  return;
+}
+
 int appcmbs_opend_callback(void *pv_AppRef, E_CMBS_EVENT_ID eventId, void *ie_data)
 {
   openD_subApiCfm_t sConfirm;
@@ -292,6 +318,10 @@ int appcmbs_opend_callback(void *pv_AppRef, E_CMBS_EVENT_ID eventId, void *ie_da
         sConfirm.status = OPEND_STATUS_OK;
       }
       openD_sub_confirmation( &sConfirm );
+      break;
+
+    case CMBS_EV_DSR_CORD_CLOSEREG:
+      cmbs_onRegistrationClose( ie_data );
       break;
 
     default:

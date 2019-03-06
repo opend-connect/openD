@@ -42,6 +42,10 @@ typedef enum openD_subApi_service {
    */
   OPEND_SUBAPI_SUBSCRIBE_ENABLE,
   /**
+   * Subscribe disable.
+   */
+  OPEND_SUBAPI_SUBSCRIBE_DISABLE,
+  /**
    * Subscribe.
    */
   OPEND_SUBAPI_SUBSCRIBE,

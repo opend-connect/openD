@@ -190,6 +190,9 @@ static bool _message_primitive_cfm_ind( void *param ) {
         case REG_TIMER:
           pCfSysCtrl->CfSysStatus.CfSysFlag.EnterRegModeReq = FALSE;    //User has requested to enter Registration Mode, and the system is now in
           SendApiFpMmSetRegistrationModeReq(COLA_TASK, FALSE, FALSE);   //Registration timeout, stop registration
+
+          sIndication.service = OPEND_SUBAPI_SUBSCRIBE_DISABLE;
+          openD_sub_indication( &sIndication );
           break;
       }
       break;
