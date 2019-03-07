@@ -124,6 +124,9 @@ void devMgmtConfirmCallback(openD_hanfunApi_devMgmtCfm_t *hDevMgmtConfirm)
       }
       for(int i=0; i < (int) hDevMgmtConfirm->param.entriesRegistration.size; i++)
       {
+        std::stringstream stream_uid;
+        std::string uid;
+
         std::cout.clear (); std::cout <<
         (fp->link (hDevMgmtConfirm->param.entriesRegistration.registrationElement[i].address) != nullptr ? "+ " : "- ");
         std::cout.clear (); std::cout << std::right << std::setw (5) <<
@@ -135,7 +138,12 @@ void devMgmtConfirmCallback(openD_hanfunApi_devMgmtCfm_t *hDevMgmtConfirm)
 
         std::string size = std::to_string(hDevMgmtConfirm->param.entriesRegistration.size);
         std::string address = std::to_string(hDevMgmtConfirm->param.entriesRegistration.registrationElement[i].address);
-        std::string uid = std::to_string(hDevMgmtConfirm->param.entriesRegistration.registrationElement[i].uid[0]) + std::to_string(hDevMgmtConfirm->param.entriesRegistration.registrationElement[i].uid[1]) + std::to_string(hDevMgmtConfirm->param.entriesRegistration.registrationElement[i].uid[2]) + std::to_string(hDevMgmtConfirm->param.entriesRegistration.registrationElement[i].uid[3]) + std::to_string(hDevMgmtConfirm->param.entriesRegistration.registrationElement[i].uid[4]);
+        stream_uid << std::hex << std::setw(2) << std::setfill('0') << hDevMgmtConfirm->param.entriesRegistration.registrationElement[i].uid[0];
+        stream_uid << std::hex << std::setw(2) << std::setfill('0') << hDevMgmtConfirm->param.entriesRegistration.registrationElement[i].uid[1];
+        stream_uid << std::hex << std::setw(2) << std::setfill('0') << hDevMgmtConfirm->param.entriesRegistration.registrationElement[i].uid[2];
+        stream_uid << std::hex << std::setw(2) << std::setfill('0') << hDevMgmtConfirm->param.entriesRegistration.registrationElement[i].uid[3];
+        stream_uid << std::hex << std::setw(2) << std::setfill('0') << hDevMgmtConfirm->param.entriesRegistration.registrationElement[i].uid[4];
+        stream_uid >> uid;
 
         j["version"] = "1.0.0";
         j["module"] = "hanfun";
