@@ -39,7 +39,6 @@ extern "C"
   #include "apphan.h"
   #include "appmsgparser.h"
   #include "appsrv.h"
-  #include "cmbs_han.h"
 }
 
 /*!
@@ -61,28 +60,6 @@ uint16_t hanfunAddress;
  * Application address of the node device.
  */
 uint16_t appAddress[255];
-
-/* Holds the data of the registration state 1. */
-extern ST_HAN_REG_STAGE_1_STATUS st_Status;
-
-/**
- * @brief   Register success callback.
- *
- * @details Handle the register success callback.
- *
- * @param   address Address of the registered.
- * @param   handsetId Id of the handset.
- */
-void registerSuccessClb(uint16_t address, uint8_t handsetId);
-
-/**
- * @brief   HANFUN message callback.
- *
- * @details Handle the HANFUN message callback.
- *
- * @param   ptrHanfunData Pointer to the HANFUN message struct.
- */
-void hanfunMessageClb(void* ptrHanfunData);
 
 /**
  * @brief   Handle device information.
@@ -496,8 +473,6 @@ openD_status_t openD_hanfunApi_fp_init( HF::Transport::Layer *transport )
 
   app_HanRegularStart(TRUE);
 
-  initMsgParserSub(registerSuccessClb, hanfunMessageClb);
-
   return OPEND_STATUS_OK;
 }
 
@@ -549,7 +524,7 @@ openD_status_t openD_hanfunApi_fp_devMgmtRequest( openD_hanfunApi_devMgmtReq_t *
       {
         fp->unit0 ()->device_management ()->next_address (address);
         hanfunAddress = address;
-        app_SrvSubscriptionOpenExt( 120, CMBS_HS_REG_ENABLE_ALL );
+        app_SrvSubscriptionOpenExt( 120, CMBS_HS_REG_ENABLE_ULE );
         ret = OPEND_STATUS_OK;
       }
       else
@@ -779,58 +754,6 @@ openD_status_t openD_hanfunApi_fp_bindMgmtRequest( openD_hanfunApi_bindMgmtReq_t
       return OPEND_STATUS_ARGUMENT_INVALID;
       break;
   }
-}
-
-void registerSuccessClb(uint16_t address, uint8_t handsetId)
-{
-  /* Map the HANFUN address with the application address. */
-  appAddress[hanfunAddress] = address;
-
-  /* HAN-FUN Transport Layer over Dialog's ULE Stack. */
-  HF::ULE::Transport * transport = HF::ULE::Transport::instance();
-
-  /* HANFUN address of the connected device. */
-  const uint8_t dev_id = hanfunAddress;
-
-  /* Data for the register finished indication. */
-  const uint8_t data[] = { 0x7F, 0xFF, 0, 0, 0, 0, 0, 0, 0, 1, 0x80, 1, 1, 0, 7, 0, 0, 1, 3, 1, 1, 8 };
-
-  /* Size of the register finished data. */
-  size_t size = sizeof(data);
-
-  /* Notify the HANFUN library about the connected device. */
-  transport->connected(dev_id, st_Status.u8_IPUI);
-
-  /* Register finished indication received. */
-  transport->receive(dev_id, data, size);
-}
-
-void hanfunMessageClb(void* ptrHanfunData)
-{
-  ST_IE_HAN_MSG hanMsg = *(ST_IE_HAN_MSG*)ptrHanfunData;
-
-  if(hanMsg.u16_InterfaceId != 0x0200)
-  {
-    return;
-  }
-
-  /* HAN-FUN Transport Layer over Dialog's ULE Stack. */
-  HF::ULE::Transport * transport = HF::ULE::Transport::instance();
-
-  /* HANFUN address of the connected device. */
-  const uint8_t dev_id = 1;
-
-  /* Data for the register finished indication. */
-  const uint8_t data[] = { 0x0, 0x1, 0x1, 0, 0, 0x1, 0, 0, 0x1E, 1, 0x82, 0, 0x3, 0, 0, 0, 0, 1, 3, 1, 1, 1 };
-
-  /* Size of the register finished data. */
-  size_t size = sizeof(data);
-
-  /* Notify the HANFUN library about the connected device. */
-  transport->connected(dev_id, st_Status.u8_IPUI);
-
-  /* Register finished indication received. */
-  transport->receive(dev_id, data, size);
 }
 
 static openD_status_t simpleOnOffSwitchService( openD_hanfunApi_profileReq_t *hProfileRequest, HF::Protocol::Address device )

@@ -108,6 +108,8 @@ char fws_cola_name[256];
 char fws_stack_name[256];
 char fws_file_name[256];
 
+static ULE_Enable_Registration_Timeout_t _ULE_Enable_Registration_Timeout_Clb;
+
 const char* patternCola = "Cola_r%4u_b%4u.fws";
 const char* patternStack = "Stack_v%4X.fws";
 rsuint8 FP_TXPASS[PP_COUNT_MAX];
@@ -1772,9 +1774,10 @@ void ULE_SetRegMode_Cfm(RsStatusType Status) {
 
 }
 
-UleErr_e ULE_Enable_Registration(rsuint32 registration_timeout) {
+UleErr_e ULE_Enable_Registration(rsuint32 registration_timeout, ULE_Enable_Registration_Timeout_t ULE_Enable_Registration_Timeout_Clb) {
 ULE_API_ENTRY	ASSERT_ULE_INIT_SUCCESS;
 
+	_ULE_Enable_Registration_Timeout_Clb = ULE_Enable_Registration_Timeout_Clb;
 	MUTEXOBTAIN_semULEData;
 
 	CLEAREVENT_SETREGMODE;
@@ -2716,6 +2719,9 @@ void *ULE_TimerThread(void *x) {
 				if (sysInfoDb.registrationMode_timeout==0){
 					ULE_Disable_Registration();
 					PRINT_MESSAGE("########### TIMER CHECK Disable_Registration ########## \n");
+					if( _ULE_Enable_Registration_Timeout_Clb ) {
+						_ULE_Enable_Registration_Timeout_Clb();
+					}
 				}
 			}
 

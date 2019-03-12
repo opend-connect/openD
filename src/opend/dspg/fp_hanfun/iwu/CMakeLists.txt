@@ -36,6 +36,10 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     $<TARGET_PROPERTY:opendApiHan,INTERFACE_INCLUDE_DIRECTORIES>
 )
 
+target_include_directories(${PROJECT_NAME} PRIVATE
+    $<TARGET_PROPERTY:opendApiPrv,INTERFACE_INCLUDE_DIRECTORIES>
+)
+
 #---------------------------------------------------------------------------------------
 # Link
 #---------------------------------------------------------------------------------------

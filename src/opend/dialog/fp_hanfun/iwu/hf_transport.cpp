@@ -41,6 +41,8 @@
 
 #include "apps/base.h"
 
+#include "opend_hanfun.h"
+
 extern "C"
 {
 #include <uleDectAPI.h>
@@ -55,6 +57,8 @@ extern "C"
 // =============================================================================
 
 extern "C" void TxBuff_SendData(rsuint8 portid, rsuint8 len, rsuint8 *Data);
+
+static void ule_disable_registration_timeout_clb( void );
 
 #define GET_ID(X) (X->TerminalId & 0xFF)
 
@@ -188,7 +192,7 @@ void HF::ULE::Transport::destroy ()
  *
  */
 // =============================================================================
-void HF::ULE::Transport::connected (uint8_t dev_id, uint8_t _ipui[5])
+void HF::ULE::Transport::connected (uint16_t dev_id, uint8_t _ipui[5])
 {
    Link * link = this->find_by_id(dev_id);
 
@@ -212,7 +216,7 @@ void HF::ULE::Transport::connected (uint8_t dev_id, uint8_t _ipui[5])
  *
  */
 // =============================================================================
-void HF::ULE::Transport::receive (const uint8_t dev_id, const uint8_t data[], size_t size)
+void HF::ULE::Transport::receive (const uint16_t dev_id, const uint8_t data[], size_t size)
 {
    HF::Common::ByteArray payload(data, size);
 
@@ -304,7 +308,7 @@ bool HF::Application::Registration (bool mode)
 
    if (mode)
    {
-      res = ULE_Enable_Registration(60);
+      res = ULE_Enable_Registration(60, ule_disable_registration_timeout_clb);
    }
    else
    {
@@ -312,6 +316,15 @@ bool HF::Application::Registration (bool mode)
    }
 
    return res == ULE_Success;
+}
+
+static void ule_disable_registration_timeout_clb( void ) {
+   openD_hanfunApi_devMgmtInd_t hDevMgmtIndication;
+
+   hDevMgmtIndication.service = OPEND_HANFUNAPI_DEVICE_MANAGEMENT_REGISTER_DISABLE;
+   openD_hanfun_devMgmtInd( &hDevMgmtIndication );
+
+   return;
 }
 
 // =============================================================================

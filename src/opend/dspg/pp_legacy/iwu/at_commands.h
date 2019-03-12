@@ -23,7 +23,6 @@
  * @{
  */
 
-#include "fifo.h"
 
 /*!
  * States for the legacy RX message handler .
@@ -74,24 +73,26 @@ typedef void (*notify_state_machine)(rx_states_t state, void *data);
  *
  * @param   state_machine Callback function pointer to notify the state machine.
  */
-void init_at_commands(notify_state_machine state_machine);
+void at_commands_init(notify_state_machine state_machine);
 
 /**
- * @brief   Receive at command.
+ * @brief   Parse at command.
  *
- * @details Handle the received at commands.
+ * @details Handle the parse at commands.
  *
- * @param   atCommand Pointer that holds the received data.
- * @param   size Size of the received data.
+ * @param   atCommand Pointer that holds the data.
+ * @param   size Size of the data.
  */
-void receive_at_command(uint8_t atCommand[], uint16_t size);
+void at_commands_parse(uint8_t atCommand[], uint16_t size);
 
 /**
- * @brief   Send at command.
+ * @brief   Create at command.
  *
- * @details Handle to send an at command.
+ * @details This function creates DSPG specific at commands.
  *
- * @param   at_Command TX state to send.
+ * @param   at_Command AT command.
+ * @param   data Pointer to AT command arguments.
  * @param   buffer Pointer to write the command into.
+ * @param   buffer Buffer length.
  */
-uint8_t send_at_command(tx_states at_Command, uint8_t *buffer);
+uint8_t at_commands_create(tx_states at_Command, void* data, uint8_t *buffer, uint8_t bufferLen);

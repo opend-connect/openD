@@ -81,6 +81,12 @@ openD_status_t openD_hanfun_devMgmtCfm( openD_hanfunApi_devMgmtCfm_t *hDevMgmtCo
 
 openD_status_t openD_hanfun_devMgmtInd( openD_hanfunApi_devMgmtInd_t *hMgmtInd )
 {
+  if(!openD_hanfunApiPrimitives.openD_hanfunApi_mgmtInd)
+  {
+    return OPEND_STATUS_FAIL;
+  }
+
+  openD_hanfunApiPrimitives.openD_hanfunApi_mgmtInd(hMgmtInd);
   return OPEND_STATUS_OK;
 }
 

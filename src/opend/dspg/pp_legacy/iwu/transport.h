@@ -132,6 +132,8 @@ void opend_iwu_deregister_request();
  */
 void opend_iwu_get_registration_state();
 
+int8_t opend_iwu_set_registration_pin( uint8_t pin[4] );
+
 /**
  * @brief   opend iwu audio init.
  *

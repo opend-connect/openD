@@ -52,11 +52,11 @@ ApiCallReferenceType HsId;
 ApiTerminalIdType terminalId;
 uint8_t ac[4];
 
-bool _message_primitive_user_sub( void *param );
-bool _message_primitive_user_call( void *param );
-bool _message_primitive_cfm_ind( void *param );
+static bool _message_primitive_user_sub( void *param );
+static bool _message_primitive_user_call( void *param );
+static bool _message_primitive_cfm_ind( void *param );
 
-bool _message_primitive_user_sub( void *param ) {
+static bool _message_primitive_user_sub( void *param ) {
 
   bool ret = true;
   uint8_t i;
@@ -113,13 +113,13 @@ bool _message_primitive_user_sub( void *param ) {
       }
       break;
 
-      case OPEND_SUBAPI_SET_AC:
-        ac[0] = ((RosMailP5Type *)param)->P2;
-        ac[1] = ((RosMailP5Type *)param)->P3;
-        ac[2] = ((RosMailP5Type *)param)->P4;
-        ac[3] = ((RosMailP5Type *)param)->P5;
-        SendApiFpMmSetAccessCodeReq ( COLA_TASK, ac);
-        break;
+    case OPEND_SUBAPI_SET_AC:
+      ac[0] = ((openD_subApiReq_t *)param)->param.setAc.ac[0];
+      ac[1] = ((openD_subApiReq_t *)param)->param.setAc.ac[1];
+      ac[2] = ((openD_subApiReq_t *)param)->param.setAc.ac[2];
+      ac[3] = ((openD_subApiReq_t *)param)->param.setAc.ac[3];
+      SendApiFpMmSetAccessCodeReq ( COLA_TASK, ac);
+      break;
 
     default:
       ret = false;
@@ -129,7 +129,7 @@ bool _message_primitive_user_sub( void *param ) {
   return ret;
 }
 
-bool _message_primitive_user_call( void *param ) {
+static bool _message_primitive_user_call( void *param ) {
 
   bool ret = true;
 
@@ -170,7 +170,7 @@ bool _message_primitive_user_call( void *param ) {
   return ret;
 }
 
-bool _message_primitive_cfm_ind( void *param ) {
+static bool _message_primitive_cfm_ind( void *param ) {
 
   uint8_t i;
   openD_subApiCfm_t sConfirm;
@@ -190,6 +190,9 @@ bool _message_primitive_cfm_ind( void *param ) {
         case REG_TIMER:
           pCfSysCtrl->CfSysStatus.CfSysFlag.EnterRegModeReq = FALSE;    //User has requested to enter Registration Mode, and the system is now in
           SendApiFpMmSetRegistrationModeReq(COLA_TASK, FALSE, FALSE);   //Registration timeout, stop registration
+
+          sIndication.service = OPEND_SUBAPI_SUBSCRIBE_DISABLE;
+          openD_sub_indication( &sIndication );
           break;
       }
       break;
@@ -380,11 +383,14 @@ bool _message_primitive_cfm_ind( void *param ) {
       break;
 
     case API_FP_MM_SET_ACCESS_CODE_CFM:
-      util_memcpy(pCfSysCtrl->Ac, ac, 4);
+      if( RSS_SUCCESS == ((ApiFpMmSetAccessCodeCfmType*)param)->Status ) {
+        sConfirm.status = OPEND_STATUS_OK;
+      } else {
+        sConfirm.status = OPEND_STATUS_FAIL;
+      }
 
       /* Send openD subscription confirmation to the application. */
       sConfirm.service = OPEND_SUBAPI_SET_AC;
-      sConfirm.status = OPEND_STATUS_OK;
       openD_sub_confirmation( &sConfirm );
       break;
 

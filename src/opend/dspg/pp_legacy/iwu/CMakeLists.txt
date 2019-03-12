@@ -51,7 +51,12 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     $<BUILD_INTERFACE:$<TARGET_PROPERTY:opend-low-level-api,INTERFACE_INCLUDE_DIRECTORIES>>
 )
 
+target_include_directories(${PROJECT_NAME} PRIVATE
+    $<TARGET_PROPERTY:opendApiPrv,INTERFACE_INCLUDE_DIRECTORIES>
+)
+
 target_link_libraries(${PROJECT_NAME} PRIVATE
     ll-utils
     utils
+    opend_pp_legacy
 )

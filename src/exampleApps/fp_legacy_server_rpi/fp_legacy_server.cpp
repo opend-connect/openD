@@ -28,6 +28,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <iostream>
+#include <sstream>
 
 extern "C" {
 #include "msManager.h"
@@ -370,6 +371,20 @@ static void openD_subApiInd_callback( openD_subApiInd_t *sIndication ) {
       msManager_changeState( &appStateCtxt, APP_STATE_STANDBY );
       break;
 
+    case OPEND_SUBAPI_SUBSCRIBE_DISABLE:
+      printf("Registration mode disabled!\n");
+      j["version"] = "1.0.0";
+      j["module"] = "legacy";
+      j["primitive"] = "indication";
+      j["service"] = "disabledRegistrationWindow";
+      j["status"] = "OK";
+      j["param1"] = "0";
+      j["param2"] = "0";
+      j["param3"] = "0";
+      len = strlen((j.dump()).c_str())+1;
+      udp_send((j.dump()).c_str(), len);
+      break;
+
     default:
       break;
   }
@@ -464,6 +479,8 @@ bool app_state_standby( void *param ) {
   openD_subApiReq_t subApiReq;
   openD_callApiReq_t callApiReq;
   openD_mgmtApiReq_t mgmtApiReq;
+  std::istringstream iss;
+  uint16_t pinCode;
 
   switch( message->primitive )
   {
@@ -495,6 +512,48 @@ bool app_state_standby( void *param ) {
           openD_mgmtApi_request( &mgmtApiReq );
           break;
 
+        case 0x70:
+          /* Key 'p' KEY_SET_PIN_CODE */
+          if( 4 == handsetOrCallId.size())
+          {
+            iss.str(handsetOrCallId.c_str());
+            /* Check if the string is a number and convert it. */
+            if (!(iss >> std::hex >> pinCode).fail()) {
+              /* Call the corresponding request. */
+              subApiReq.service = OPEND_SUBAPI_SET_AC;
+              subApiReq.param.setAc.ac[0] = 0xFF;
+              subApiReq.param.setAc.ac[1] = 0xFF;
+              subApiReq.param.setAc.ac[2] = (uint8_t) (pinCode >> 8U);
+              subApiReq.param.setAc.ac[3] = (uint8_t) pinCode;
+              openD_subApi_request( &subApiReq );
+            } else {
+              printf("Can not convert the string to an interger!\n");
+              j["version"] = "1.0.0";
+              j["module"] = "legacy";
+              j["primitive"] = "confirmation";
+              j["service"] = "OPEND_SUBAPI_SET_AC";
+              j["status"] = "FAIL";
+              j["param1"] = "0";
+              j["param2"] = "0";
+              j["param3"] = "0";
+              size_t len = strlen((j.dump()).c_str())+1;
+              udp_send((j.dump()).c_str(), len);
+            }
+          } else {
+            printf("Pin length not correct!\n");
+            j["version"] = "1.0.0";
+            j["module"] = "legacy";
+            j["primitive"] = "confirmation";
+            j["service"] = "OPEND_SUBAPI_SET_AC";
+            j["status"] = "FAIL";
+            j["param1"] = "0";
+            j["param2"] = "0";
+            j["param3"] = "0";
+            size_t len = strlen((j.dump()).c_str())+1;
+            udp_send((j.dump()).c_str(), len);
+          }
+          break;
+
         default:
           break;
       }
@@ -523,9 +582,19 @@ bool app_state_standby( void *param ) {
           break;
 
         case OPEND_SUBAPI_SUBSCRIPTION_DELETE:
-          if( OPEND_STATUS_OK == ((openD_callApiCfm_t*) message->param)->status ) {
+          if( OPEND_STATUS_OK == ((openD_subApiCfm_t*) message->param)->status ) {
             printf("Deregistration APP finished!\n");
             msManager_changeState( &appStateCtxt, APP_STATE_UNREGISTERED );
+            j["version"] = "1.0.0";
+            j["module"] = "legacy";
+            j["primitive"] = "confirmation";
+            j["service"] = "subscriptionDelete";
+            j["status"] = "OK";
+            j["param1"] = "0";
+            j["param2"] = "0";
+            j["param3"] = "0";
+            size_t len = strlen((j.dump()).c_str())+1;
+            udp_send((j.dump()).c_str(), len);
           } else {
             printf("Subscription delete failed!\n");
           }
@@ -670,6 +739,15 @@ int main(int argc, char* argv[]) {
 
   /* Change to the initialization state. */
   msManager_changeState( &appStateCtxt, APP_STATE_INIT );
+
+  /* Set access code. */
+  openD_subApiReq_t openD_subApiReq;
+  openD_subApiReq.service = OPEND_SUBAPI_SET_AC;
+  openD_subApiReq.param.setAc.ac[0] = 0xFF;
+  openD_subApiReq.param.setAc.ac[1] = 0xFF;
+  openD_subApiReq.param.setAc.ac[2] = 0x00;
+  openD_subApiReq.param.setAc.ac[3] = 0x00;
+  openD_subApi_request( &openD_subApiReq );
 
   bool executeApp = true;
 

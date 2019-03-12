@@ -33,6 +33,7 @@ target_include_directories(${PROJECT_NAME} INTERFACE
 add_library(${PROJECT_NAME}Prv INTERFACE)
 
 target_include_directories(${PROJECT_NAME}Prv INTERFACE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/prv>
 )
 

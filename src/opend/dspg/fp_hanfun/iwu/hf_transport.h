@@ -73,7 +73,7 @@ namespace HF
       * @param   dev_id  Device id of the connected device.
       * @param   ipui IPUI of the connected device.
       */
-      void connected (uint8_t dev_id, uint8_t ipui[5]);
+      void connected (uint16_t dev_id, uint8_t ipui[5]);
 
       /**
       * @brief   Connected.
@@ -84,7 +84,7 @@ namespace HF
       * @param   data Pointer to the data.
       * @param   size Size of the data.
       */
-      void receive(const uint8_t dev_id, const uint8_t data[], size_t size);
+      void receive(const uint16_t dev_id, const uint8_t data[], size_t size);
 
       /**
       * @brief   Find by id.

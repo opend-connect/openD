@@ -139,6 +139,14 @@ openD_status_t openD_subApi_request( openD_subApiReq_t *sRequest )
       ret = OPEND_STATUS_OK;
       break;
 
+    case OPEND_SUBAPI_SET_AC:
+      if( opend_iwu_set_registration_pin( sRequest->param.setAc.ac ) >= 0 ) {
+        ret = OPEND_STATUS_OK;
+      } else {
+        ret = OPEND_STATUS_ARGUMENT_INVALID;
+      }
+      break;
+
     default:
       ret = OPEND_STATUS_SERVICE_UNKNOWN;
     }

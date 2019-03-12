@@ -34,6 +34,8 @@ extern "C"
 #include "LineCtrl.h"
 #include "Util.h"
 
+#include "opend.h"
+#include "opend_sub.h"
 #include "opend_mgmt.h"
 
 #include "opend_states.h"
@@ -41,6 +43,7 @@ extern "C"
 
 #include <stdbool.h>
 
+uint8_t ac[4];
 
 typedef enum {
   INIT_SUB_STATE_NULL = 0U,
@@ -55,6 +58,8 @@ static subState_t _subState = INIT_SUB_STATE_NULL;
 static void _init_sub_state_01( void *param );
 static void _init_sub_state_02( void *param );
 static void _init_sub_state_03( void *param );
+static bool _message_primitive_user_sub( void *param );
+static bool _message_primitive_cfm_ind( void *param );
 
 static void _init_sub_state_01( void *param ) {
 
@@ -224,7 +229,63 @@ static void _init_sub_state_03( void *param ) {
   }
 }
 
+static bool _message_primitive_user_sub( void *param ) {
+  bool ret = true;
+
+  if( !param ) {
+    return false;
+  }
+
+  switch(((openD_subApiReq_t *)param)->service)
+  {
+    case OPEND_SUBAPI_SET_AC:
+      ac[0] = ((openD_subApiReq_t *)param)->param.setAc.ac[0];
+      ac[1] = ((openD_subApiReq_t *)param)->param.setAc.ac[1];
+      ac[2] = ((openD_subApiReq_t *)param)->param.setAc.ac[2];
+      ac[3] = ((openD_subApiReq_t *)param)->param.setAc.ac[3];
+      SendApiFpMmSetAccessCodeReq ( COLA_TASK, ac);
+      break;
+
+    default:
+      ret = false;
+      break;
+  }
+
+  return ret;
+}
+
+static bool _message_primitive_cfm_ind( void *param ) {
+
+  if( !param ) {
+    return false;
+  }
+
+  switch(((RosMailType *)param)->Primitive)
+  {
+    case API_FP_MM_SET_ACCESS_CODE_CFM:
+    {
+      openD_subApiCfm_t sConfirm;
+      if( RSS_SUCCESS == ((ApiFpMmSetAccessCodeCfmType*)param)->Status ) {
+        sConfirm.status = OPEND_STATUS_OK;
+      } else {
+        sConfirm.status = OPEND_STATUS_FAIL;
+      }
+
+      /* Send openD subscription confirmation to the application. */
+      sConfirm.service = OPEND_SUBAPI_SET_AC;
+      openD_sub_confirmation( &sConfirm );
+      break;
+    }
+
+    default:
+      break;
+  }
+
+  return true;
+}
+
 bool opend_state_init( void *param ) {
+  bool ret = true;
 
   if( !param ) {
     return false;
@@ -242,6 +303,21 @@ bool opend_state_init( void *param ) {
       SendApiFpAudioUnmuteReq(COLA_TASK, 1, API_FP_MUTE_BOTH);
       SendApiFpAudioUnmuteReq(COLA_TASK, 2, API_FP_MUTE_BOTH);
       SendApiFpAudioUnmuteReq(COLA_TASK, 3, API_FP_MUTE_BOTH);
+      break;
+
+    case MESSAGE_PRIMITIVE_USER:
+      if( !((openD_Api_t *)message->param) ) {
+        return false;
+      }
+
+      switch( ((openD_Api_t *)message->param)->opendApis ) {
+        case OPEND_APIS_SUB:
+          ret = _message_primitive_user_sub( ((openD_Api_t *)message->param)->param );
+          break;
+
+        default:
+          break;
+      }
       break;
 
     case MESSAGE_PRIMITIVE_CFM_IND:
@@ -263,13 +339,14 @@ bool opend_state_init( void *param ) {
           break;
       }
 
+      ret = _message_primitive_cfm_ind( message->param );
       break;
 
     default:
       break;
   }
 
-  return true;
+  return ret;
 }
 
 #ifdef __cplusplus

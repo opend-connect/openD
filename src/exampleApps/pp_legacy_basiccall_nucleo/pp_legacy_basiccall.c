@@ -253,6 +253,15 @@ bool app_state_init( void *param ) {
       if( OPEND_STATUS_OK == openD_init( NULL ) ) {
         msManager_changeState( &appStateCtxt, APP_STATE_UNREGISTERED );
       }
+
+      /* Set access code. */
+      openD_subApiReq_t openD_subApiReq;
+      openD_subApiReq.service = OPEND_SUBAPI_SET_AC;
+      openD_subApiReq.param.setAc.ac[0] = 0xFF;
+      openD_subApiReq.param.setAc.ac[1] = 0xFF;
+      openD_subApiReq.param.setAc.ac[2] = 0x00;
+      openD_subApiReq.param.setAc.ac[3] = 0x00;
+      openD_subApi_request( &openD_subApiReq );
       break;
 
     default:
