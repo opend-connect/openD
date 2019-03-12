@@ -88,6 +88,12 @@ struct Command_VolumeDown:public Command
   void run (std::vector <std::string> &args);
 }command_VolumeDown;
 
+struct Command_SetPin:public Command
+{
+  Command_SetPin ():Command ("p", "p <pin code>:Set pin code (4 digits), for example 1234") {}
+  void run (std::vector <std::string> &args);
+}command_SetPin;
+
 void Command_Registration::run (std::vector <std::string> &args)
 {
   j["version"] = "1.0.0";
@@ -220,6 +226,27 @@ void Command_VolumeDown::run (std::vector <std::string> &args)
   udp_send((j.dump()).c_str(), len);
 }
 
+void Command_SetPin::run (std::vector <std::string> &args)
+{
+  if (args.size () != 1 )
+  {
+    std::cout.clear (); std::cout << "Wrong usage - use command h or ? for help menu" <<
+    std::endl;std::cout.clear (); std::cerr.clear ();
+    return;
+  }
+
+  j["version"] = "1.0.0";
+  j["module"] = "legacy";
+  j["primitive"] = "request";
+  j["service"] = "OPEND_SUBAPI_SET_AC";
+  j["status"] = "OK";
+  j["param1"] = "p";
+  j["param2"] = args[0].c_str();
+  j["param3"] = "0";
+  size_t len = strlen((j.dump()).c_str())+1;
+  udp_send((j.dump()).c_str(), len);
+}
+
 /* HF::Application::Initialize */
 void HF::Application::Initialize (receiveUdpData rxUdpData)
 {
@@ -227,6 +254,7 @@ void HF::Application::Initialize (receiveUdpData rxUdpData)
 
   udp_init(rxUdpData);
 
+  Command::add(&command_SetPin);
   Command::add(&command_Registration);
   Command::add(&command_Delete);
   Command::add(&command_SetupCall);
