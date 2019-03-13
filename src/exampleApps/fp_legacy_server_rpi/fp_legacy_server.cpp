@@ -500,6 +500,13 @@ bool app_state_standby( void *param ) {
           openD_callApi_request( &callApiReq );
           break;
 
+        case 0x74:
+          /* Key 't' Release call */
+          callApiReq.service = OPEND_CALLAPI_RELEASE;
+          memcpy(&callApiReq.param.setup.pmid[1], handsetOrCallId.c_str(), (handsetOrCallId.size() + 1));
+          openD_callApi_request( &callApiReq );
+          break;
+
         case 0x65:
           /* Key 'e' KEY_DEREG */
           subApiReq.service = OPEND_SUBAPI_SUBSCRIPTION_DELETE;
