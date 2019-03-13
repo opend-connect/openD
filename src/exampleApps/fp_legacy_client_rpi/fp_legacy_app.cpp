@@ -52,15 +52,21 @@ struct Command_Delete:public Command
   void run (std::vector <std::string> &args);
 }command_Delete;
 
+struct Command_DeleteSingle:public Command
+{
+  Command_DeleteSingle ():Command ("d", "d <h>:Deletes a registered hansets with handset id <h>.") {}
+  void run (std::vector <std::string> &args);
+}command_DeleteSingle;
+
 struct Command_SetupCall:public Command
 {
-  Command_SetupCall ():Command ("r", "r <h>:Setup a call with handset id h.") {}
+  Command_SetupCall ():Command ("r", "r <h>:Setup a call with handset id <h>.") {}
   void run (std::vector <std::string> &args);
 }command_SetupCall;
 
 struct Command_ReleaseCall:public Command
 {
-  Command_ReleaseCall ():Command ("t", "t <c>:Release a call with call id c.") {}
+  Command_ReleaseCall ():Command ("t", "t <c>:Release a call with call id <c>.") {}
   void run (std::vector <std::string> &args);
 }command_ReleaseCall;
 
@@ -125,6 +131,30 @@ void Command_Delete::run (std::vector <std::string> &args)
   udp_send((j.dump()).c_str(), len);
 
   std::cout.clear (); std::cout << "Deletes all registered handsets!" <<
+  std::endl; std::cout.clear (); std::cerr.clear ();
+}
+
+void Command_DeleteSingle::run (std::vector <std::string> &args)
+{
+  if (args.size () != 1 )
+  {
+    std::cout.clear (); std::cout << "Wrong usage - use command h or ? for help menu" <<
+    std::endl;std::cout.clear (); std::cerr.clear ();
+    return;
+  }
+
+  j["version"] = "1.0.0";
+  j["module"] = "legacy";
+  j["primitive"] = "request";
+  j["service"] = "OPEND_SUBAPI_SUBSCRIPTION_DELETE";
+  j["status"] = "OK";
+  j["param1"] = "d";
+  j["param2"] = args[0].c_str();
+  j["param3"] = "0";
+  size_t len = strlen((j.dump()).c_str())+1;
+  udp_send((j.dump()).c_str(), len);
+
+  std::cout.clear (); std::cout << "Delete handset " << args[0].c_str() <<
   std::endl; std::cout.clear (); std::cerr.clear ();
 }
 
@@ -257,6 +287,7 @@ void HF::Application::Initialize (receiveUdpData rxUdpData)
   Command::add(&command_SetPin);
   Command::add(&command_Registration);
   Command::add(&command_Delete);
+  Command::add(&command_DeleteSingle);
   Command::add(&command_SetupCall);
   Command::add(&command_ReleaseCall);
   Command::add(&command_Mute);

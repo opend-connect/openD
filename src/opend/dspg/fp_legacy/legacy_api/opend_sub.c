@@ -56,7 +56,8 @@ openD_status_t openD_subApi_init( openD_subApiPrimitives_t *sPrimitives )
 openD_status_t openD_subApi_request( openD_subApiReq_t *sRequest )
 {
     openD_status_t ret = OPEND_STATUS_FAIL;
-    E_CMBS_RC cmbs_ret;
+    E_CMBS_RC cmbs_ret = CMBS_RC_ERROR_GENERAL;
+    pmid_t *pmid;
 
     if(!sRequest)
     {
@@ -71,8 +72,16 @@ openD_status_t openD_subApi_request( openD_subApiReq_t *sRequest )
             break;
 
         case OPEND_SUBAPI_SUBSCRIPTION_DELETE:
-            /* Delete all registered handsets. */
-            cmbs_ret = cmbs_dsr_hs_Delete(g_cmbsappl.pv_CMBSRef, 0xFFFF);
+            pmid = &sRequest->param.subscriptionDelete.pmid;
+
+            if( 0xFF == (*pmid)[0] && 0xFF == (*pmid)[1] && 0xFF == (*pmid)[2]) {
+                /* Delete all registered handsets. */
+                cmbs_ret = cmbs_dsr_hs_Delete(g_cmbsappl.pv_CMBSRef, 0xFFFF);
+            } else {
+                /* Delete a single PP. */
+                uint16_t handsetId = (*pmid)[0] - '0';
+                cmbs_ret = cmbs_dsr_hs_Delete(g_cmbsappl.pv_CMBSRef, handsetId);
+            }
             break;
 
         case OPEND_SUBAPI_SET_AC:
