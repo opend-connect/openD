@@ -220,7 +220,6 @@ typedef struct openD_hanfun_iOnOffServerInd {
     openD_hanfun_iOnOffServerInd_addr_t onAddr;
     openD_hanfun_iOnOffServerInd_addr_t offAddr;
     openD_hanfun_iOnOffServerInd_addr_t toggleAddr;
-    openD_hanfun_iOnOffServerInd_getState_t getState;
   } param;
 } openD_hanfun_iOnOffServerInd_t;
 
