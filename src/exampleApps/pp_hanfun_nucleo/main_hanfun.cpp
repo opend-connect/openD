@@ -102,34 +102,40 @@ void devMgmtConfirmCallback(openD_hanfunApi_devMgmtCfm_t *hDevMgmtConfirm)
 
 void profileIndCallback( openD_hanfunApi_profileInd_t *hProfileInd )
 {
+  static bool ledState = false;
+
   if(hProfileInd->status != OPEND_STATUS_OK)
-	{
-		return;
-	}
+  {
+    return;
+  }
 
   switch(hProfileInd->profile)
   {
     case OPEND_HANFUNAPI_SIMPLE_LIGHT:
       switch(hProfileInd->simpleLight.service)
-	    {
-		    case OPEND_HANFUN_IONOFF_SERVER_TOGGLE_ADDR:
-		      /* Toggle the application-specific LED. */
-		      update(hProfileInd->simpleLight.param.getState.state);
-		      break;
-        case OPEND_HANFUN_IONOFF_SERVER_ON_ADDR:
-		      /* Turn on the application-specific LED. */
-          update(hProfileInd->simpleLight.param.getState.state);
+      {
+        case OPEND_HANFUN_IONOFF_SERVER_TOGGLE_ADDR:
+          /* Toggle the application-specific LED. */
+          ledState = !ledState;
+          update( ledState );
           break;
-		    case OPEND_HANFUN_IONOFF_SERVER_OFF_ADDR:
-		      /* Turn off the application-specific LED. */
-          update(hProfileInd->simpleLight.param.getState.state);
-		      break;
-		    default:
-		      break;
-	  }
-	    break;
-	  default:
-	    break;
+        case OPEND_HANFUN_IONOFF_SERVER_ON_ADDR:
+          /* Turn on the application-specific LED. */
+          ledState = true;
+          update( ledState );
+          break;
+        case OPEND_HANFUN_IONOFF_SERVER_OFF_ADDR:
+          /* Turn off the application-specific LED. */
+          ledState = false;
+          update( ledState );
+          break;
+        default:
+          break;
+      }
+      break;
+
+    default:
+      break;
   }
 }
 
