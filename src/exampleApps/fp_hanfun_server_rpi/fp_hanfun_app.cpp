@@ -221,15 +221,15 @@ void profileIndCallback( openD_hanfunApi_profileInd_t *hProfileInd )
   {
     case OPEND_HANFUNAPI_SIMPLE_LIGHT:
       switch(hProfileInd->simpleLight.service)
-	    {
-		    case OPEND_HANFUN_IONOFF_SERVER_TOGGLE_ADDR:
+      {
+        case OPEND_HANFUN_IONOFF_SERVER_TOGGLE_ADDR:
           printf("Toggle LED indication from PP received.\n");
           j["version"] = "1.0.0";
           j["module"] = "hanfun";
-          j["primitive"] = "confirmation";
+          j["primitive"] = "indication";
           j["service"] = "IOnOffClientToggle";
           j["status"] = "OK";
-          j["param1"] = "0";
+          j["param1"] = std::to_string(hProfileInd->simpleLight.param.toggleAddr.addr.device);
           j["param2"] = "0";
           j["param3"] = "0";
           len = strlen((j.dump()).c_str())+1;
