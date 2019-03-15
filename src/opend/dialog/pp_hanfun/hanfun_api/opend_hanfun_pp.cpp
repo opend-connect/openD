@@ -35,6 +35,15 @@ extern "C"
 #include "opend_ll_gpio.h"
 
 /*!
+ * Copy macro of HANFUN address.
+ */
+#define ADDR_CPY( DEST, SRC ) \
+  DEST.mod = SRC.mod; \
+  DEST.device = SRC.device; \
+  DEST.unit = SRC.unit; \
+
+
+/*!
  * Static and global SimpleOnOffSwitchable profile object.
  */
 static SimpleSwitch * g_simple_switch = nullptr;
@@ -71,9 +80,9 @@ void SimpleLight::on (HF::Protocol::Address &source)
 
   hProfileInd.profile = OPEND_HANFUNAPI_SIMPLE_LIGHT;
   hProfileInd.simpleLight.service = OPEND_HANFUN_IONOFF_SERVER_ON_ADDR;
+  ADDR_CPY( hProfileInd.simpleLight.param.onAddr.addr, source )
   hProfileInd.status = OPEND_STATUS_OK;
   g_simple_light->HF::Units::Unit<HF::Profiles::SimpleLight>::on( source );
-  hProfileInd.simpleLight.param.getState.state = (bool) g_simple_light->state();
 
   openD_hanfun_profileInd(&hProfileInd);
 }
@@ -84,9 +93,9 @@ void SimpleLight::off (HF::Protocol::Address &source)
 
   hProfileInd.profile = OPEND_HANFUNAPI_SIMPLE_LIGHT;
   hProfileInd.simpleLight.service = OPEND_HANFUN_IONOFF_SERVER_OFF_ADDR;
+  ADDR_CPY( hProfileInd.simpleLight.param.onAddr.addr, source )
   hProfileInd.status = OPEND_STATUS_OK;
   g_simple_light->HF::Units::Unit<HF::Profiles::SimpleLight>::off( source );
-  hProfileInd.simpleLight.param.getState.state = (bool) g_simple_light->state();
 
   openD_hanfun_profileInd(&hProfileInd);
 }
@@ -97,9 +106,9 @@ void SimpleLight::toggle (HF::Protocol::Address &source)
 
   hProfileInd.profile = OPEND_HANFUNAPI_SIMPLE_LIGHT;
   hProfileInd.simpleLight.service = OPEND_HANFUN_IONOFF_SERVER_TOGGLE_ADDR;
+  ADDR_CPY( hProfileInd.simpleLight.param.onAddr.addr, source )
   hProfileInd.status = OPEND_STATUS_OK;
   g_simple_light->HF::Units::Unit<HF::Profiles::SimpleLight>::toggle( source );
-  hProfileInd.simpleLight.param.getState.state = (bool) g_simple_light->state();
 
   openD_hanfun_profileInd(&hProfileInd);
 }

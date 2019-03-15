@@ -62,6 +62,7 @@ static bool _message_primitive_user_sub( void *param ) {
   uint8_t i;
   openD_subApiInd_t sIndication;
   openD_subApiCfm_t sConfirm;
+  pmid_t *pmid;
 
   if( !param ) {
     return false;
@@ -91,12 +92,24 @@ static bool _message_primitive_user_sub( void *param ) {
         SendApiFpMmSetRegistrationModeReq(COLA_TASK, FALSE, FALSE);                                                 //If in registration mode, disable Registration
         RosTimerStop(REG_TIMER);
       }
-                                                                                                                    //Deregistration key pressed, dereg all
-      for (i=1; i<NO_HANDSETS; i++)
-      {
-        if(pCfSysCtrl->CfSysStatus.HsInfo[i].Registered)
+
+      pmid = &((openD_subApiReq_t *)param)->param.subscriptionDelete.pmid;
+
+      if( 0xFF == (*pmid)[0] && 0xFF == (*pmid)[1] && 0xFF == (*pmid)[2]) {
+        /* Delete all subscripted PPs. */
+        for (i=1; i<NO_HANDSETS; i++)
         {
-          SendApiFpMmDeleteRegistrationReq(COLA_TASK, i);
+          if(pCfSysCtrl->CfSysStatus.HsInfo[i].Registered)
+          {
+            SendApiFpMmDeleteRegistrationReq(COLA_TASK, i);
+          }
+        }
+      } else {
+        /* Delete a single PP. */
+        uint8_t handsetId = (*pmid)[0] - '0';
+        if(pCfSysCtrl->CfSysStatus.HsInfo[handsetId].Registered)
+        {
+          SendApiFpMmDeleteRegistrationReq(COLA_TASK, handsetId);
         }
       }
       break;

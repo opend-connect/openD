@@ -131,8 +131,8 @@ void handleConfirmationAndIndication(char *buffer)
   {
     if(status.compare("OK") == 0)
     {
-      std::cout.clear (); std::cout << "[INFO ] " << "Toggle LED indication from PP received."
-      << std::endl; std::cout.clear (); std::cerr.clear ();
+      std::cout.clear (); std::cout << "[INFO ] " << "Indication 'Toggle LED' received from device: " <<
+      param1 << std::endl; std::cout.clear (); std::cerr.clear ();
     }
   }
 }

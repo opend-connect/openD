@@ -42,7 +42,6 @@ static t_stReceiveData g_ParserContext;   /* Parser context for serial communica
 static int             g_Registered;      /* Registered flag. */
 static int             g_DeviceId;        /* Device id. */
 static uint8_t         g_SendResult;      /* Send result. */
-static bool            g_ledState;        /* State of the led. */
 
 
 /**
@@ -214,32 +213,26 @@ void rxByteReceived(uint8_t *data, uint16_t len)
       case CMND_SERVICE_ID_ON_OFF:
         if(g_st_Msg.messageId == CMND_MSG_ONOFF_ON_REQ)
         {
-          printf("ON");
           hProfileInd.profile = OPEND_HANFUNAPI_SIMPLE_LIGHT;
           hProfileInd.simpleLight.service = OPEND_HANFUN_IONOFF_SERVER_ON_ADDR;
+          hProfileInd.simpleLight.param.onAddr.addr.device = g_st_Msg.unitId;
           hProfileInd.status = OPEND_STATUS_OK;
-          hProfileInd.simpleLight.param.getState.state = true;
-          g_ledState = true;
           openD_hanfun_profileInd(&hProfileInd);
         }
         if(g_st_Msg.messageId == CMND_MSG_ONOFF_OFF_REQ)
         {
-          printf("OFF");
           hProfileInd.profile = OPEND_HANFUNAPI_SIMPLE_LIGHT;
           hProfileInd.simpleLight.service = OPEND_HANFUN_IONOFF_SERVER_OFF_ADDR;
+          hProfileInd.simpleLight.param.onAddr.addr.device = g_st_Msg.unitId;
           hProfileInd.status = OPEND_STATUS_OK;
-          hProfileInd.simpleLight.param.getState.state = false;
-          g_ledState = false;
           openD_hanfun_profileInd(&hProfileInd);
         }
         if(g_st_Msg.messageId == CMND_MSG_ONOFF_TOGGLE_REQ)
         {
-          printf("TOGGLE");
           hProfileInd.profile = OPEND_HANFUNAPI_SIMPLE_LIGHT;
           hProfileInd.simpleLight.service = OPEND_HANFUN_IONOFF_SERVER_TOGGLE_ADDR;
+          hProfileInd.simpleLight.param.onAddr.addr.device = g_st_Msg.unitId;
           hProfileInd.status = OPEND_STATUS_OK;
-          hProfileInd.simpleLight.param.getState.state = (g_ledState == true) ? false : true;
-          g_ledState = hProfileInd.simpleLight.param.getState.state;
           openD_hanfun_profileInd(&hProfileInd);
         }
       break;

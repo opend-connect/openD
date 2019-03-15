@@ -85,6 +85,14 @@ void handleConfirmationAndIndication(char *buffer)
       std::endl; std::cout.clear (); std::cerr.clear ();
     }
   }
+  if(service.compare("OPEND_SUBAPI_SUBSCRIPTION_DELETE") == 0)
+  {
+    if(status.compare("OK") == 0)
+    {
+      std::cout.clear (); std::cout << "Handset successfully deleded." <<
+      std::endl; std::cout.clear (); std::cerr.clear ();
+    }
+  }
   if(service.compare("setAudio") == 0)
   {
     if(status.compare("OK") == 0)
