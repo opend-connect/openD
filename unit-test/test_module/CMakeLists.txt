@@ -147,52 +147,61 @@ target_include_directories(mockOpend PUBLIC ${MOCK_DIR}/opend
 
 file(GLOB HAN_FUN_SOURES
     # HAN-FUN Lib
-    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/src/attributes.cpp"
-    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/src/common.cpp"
-    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/src/debug.cpp"
-    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/src/devices.cpp"
-    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/src/dlg_extra.cpp"
-    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/src/interfaces.cpp"
-    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/src/profiles.cpp"
-    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/src/protocol.cpp"
-    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/src/uids.cpp"
-    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/src/units.cpp"
-    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/src/core/attribute_reporting.cpp"
-    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/src/core/attribute_reporting_client.cpp"
-    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/src/core/attribute_reporting_server.cpp"
-    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/src/core/bind_management.cpp"
-    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/src/core/bind_management_client.cpp"
-    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/src/core/bind_management_server.cpp"
-    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/src/core/device_information.cpp"
-    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/src/core/device_management.cpp"
-    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/src/core/device_management_client.cpp"
-    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/src/core/device_management_server.cpp"
-    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/src/core/session_management_client.cpp"
-    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/src/core/session_management_server.cpp"
-    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/src/interfaces/alert.cpp"
-    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/src/interfaces/alert_client.cpp"
-    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/src/interfaces/alert_server.cpp"
-    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/src/interfaces/level_control.cpp"
-    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/src/interfaces/level_control_client.cpp"
-    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/src/interfaces/level_control_server.cpp"
-    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/src/interfaces/on_off.cpp"
-    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/src/interfaces/on_off_client.cpp"
-    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/src/interfaces/on_off_server.cpp"
-    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/src/interfaces/simple_humidity_client.cpp"
-    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/src/interfaces/simple_humidity_server.cpp"
-    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/src/interfaces/simple_power_meter.cpp"
-    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/src/interfaces/simple_power_meter_client.cpp"
-    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/src/interfaces/simple_power_meter_server.cpp"
-    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/src/interfaces/simple_temperature_client.cpp"
-    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/src/interfaces/simple_temperature_server.cpp"
+    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/hanfun_lib/src/attributes.cpp"
+    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/hanfun_lib/src/common.cpp"
+    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/hanfun_lib/src/debug.cpp"
+    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/hanfun_lib/src/devices.cpp"
+    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/hanfun_lib/src/interfaces.cpp"
+    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/hanfun_lib/src/profiles.cpp"
+    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/hanfun_lib/src/protocol.cpp"
+    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/hanfun_lib/src/uids.cpp"
+    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/hanfun_lib/src/units.cpp"
+    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/hanfun_lib/src/core/attribute_reporting.cpp"
+    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/hanfun_lib/src/core/attribute_reporting_client.cpp"
+    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/hanfun_lib/src/core/attribute_reporting_server.cpp"
+    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/hanfun_lib/src/core/bind_management.cpp"
+    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/hanfun_lib/src/core/bind_management_client.cpp"
+    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/hanfun_lib/src/core/bind_management_server.cpp"
+    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/hanfun_lib/src/core/device_information.cpp"
+    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/hanfun_lib/src/core/device_management.cpp"
+    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/hanfun_lib/src/core/device_management_client.cpp"
+    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/hanfun_lib/src/core/device_management_server.cpp"
+    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/hanfun_lib/src/core/session_management_client.cpp"
+    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/hanfun_lib/src/core/session_management_server.cpp"
+    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/hanfun_lib/src/interfaces/alert.cpp"
+    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/hanfun_lib/src/interfaces/alert_client.cpp"
+    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/hanfun_lib/src/interfaces/alert_server.cpp"
+    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/hanfun_lib/src/interfaces/level_control.cpp"
+    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/hanfun_lib/src/interfaces/level_control_client.cpp"
+    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/hanfun_lib/src/interfaces/level_control_server.cpp"
+    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/hanfun_lib/src/interfaces/on_off.cpp"
+    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/hanfun_lib/src/interfaces/on_off_client.cpp"
+    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/hanfun_lib/src/interfaces/on_off_server.cpp"
+    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/hanfun_lib/src/interfaces/simple_humidity_client.cpp"
+    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/hanfun_lib/src/interfaces/simple_humidity_server.cpp"
+    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/hanfun_lib/src/interfaces/simple_power_meter.cpp"
+    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/hanfun_lib/src/interfaces/simple_power_meter_client.cpp"
+    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/hanfun_lib/src/interfaces/simple_power_meter_server.cpp"
+    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/hanfun_lib/src/interfaces/simple_temperature_client.cpp"
+    "${CMAKE_SOURCE_DIR}/../src/hanfun_lib/hanfun_lib/src/interfaces/simple_temperature_server.cpp"
+
 )
+
+execute_process (
+    COMMAND git apply --directory=src/hanfun_lib src/hanfun_lib/hanfun.patch
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/..
+    OUTPUT_VARIABLE outVar
+    ERROR_VARIABLE errVar
+)
+message(STATUS "Git applay: ${outVar}")
 
 add_library(libTestHanFun ${HAN_FUN_SOURES})
 
 target_include_directories(libTestHanFun PUBLIC
     # HAN-FUN Lib
     ${CMAKE_SOURCE_DIR}/../src/hanfun_lib
-    ${CMAKE_SOURCE_DIR}/../src/hanfun_lib/inc
+    ${CMAKE_SOURCE_DIR}/../src/hanfun_lib/hanfun_lib
+    ${CMAKE_SOURCE_DIR}/../src/hanfun_lib/hanfun_lib/inc
 )
 
 ##

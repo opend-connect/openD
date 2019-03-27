@@ -1,0 +1,28 @@
+---
+ hanfun_lib/src/debug.cpp | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/hanfun_lib/src/debug.cpp b/hanfun_lib/src/debug.cpp
+--- a/hanfun_lib/src/debug.cpp
++++ b/hanfun_lib/src/debug.cpp
+@@ -49,7 +49,7 @@ static int8_t log_width = -1;
+ // =============================================================================
+ std::ostream &operator <<(std::ostream &stream, const uint8_t byte)
+ {
+-   if (stream == std::cout || stream == std::cerr)
++   if ( &stream == &(std::cout) || &stream == &(std::cerr) )
+    {
+       std::ios_base::fmtflags ff = stream.flags ();
+       char f                     = stream.fill ('0');
+@@ -79,7 +79,7 @@ std::ostream &operator <<(std::ostream &stream, const uint8_t byte)
+ // =============================================================================
+ std::ostream &operator <<(std::ostream &stream, const HF::Common::ByteArray &array)
+ {
+-   if (stream == std::cout || stream == std::cerr)
++   if ( &stream == &(std::cout) || &stream == &(std::cerr) )
+    {
+       std::ios_base::fmtflags ff = stream.flags ();
+       char f                     = stream.fill ('0');
+--
+2.17.1
+

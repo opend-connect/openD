@@ -320,6 +320,16 @@ console=serial0,115200
 
 <a name="buildinstructions_sys"/>
 
+The first step is to clone the GitHub project with the software tool [Git](https://git-scm.com) to your local system. For example:
+```sh
+$ git clone https://github.com/opend-connect/openD.git
+```
+
+The openD project uses also the open-source HAN-FUN project ([Link](https://github.com/ULE-Alliance/hanfun)). This GitHub project is integrated as a Git submodule. In order to get the source files of this project you should execute the Git submodule update command from the root directory of the openD project. For example:
+```sh
+$ git submodule update --init --recursive
+```
+
 ### Build System
 
 This project uses CMake as build system. A user is able to build the firmware with a terminal or with an IDE on Windows, Linux and OSX. The project requires a **CMake version >= v3.6**. Example installations are:
