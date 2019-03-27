@@ -34,7 +34,8 @@ include_directories(
     ${MOCKED_MODULES_SOURCE_DIR}/opend/dspg/pp_hanfun/hanfun_api
     ${MOCKED_MODULES_SOURCE_DIR}/opend
     ${MOCKED_MODULES_SOURCE_DIR}/opend/prv
-    ${MOCKED_MODULES_SOURCE_DIR}/hanfun_lib/inc
+    ${MOCKED_MODULES_SOURCE_DIR}/hanfun_lib
+    ${MOCKED_MODULES_SOURCE_DIR}/hanfun_lib/hanfun_lib/inc
     ${MOCKED_MODULES_SOURCE_DIR}/hardware/low-level-api
 )
 

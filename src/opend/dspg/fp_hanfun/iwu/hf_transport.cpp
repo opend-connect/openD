@@ -577,14 +577,23 @@ static int8_t cmbs_hanFunMsgRecv( void* ie_data )
     return -1;
   }
 
+  /* HAN-FUN Transport Layer over Dialog's ULE Stack. */
+  HF::ULE::Transport * transport = HF::ULE::Transport::instance();
+
+  /* Find the connected device by id. */
+  HF::ULE::Link * link = transport->find_by_id(ie_han_msg.u16_SrcDeviceId);
+  if(link != nullptr) {
+    deviceId = link->address();
+  }
+
   /* Generate original HANFUN packet. */
-  cmbs_hanFunBuffer[0] = (uint8_t) (ie_han_msg.u16_SrcDeviceId >> 8U);
-  cmbs_hanFunBuffer[1] = (uint8_t) ie_han_msg.u16_SrcDeviceId;
+  cmbs_hanFunBuffer[0] = (uint8_t) (deviceId >> 8U);
+  cmbs_hanFunBuffer[1] = (uint8_t) deviceId;
   cmbs_hanFunBuffer[2] = ie_han_msg.u8_SrcUnitId;
   cmbs_hanFunBuffer[3] = (ie_han_msg.u8_DstAddressType << 7 ) & 0x80;
   cmbs_hanFunBuffer[3] |= (uint8_t) ((ie_han_msg.u16_DstDeviceId >> 8U) & 0x7F);
   cmbs_hanFunBuffer[4] = (uint8_t) ie_han_msg.u16_DstDeviceId;
-  cmbs_hanFunBuffer[5] = ie_han_msg.u8_DstUnitId;
+  cmbs_hanFunBuffer[5] = 0x01;
   cmbs_hanFunBuffer[6] = 0x00; /* RFU */
   cmbs_hanFunBuffer[7] = 0x00; /* RFU */
   cmbs_hanFunBuffer[8] = ie_han_msg.u8_MsgSequence;
@@ -595,9 +604,6 @@ static int8_t cmbs_hanFunMsgRecv( void* ie_data )
   cmbs_hanFunBuffer[12] = (uint8_t) ie_han_msg.u8_InterfaceMember;
   cmbs_hanFunBuffer[13] = (uint8_t) (ie_han_msg.u16_DataLen >> 8U);
   cmbs_hanFunBuffer[14] = (uint8_t) ie_han_msg.u16_DataLen;
-
-  /* HAN-FUN Transport Layer over Dialog's ULE Stack. */
-  HF::ULE::Transport * transport = HF::ULE::Transport::instance();
 
   /* Size of the register finished data. */
   size_t size = ie_han_msg.u16_DataLen + HANFUN_HEADER_SIZE;

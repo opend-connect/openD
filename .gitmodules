@@ -1,0 +1,3 @@
+[submodule "src/hanfun_lib/hanfun_lib"]
+	path = src/hanfun_lib/hanfun_lib
+	url = https://github.com/ULE-Alliance/hanfun.git

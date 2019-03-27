@@ -1,3 +1,0 @@
-[submodule "tests/cpputest"]
-	path = tests/cpputest
-	url = https://github.com/bithium/cpputest
