@@ -191,6 +191,7 @@ execute_process (
     COMMAND git apply --directory=src/hanfun_lib src/hanfun_lib/hanfun.patch
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/..
     OUTPUT_VARIABLE outVar
+    ERROR_VARIABLE errVar
 )
 message(STATUS "Git applay: ${outVar}")
 
