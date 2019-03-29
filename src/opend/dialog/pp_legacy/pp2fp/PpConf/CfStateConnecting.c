@@ -97,8 +97,8 @@ DECL_STATE_FN(S_CfStateConnecting)
       // SendApiPpAudioUnmuteReq(COLA_TASK, API_MUTE_BOTH);                                        //ApiPpAudioMuteRxTxType MuteRxTx
 
       if( '6' == pCfSysCtrl->PpSysPara.DestHsId ) {
-        pCfSysCtrl->PpSysPara.MmiConEi=((ApiCcGetConeiCfmType *)p_Mail)->ConEi;
-        SetupExtOutgoingCall( pCfSysCtrl->PpSysPara.MmiConEi, '0' );
+        pCfSysCtrl->PpSysPara.CallCtrlPara.ConEi=((ApiCcGetConeiCfmType *)p_Mail)->ConEi;
+        SetupExtOutgoingCall( pCfSysCtrl->PpSysPara.CallCtrlPara.ConEi, '0' );
       } else {
         SetupIntOutgoingCall( ((ApiCcGetConeiCfmType *)p_Mail)->ConEi, pCfSysCtrl->PpSysPara.DestHsId-'0' );
       }
@@ -129,7 +129,7 @@ DECL_STATE_FN(S_CfStateConnecting)
       {
         case CONNECTION_TIMER:
           SendApiCcReleaseReq ( COLA_TASK,                          //RosTaskIdType Src,
-                                  pCfSysCtrl->PpSysPara.MmiConEi,     //ApiCcConEiType ConEi,
+                                  pCfSysCtrl->PpSysPara.CallCtrlPara.ConEi,     //ApiCcConEiType ConEi,
                                   API_RR_NORMAL,                      //ApiCcReleaseReasonType Reason,
                                   0,                                  //tsuint16 InfoElementLength,
                                   NULL );                             //tsuint8 InfoElement[1])

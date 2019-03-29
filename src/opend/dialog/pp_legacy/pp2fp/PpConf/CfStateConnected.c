@@ -116,7 +116,7 @@ DECL_STATE_FN(S_CfStateConnected)
           case KEY_HOOK: // hook on
             // release connection (and all instances)
             SendApiCcReleaseReq ( COLA_TASK,                          //RosTaskIdType Src,
-                                  pCfSysCtrl->PpSysPara.MmiConEi,     //ApiCcConEiType ConEi,
+                                  pCfSysCtrl->PpSysPara.CallCtrlPara.ConEi,     //ApiCcConEiType ConEi,
                                   API_RR_NORMAL,                      //ApiCcReleaseReasonType Reason,
                                   0,                                  //tsuint16 InfoElementLength,
                                   NULL );                             //tsuint8 InfoElement[1])
