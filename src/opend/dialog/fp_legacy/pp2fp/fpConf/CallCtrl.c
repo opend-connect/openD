@@ -78,7 +78,6 @@ void ApiFpCcSetupReq( ApiCallReferenceType CallReference, ApiTerminalIdType term
 
   ApiInfoElementType *IeBlockPtr = NULL;
   ApiFpCcAudioIdType AudioId= {API_IEA_INT, 0, 0};
-  ApiLineIdType TempLineId;
   rsuint16 IeBlockLength = 0;
 
   CallState[ terminalId ].CallClass = API_CC_NORMAL; //normal external call
@@ -95,15 +94,6 @@ void ApiFpCcSetupReq( ApiCallReferenceType CallReference, ApiTerminalIdType term
   ApiBuildInfoElement(&IeBlockPtr, &IeBlockLength, API_IE_CALL_STATUS, sizeof(ApiCallStatusType), (rsuint8*)&tempCallStatus);
 
   ApiBuildInfoElement(&IeBlockPtr, &IeBlockLength, API_IE_SYSTEM_CALL_ID, sizeof(ApiSystemCallIdType), (rsuint8*)&CallState[terminalId].ApiSystemCallId);
-
-  //If we are making an outgoing call from ContactList check for LineId
-  TempLineId.ApiSubId = API_SUB_LINE_ID_EXT_LINE_ID;
-  TempLineId.ApiLineValue.Value = API_LINEID_NONE;  // line id none
-  ApiBuildInfoElement(&IeBlockPtr,
-                      &IeBlockLength,
-                      API_IE_LINE_ID,
-                      sizeof(ApiLineIdType),
-                      (rsuint8*)&TempLineId);
 
   CfSetCallState( terminalId, F06_CALL_PRESENT);
 
