@@ -74,35 +74,35 @@ const ApiCodecInfoType CodecG726 = {API_CT_G726, API_MDS_1_MD, API_CPR_CS, API_S
 *                                Implementation
 ****************************************************************************/
 
-void ApiFpCcSetupReq( ApiCallReferenceType CallReference, ApiTerminalIdType terminalId ) {
+void ApiFpCcSetupReq( ApiCallReferenceType CallReference, rsuint8 handsetId ) {
 
   ApiInfoElementType *IeBlockPtr = NULL;
   ApiFpCcAudioIdType AudioId= {API_IEA_INT, 0, 0};
   rsuint16 IeBlockLength = 0;
 
-  CallState[ terminalId ].CallClass = API_CC_NORMAL; //normal external call
-  CallState[ terminalId ].BasicService = API_WIDEBAND_SPEECH;
-  CallState[ terminalId ].DestinationId = terminalId;
-  CallState[ terminalId ].CallReference = CallReference;
+  CallState[ handsetId ].CallClass = API_CC_NORMAL; //normal external call
+  CallState[ handsetId ].BasicService = API_WIDEBAND_SPEECH;
+  CallState[ handsetId ].DestinationId = handsetId;
+  CallState[ handsetId ].CallReference = CallReference;
 
   AudioId.IntExtAudio = API_IEA_INT;
-  AudioId.SourceTerminalId = terminalId;
+  AudioId.SourceTerminalId = handsetId;
 
   ApiCallStatusType tempCallStatus;
   tempCallStatus.CallStatusSubId = API_SUB_CALL_STATUS;
   tempCallStatus.CallStatusValue.State = API_CSS_CALL_SETUP;
   ApiBuildInfoElement(&IeBlockPtr, &IeBlockLength, API_IE_CALL_STATUS, sizeof(ApiCallStatusType), (rsuint8*)&tempCallStatus);
 
-  ApiBuildInfoElement(&IeBlockPtr, &IeBlockLength, API_IE_SYSTEM_CALL_ID, sizeof(ApiSystemCallIdType), (rsuint8*)&CallState[terminalId].ApiSystemCallId);
+  ApiBuildInfoElement(&IeBlockPtr, &IeBlockLength, API_IE_SYSTEM_CALL_ID, sizeof(ApiSystemCallIdType), (rsuint8*)&CallState[handsetId].ApiSystemCallId);
 
-  CfSetCallState( terminalId, F06_CALL_PRESENT);
+  CfSetCallState( handsetId, F06_CALL_PRESENT);
 
   SendApiFpCcSetupReq(COLA_TASK,
                       CallReference,                                    //CallReference
-                      CallState[ terminalId ].DestinationId ,           //ApiTerminalIdType
+                      CallState[ handsetId ].DestinationId ,           //ApiTerminalIdType
                       AudioId,                                          //SourceId
-                      CallState[ terminalId ].BasicService,             //BasicService
-                      CallState[ terminalId ].CallClass,                //CallClass
+                      CallState[ handsetId ].BasicService,             //BasicService
+                      CallState[ handsetId ].CallClass,                //CallClass
                       API_CC_SIGNAL_ALERT_ON_PATTERN_0_INT,             //Signal
                       IeBlockLength,
                       (rsuint8 *)IeBlockPtr);
