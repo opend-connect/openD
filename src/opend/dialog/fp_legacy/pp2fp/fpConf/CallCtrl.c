@@ -84,6 +84,7 @@ void ApiFpCcSetupReq( ApiCallReferenceType CallReference, rsuint8 handsetId ) {
   CallState[ handsetId ].BasicService = API_WIDEBAND_SPEECH;
   CallState[ handsetId ].DestinationId = handsetId;
   CallState[ handsetId ].CallReference = CallReference;
+  CallState[ handsetId ].LineId = 0;
 
   AudioId.IntExtAudio = API_IEA_INT;
   AudioId.SourceTerminalId = handsetId;
