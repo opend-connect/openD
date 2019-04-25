@@ -68,6 +68,9 @@ static int8_t cmbs_hanFunMsgSendTxStartRequestRes( void* ie_data );
 static void cmbs_hanFunMsgRegState3Notification( void* ie_data );
 static void cmbs_hanFunMsgRegState1Notification( void* ie_data );
 
+/** Extended device entry pointer. */
+static ST_IE_HAN_EXTENDED_DEVICE_ENTRIES *_pst_HANExtendedDeviceEntry;
+
 /** HANFUN buffer for CMBS. */
 static uint8_t cmbs_hanFunBuffer[CMBS_HAN_MAX_MSG_LEN*2];
 
@@ -338,7 +341,7 @@ void initUleApp(int argc, char **argv)
   tcx_LogCloseTracefile();
   tcx_HostLogOutputDestroy();
   tcx_LogOutputDestroy();
-  printf("Press ENTER to exit...");
+  printf("Press ENTER to exit...\n");
   exit(1);
 }
 
@@ -637,6 +640,32 @@ static void cmbs_onRegistrationClose( void* ie_data )
   return;
 }
 
+void set_deviceEntryList( ST_IE_HAN_EXTENDED_DEVICE_ENTRIES *pst_HANExtendedDeviceEntry )
+{
+  _pst_HANExtendedDeviceEntry = pst_HANExtendedDeviceEntry;
+}
+
+static void cmbs_hanFunDeviceReadTableRes( void* ie_data )
+{
+  void* ie = NULL;
+  uint16_t ieType = 0U;
+
+  if( ie_data ) {
+    cmbs_api_ie_GetFirst(ie_data, &ie, &ieType);
+
+    while(ie != NULL) {
+      if( CMBS_IE_HAN_DEVICE_TABLE_EXTENDED_ENTRIES == ieType ) {
+        if( _pst_HANExtendedDeviceEntry ) {
+          cmbs_api_ie_HANDeviceTableExtendedGet( ie, _pst_HANExtendedDeviceEntry);
+        }
+
+        SEM_POST_READTABLE;
+      }
+      cmbs_api_ie_GetNext(ie_data, &ie, &ieType);
+    }
+  }
+}
+
 static int appcmbs_opend_callback( void *pv_AppRef, E_CMBS_EVENT_ID eventId, void *ie_data)
 {
   int8_t ret;
@@ -674,6 +703,11 @@ static int appcmbs_opend_callback( void *pv_AppRef, E_CMBS_EVENT_ID eventId, voi
 
     case CMBS_EV_DSR_CORD_CLOSEREG:
       cmbs_onRegistrationClose( ie_data );
+      break;
+
+    case CMBS_EV_DSR_HAN_DEVICE_READ_TABLE_RES:
+      /* Read device table. */
+      cmbs_hanFunDeviceReadTableRes( ie_data );
       break;
 
     default:
