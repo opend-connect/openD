@@ -52,6 +52,10 @@ extern "C"
 #include <include/uleAppAPI.h>
 }
 
+#include "opend_hanfun_api.h"
+
+bool restoreRunning = false;
+
 // =============================================================================
 // Defines
 // =============================================================================
@@ -456,16 +460,14 @@ extern "C" void mail_switch(unsigned short Length, unsigned char *MailPtr)
 
          LOG (TRACE) << ">>> ID :" << std::hex << GET_ID(p_ipui) << std::dec << " <<<" << NL;
 
-         auto link = transport->find_by_id(GET_ID(p_ipui));
+         if( !restoreRunning ) {
+            auto link = transport->find_by_id(GET_ID(p_ipui));
 
-         if (link == nullptr)
-         {
-            transport->connected (GET_ID(p_ipui), p_ipui->IPUI);
-         }
-         else	// already registered
-         {
-            //LOG(DEBUG) <<  "IN HANDSET_PR" << NL;
-            // base.web_interface.handle_handset_present_ind(link);
+            if (link == nullptr)
+            {
+               transport->connected (GET_ID(p_ipui), p_ipui->IPUI);
+            }
+            // already registered
          }
          break;
       }

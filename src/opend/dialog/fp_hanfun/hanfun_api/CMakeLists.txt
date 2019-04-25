@@ -50,6 +50,7 @@ target_link_libraries(${PROJECT_NAME}
     dialog-hdlc-cvmdect
     hanfunLib
     dialog-board-rpi
+    iwu
 )
 
 #---------------------------------------------------------------------------------------
