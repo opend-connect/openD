@@ -26,6 +26,7 @@
 #include <cstdint>
 #include <iostream>
 #include <sstream>
+#include <fstream>
 #include "application.h"
 #include "fp_hanfun_app.h"
 #include "opend_hanfun_api_fp.h"
@@ -36,6 +37,11 @@ extern "C"
 {
 #include "opend_api.h"
 }
+
+/* JSON HAN-FUN device file. */
+#ifndef HF_APP_CONFIG_FILE
+   #define HF_APP_CONFIG_FILE   "./hanfun.json"
+#endif
 
 using json = nlohmann::json;
 
@@ -639,6 +645,136 @@ void Command_Toggle::run (std::vector <std::string> &args)
   openD_hanfunApi_fp_profileRequest(&hProfileRequest, arg1, arg2);
 }
 
+static std::string json_uid( uint16_t uid )
+{
+  std::ostringstream convert;
+
+  convert << "0x" << std::setfill ('0') << std::setw (sizeof(uint16_t) * 2) << std::hex << uid;
+
+  return convert.str ();
+}
+
+static uint16_t json_uid( std::string uid )
+{
+   return strtol( uid.substr (2).c_str (), NULL, 16 );
+}
+
+void HF::Application::Save ()
+{
+  std::cout.clear (); std::cout << "Application configuration save !" << std::endl; std::cout.clear (); std::cerr.clear ();
+
+  json j;
+  openD_hanfunDevice_t *hanfunDevices = NULL;
+  uint16_t hanfunDevices_size;
+
+  std::ofstream ofs (HF_APP_CONFIG_FILE);
+
+  /* Get the available devices. */
+  hanfunDevices_size = openD_hanfunApi_fp_devMgmt_get( &hanfunDevices );
+
+  json root;
+
+  for( unsigned i = 0; i < hanfunDevices_size; i++ )
+  {
+    /* Address */
+    root[i]["address"] = hanfunDevices[i].address;
+    /* EMC */
+    root[i]["emc"] = json_uid( hanfunDevices[i].emc );
+    /* Units */
+    for (unsigned k = 0; k < hanfunDevices[i].units_length; k++)
+    {
+      json &units = root[i]["units"][k];
+      units["id"] = hanfunDevices[i].units[k].id;
+      units["profile"] = json_uid( hanfunDevices[i].units[k].profile );
+    }
+    /* IPUI */
+    root[i]["uid"] = { {"type", "dect"} };
+    for (unsigned k = 0U; k < 5U; ++k)
+    {
+      root[i]["uid"]["value"][k] = hanfunDevices[i].ipui[k];
+    }
+  }
+
+  if (ofs.is_open ())
+  {
+    j["core"]["device_management"] = root;
+    ofs << std::setw(4) << j << std::endl;
+    ofs.close ();
+  }
+
+  Saved ();
+}
+
+void HF::Application::Restore ()
+{
+  json j;
+  std::vector<openD_hanfunDevice_t> hanfunDevices;
+  std::vector<openD_hanfunDevice_unit_t> hanfunDevice_units;
+
+  std::ifstream ifs (HF_APP_CONFIG_FILE);
+
+  /* Check if file exists. */
+  if( ifs.good() )
+  {
+    try
+    {
+      /* Stream to JSON object. */
+      ifs >> j;
+
+      json root = j["core"]["device_management"];
+
+      /* JSON object to device list. */
+      for( unsigned i = 0; i < root.size (); i++ )
+      {
+        openD_hanfunDevice_t hanfunDevice;
+
+        /* Address */
+        hanfunDevice.address = (uint16_t) root[i].at("address").get<std::uint16_t>();
+        /* EMC */
+        hanfunDevice.emc = json_uid (root[i].at("emc").get<std::string>());
+        /* Units */
+        for (unsigned j = 0U; j <  root[i]["units"].size(); j++)
+        {
+          openD_hanfunDevice_unit_t openD_hanfunDevice_unit;
+          hanfunDevice_units.push_back( openD_hanfunDevice_unit );
+
+          /* Save the first reference to the current HANFUN device. */
+          if( 0U == j) {
+            hanfunDevice.units = &hanfunDevice_units.back();
+          }
+
+          /* Convert units from JSON. */
+          hanfunDevice.units[j].id = (uint8_t) root[i]["units"][j].at("id").get<std::uint8_t>();
+          hanfunDevice.units[j].profile = json_uid (root[i]["units"][j].at("profile").get<std::string>());
+        }
+        hanfunDevice.units_length = root[i]["units"].size();
+
+        /* IPUI */
+        for (unsigned j = 0U; j < 5U; ++j)
+        {
+            hanfunDevice.ipui[j] = (uint8_t) root[i]["uid"]["value"][j];
+        }
+
+        hanfunDevices.push_back( hanfunDevice );
+      }
+
+    }
+    catch (json::exception& e)
+    {
+      LOG(WARN) << "Reading configuration file error!" << e.what() << NL;
+    }
+  } else {
+    LOG(INFO) << "No HAN-FUN device file exists." << NL;
+  }
+
+  /* Restore device list. */
+  openD_hanfunApi_fp_devMgmt_set( &hanfunDevices[0], hanfunDevices.size() );
+
+  ifs.close ();
+
+  Restored ();
+}
+
 /* HF::Application::Initialize */
 void HF::Application::Initialize (HF::Transport::Layer &transport, int argc, char **argv)
 {
@@ -677,6 +813,8 @@ void HF::Application::Initialize (HF::Transport::Layer &transport, int argc, cha
   Command::add(&command_Off);
   Command::add(&command_On);
   Command::add(&command_Toggle);
+
+  Restore();
 }
 
 /* Command::add */

@@ -31,6 +31,25 @@
 
 #include "opend_hanfun_api.h"
 
+/**
+ * openD HANFUN device structure.
+ */
+typedef struct openD_hanfunDevice_unit {
+  uint8_t id;
+  uint16_t profile;
+} openD_hanfunDevice_unit_t;
+
+/**
+ * openD HANFUN device structure.
+ */
+typedef struct openD_hanfunDevice {
+  uint16_t address;
+  uint16_t emc;
+  openD_hanfunDevice_unit_t *units;
+  uint8_t units_length;
+  uint8_t ipui[5];
+} openD_hanfunDevice_t;
+
 
 namespace DeviceManagement
 {
@@ -39,6 +58,8 @@ namespace DeviceManagement
    */
   struct Entries:public HF::Core::DeviceManagement::Entries
   {
+    typedef HF::Core::DeviceManagement::Device Device;
+
     /**
      * @brief   Save configuration.
      *
@@ -60,6 +81,14 @@ namespace DeviceManagement
      * @retval  Result of the operation.
      */
     HF::Common::Result destroy (const HF::Core::DeviceManagement::Device &device);
+    /**
+     * Insert a device management entry into the database.
+     *
+     * This is used to add the entries when reading the configuration from the JSON database.
+     *
+     * @param [in] device   device entry to add.
+     */
+    void insert (const Device &device);
   };
 
   /*!
@@ -110,6 +139,21 @@ namespace DeviceManagement
      * @retval  Status of the operation.
      */
     bool deregister (uint16_t address);
+
+    /**
+      * Save the device entries.
+      *
+      * @param [out] hanfunDevices  HANFUN devices to save.
+      */
+    uint16_t save ( openD_hanfunDevice_t **hanfunDevices );
+
+    /**
+      * Restore the device entries.
+      *
+      * @param [in] hanfunDevices  HANFUN devices to restore.
+      * @param [in] size  Size of the devices.
+      */
+    void restore ( openD_hanfunDevice_t *hanfunDevices, uint16_t size );
 
     protected:
 
@@ -435,6 +479,22 @@ openD_status_t openD_hanfunApi_fp_bindMgmtRequest( openD_hanfunApi_bindMgmtReq_t
  */
 openD_status_t openD_hanfunApi_fp_profileRequest( openD_hanfunApi_profileReq_t *hProfileRequest, uint16_t address = 0, uint16_t unit = 0 );
 
+/**
+ * @brief   openD HAN-FUN API device management get devices.
+ *
+ * @param   hanfunDevices Pointer of HANFUN devices (@ref openD_hanfunDevice_t).
+ *
+ * @retval  Number of devices in the HANFUN devices list.
+ */
+uint16_t openD_hanfunApi_fp_devMgmt_get( openD_hanfunDevice_t **hanfunDevices );
+
+/**
+ * @brief   openD HAN-FUN API device management set devices.
+ *
+ * @param   hanfunDevices Pointer of HANFUN devices (@ref openD_hanfunDevice_t).
+ * @param   size Number of devices in the HANFUN device list.
+ */
+void openD_hanfunApi_fp_devMgmt_set( openD_hanfunDevice_t *hanfunDevices, uint16_t size );
 
 /*! @} defgroup OPEND_HANFUN_API_FP */
 
