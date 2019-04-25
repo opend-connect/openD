@@ -231,7 +231,16 @@ bool HF::Application::Registration (bool mode)
 
 void HF::Application::Deregister (uint16_t address)
 {
-  /* Can be used for deregistration. */
+  auto link = HF::ULE::Transport::instance()->find_by_address(address);
+
+  if (link != nullptr)
+  {
+    app_DsrHanDeleteDevice( link->id() , false);
+  }
+  else
+  {
+    printf("Could not find link for address : %d \n", address);
+  }
 }
 
 void initUleApp(int argc, char **argv)

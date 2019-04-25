@@ -727,12 +727,13 @@ openD_status_t openD_hanfunApi_fp_devMgmtRequest( openD_hanfunApi_devMgmtReq_t *
       break;
     case OPEND_HANFUNAPI_DEVICE_MANAGEMENT_DEREGISTER:
       hDevMgmtConfirm.service = OPEND_HANFUNAPI_DEVICE_MANAGEMENT_DEREGISTER;
+      /* External de-registration. */
+      HF::Application::Deregister(address);
       /* HANFUN deregistration. */
       if(fp->unit0 ()->device_management ()->deregister (address) == true)
       {
         hDevMgmtConfirm.status = OPEND_STATUS_OK;
         openD_hanfun_devMgmtCfm( &hDevMgmtConfirm );
-        app_DsrHanDeleteDevice(appAddress[address], false);
         ret = OPEND_STATUS_OK;
       }
       else
