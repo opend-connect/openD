@@ -303,6 +303,19 @@ void DeviceManagement::Entries::insert (const Device &device)
    HF::Core::DeviceManagement::Entries::save (device);
 }
 
+void  DeviceManagement::Server::registered (HF::Core::DeviceManagement::DevicePtr &device)
+{
+  openD_hanfunApi_devMgmtInd_t hDevMgmtIndication;
+
+  if( device == nullptr ) {
+    return;
+  }
+
+  hDevMgmtIndication.param.getAddress.address = device->address;
+  hDevMgmtIndication.service = OPEND_HANFUNAPI_DEVICE_MANAGEMENT_REGISTER_DEVICE;
+  openD_hanfun_devMgmtInd( &hDevMgmtIndication );
+}
+
 /* DeviceManagement::Entries::destroy. */
 HF::Common::Result DeviceManagement::Entries::destroy (const HF::Core::DeviceManagement::Device &device)
 {

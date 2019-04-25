@@ -140,6 +140,11 @@ namespace DeviceManagement
      */
     bool deregister (uint16_t address);
 
+    /*
+     * Registration of device was completed
+     */
+    void registered (HF::Core::DeviceManagement::DevicePtr &device);
+
     /**
       * Save the device entries.
       *

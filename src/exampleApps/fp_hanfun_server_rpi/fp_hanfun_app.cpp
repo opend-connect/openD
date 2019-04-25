@@ -206,6 +206,23 @@ void devMgmtIndicationCallback(openD_hanfunApi_devMgmtInd_t *hDevMgmtIndication)
       udp_send((j.dump()).c_str(), strlen((j.dump()).c_str())+1);
       break;
 
+    case OPEND_HANFUNAPI_DEVICE_MANAGEMENT_REGISTER_DEVICE:
+      {
+        std::string address = std::to_string(hDevMgmtIndication->param.getAddress.address);
+        std::cout.clear (); std::cout << "[INFO ] " << "Device with ID " << address << " registered" <<
+        std::endl; std::cout.clear (); std::cerr.clear ();
+        j["version"] = "1.0.0";
+        j["module"] = "hanfun";
+        j["primitive"] = "indication";
+        j["service"] = "deviceManagementRegisterDevice";
+        j["status"] = "OK";
+        j["param1"] = address;
+        j["param2"] = "0";
+        j["param3"] = "0";
+        udp_send((j.dump()).c_str(), strlen((j.dump()).c_str())+1);
+      }
+      break;
+
     case OPEND_HANFUNAPI_DEVICE_MANAGEMENT_GET_DEVICE_CORE_INFORMATION:
       openD_hanfunApi_devMgmtReq_t hMgmtRequest;
       hMgmtRequest.service = OPEND_HANFUNAPI_DEVICE_MANAGEMENT_GET_DEVICE_CORE_INFORMATION;
