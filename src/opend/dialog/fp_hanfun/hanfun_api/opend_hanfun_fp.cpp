@@ -1007,6 +1007,14 @@ openD_status_t openD_hanfunApi_fp_profileRequest( openD_hanfunApi_profileReq_t *
     return OPEND_STATUS_ARGUMENT_INVALID;
   }
 
+  /* Check if device is registered. */
+  FP * fp = FP::instance();
+  auto _entry = fp->unit0 ()->device_management ()->entry ( address );
+  if(_entry == nullptr)
+  {
+    return OPEND_STATUS_ARGUMENT_INVALID;
+  }
+
   switch(hProfileRequest->profile){
     case OPEND_HANFUNAPI_SIMPLE_ONOFF_SWITCH:
       return simpleOnOffSwitchService(hProfileRequest, device);

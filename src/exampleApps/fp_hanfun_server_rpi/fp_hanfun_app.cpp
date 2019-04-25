@@ -604,7 +604,22 @@ void Command_On::run (std::vector <std::string> &args)
   uint16_t arg1 = strtol (args[0].c_str (), NULL, 10);
   uint16_t arg2 = strtol (args[1].c_str (), NULL, 10);
 
-  openD_hanfunApi_fp_profileRequest(&hProfileRequest, arg1, arg2);
+  if( OPEND_STATUS_OK != openD_hanfunApi_fp_profileRequest(&hProfileRequest, arg1, arg2) )
+  {
+    std::cerr.clear (); std::cerr << "[WARN ] " << "[HANFUN] Simple on/off switch request: FAIL" <<
+    std::endl; std::cout.clear (); std::cerr.clear ();
+
+    j["version"] = "1.0.0";
+    j["module"] = "hanfun";
+    j["primitive"] = "confirmation";
+    j["service"] = "IOnOffClientOn";
+    j["status"] = "ERR";
+    j["param1"] = "0";
+    j["param2"] = "0";
+    j["param3"] = "0";
+    size_t len = strlen((j.dump()).c_str())+1;
+    udp_send((j.dump()).c_str(), len);
+  }
 }
 
 void Command_Off::run (std::vector <std::string> &args)
@@ -623,7 +638,22 @@ void Command_Off::run (std::vector <std::string> &args)
   uint16_t arg1 = strtol (args[0].c_str (), NULL, 10);
   uint16_t arg2 = strtol (args[1].c_str (), NULL, 10);
 
-  openD_hanfunApi_fp_profileRequest(&hProfileRequest, arg1, arg2);
+  if( OPEND_STATUS_OK != openD_hanfunApi_fp_profileRequest(&hProfileRequest, arg1, arg2) )
+  {
+    std::cerr.clear (); std::cerr << "[WARN ] " << "[HANFUN] Simple on/off switch request: FAIL" <<
+    std::endl; std::cout.clear (); std::cerr.clear ();
+
+    j["version"] = "1.0.0";
+    j["module"] = "hanfun";
+    j["primitive"] = "confirmation";
+    j["service"] = "IOnOffClientOff";
+    j["status"] = "ERR";
+    j["param1"] = "0";
+    j["param2"] = "0";
+    j["param3"] = "0";
+    size_t len = strlen((j.dump()).c_str())+1;
+    udp_send((j.dump()).c_str(), len);
+  }
 }
 
 void Command_Toggle::run (std::vector <std::string> &args)
@@ -642,7 +672,22 @@ void Command_Toggle::run (std::vector <std::string> &args)
   uint16_t arg1 = strtol (args[0].c_str (), NULL, 10);
   uint16_t arg2 = strtol (args[1].c_str (), NULL, 10);
 
-  openD_hanfunApi_fp_profileRequest(&hProfileRequest, arg1, arg2);
+  if( OPEND_STATUS_OK != openD_hanfunApi_fp_profileRequest(&hProfileRequest, arg1, arg2) )
+  {
+    std::cerr.clear (); std::cerr << "[WARN ] " << "[HANFUN] Simple on/off switch request: FAIL" <<
+    std::endl; std::cout.clear (); std::cerr.clear ();
+
+    j["version"] = "1.0.0";
+    j["module"] = "hanfun";
+    j["primitive"] = "confirmation";
+    j["service"] = "IOnOffClientToggle";
+    j["status"] = "ERR";
+    j["param1"] = "0";
+    j["param2"] = "0";
+    j["param3"] = "0";
+    size_t len = strlen((j.dump()).c_str())+1;
+    udp_send((j.dump()).c_str(), len);
+  }
 }
 
 static std::string json_uid( uint16_t uid )
