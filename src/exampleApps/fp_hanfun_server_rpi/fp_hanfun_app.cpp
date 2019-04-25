@@ -200,6 +200,12 @@ void devMgmtIndicationCallback(openD_hanfunApi_devMgmtInd_t *hDevMgmtIndication)
       udp_send((j.dump()).c_str(), strlen((j.dump()).c_str())+1);
       break;
 
+    case OPEND_HANFUNAPI_DEVICE_MANAGEMENT_GET_DEVICE_CORE_INFORMATION:
+      openD_hanfunApi_devMgmtReq_t hMgmtRequest;
+      hMgmtRequest.service = OPEND_HANFUNAPI_DEVICE_MANAGEMENT_GET_DEVICE_CORE_INFORMATION;
+      openD_hanfunApi_fp_devMgmtRequest( &hMgmtRequest, hDevMgmtIndication->param.getAddress.address, 0 );
+      break;
+
     default:
       break;
   }

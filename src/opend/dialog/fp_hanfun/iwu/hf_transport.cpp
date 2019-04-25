@@ -124,6 +124,13 @@ void resetConcentratorDectModule()
 }
 
 
+extern "C" void request_device_core_info( uint8_t dev_legacy_id )
+{
+   openD_hanfunApi_devMgmtInd_t hMgmtInd;
+   hMgmtInd.service = OPEND_HANFUNAPI_DEVICE_MANAGEMENT_GET_DEVICE_CORE_INFORMATION;
+   hMgmtInd.param.getAddress.address = (uint16_t) dev_legacy_id;
+   openD_hanfun_devMgmtInd( &hMgmtInd );
+}
 
 // =============================================================================
 // API

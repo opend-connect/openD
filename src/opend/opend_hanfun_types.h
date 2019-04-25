@@ -264,6 +264,10 @@ typedef enum openD_hanfunApi_devMgmt_service {
    */
   OPEND_HANFUNAPI_DEVICE_MANAGEMENT_GET_DEVICE_INFORMATION_ALL,
   /**
+   * HAN-FUN device management get device core information.
+   */
+  OPEND_HANFUNAPI_DEVICE_MANAGEMENT_GET_DEVICE_CORE_INFORMATION,
+  /**
    * HAN-FUN device management change concentrator dect mode.
    */
   OPEND_HANFUNAPI_DEVICE_MANAGEMENT_CHANGE_CONCENTRATOR_DECT_MODE,
@@ -316,6 +320,12 @@ typedef struct openD_hanfunApi_devMgmtInd {
    * HanfunApi device management service.
    */
   openD_hanfunApi_devMgmt_service_t service;
+  /**
+   * openD HanfunApi device management parameters.
+   */
+  union {
+    hanfunApiDevMgmt_getAddress_t getAddress;
+  } param;
 } openD_hanfunApi_devMgmtInd_t;
 
 /**

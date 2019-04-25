@@ -76,6 +76,14 @@ static void handle_device_infomation (HF::Common::ByteArray &payload, uint16_t o
  */
 static openD_status_t simpleOnOffSwitchService( openD_hanfunApi_profileReq_t *hProfileRequest, HF::Protocol::Address device );
 
+static uint16_t port_to_dev_id(uint8_t port_id) {
+
+  HF::ULE::Link* a_link = HF::ULE::Transport::instance()->find_by_id(port_id);
+
+  if (a_link == nullptr) return 0;
+  else return (uint16_t) a_link->address();
+}
+
 void SimpleLight::on (HF::Protocol::Address &source)
 {
   openD_hanfunApi_profileInd_t hProfileInd;
@@ -662,6 +670,20 @@ openD_status_t openD_hanfunApi_fp_devMgmtRequest( openD_hanfunApi_devMgmtReq_t *
       ret = OPEND_STATUS_OK;
       }
       break;
+    case OPEND_HANFUNAPI_DEVICE_MANAGEMENT_GET_DEVICE_CORE_INFORMATION:
+    {
+      uint16_t dev_hanfun_id = port_to_dev_id(address);
+
+      if (dev_hanfun_id == 0) return ret;
+      LOG (DEBUG) << "Sending keep alive request to device: " << dev_hanfun_id << NL;
+
+      HF::Protocol::Address addr (dev_hanfun_id, 0);
+      auto message = HF::Core::DeviceInformation::get (HF::Core::DeviceInformation::CORE_VERSION_ATTR);
+
+      fp->unit0()->send (addr, *message, nullptr);
+
+      break;
+    }
     default:
       hDevMgmtConfirm.status = OPEND_STATUS_ARGUMENT_INVALID;
       openD_hanfun_devMgmtCfm( &hDevMgmtConfirm );
