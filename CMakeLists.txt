@@ -13,6 +13,8 @@
 #
 # SPDX-License-Identifier: Apache-2.0 OR GPL-2.0-only
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+
 cmake_minimum_required(VERSION 3.6)
 
 #---------------------------------------------------------------------------------------
