@@ -212,6 +212,10 @@ typedef struct hanfunApiBindMgmt_entriesElement {
  */
 typedef enum openD_hanfunApi_devMgmt_service {
   /**
+   * HAN-FUN device management device ready.
+   */
+  OPEND_HANFUNAPI_DEVICE_MANAGEMENT_DEVICE_READY,
+  /**
    * HAN-FUN device management enable registration.
    */
   OPEND_HANFUNAPI_DEVICE_MANAGEMENT_REGISTER_ENABLE,

@@ -220,6 +220,10 @@ void rxByteReceived(uint8_t *data, uint16_t len)
             {
                 g_DeviceId = st_IeGenStatus.u16_DeviceID;
             }
+
+            hDevMgmtConfirm.service = OPEND_HANFUNAPI_DEVICE_MANAGEMENT_DEVICE_READY;
+            hDevMgmtConfirm.status = OPEND_STATUS_OK;
+            openD_hanfun_devMgmtCfm(&hDevMgmtConfirm);
           }
         } else if (g_st_Msg.messageId == CMND_MSG_GENERAL_LINK_CFM)
         {

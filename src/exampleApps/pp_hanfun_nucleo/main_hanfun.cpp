@@ -29,6 +29,8 @@
 using namespace std;
 
 static bool deviceRegistered;
+static bool powerOn = true;
+static bool initSuccessful = false;
 
 openD_ll_gpio_button_ctxt_t button01;
 
@@ -82,12 +84,17 @@ void devMgmtConfirmCallback(openD_hanfunApi_devMgmtCfm_t *hDevMgmtConfirm)
 
   switch(hDevMgmtConfirm->service)
   {
+    case OPEND_HANFUNAPI_DEVICE_MANAGEMENT_DEVICE_READY:
+      initSuccessful = true;
+      break;
+
 	  case OPEND_HANFUNAPI_DEVICE_MANAGEMENT_REGISTER_DEVICE:
 	    confirmAndIndStatusByte = hDevMgmtConfirm->status;
       if(confirmAndIndStatusByte == OPEND_STATUS_OK)
       {
         successConInd();
         deviceRegistered = true;
+        openD_ll_gpio_write( OPEND_LL_GPIO_PIN_USER_LED_01, OPEND_LL_GPIO_PIN_RESET );
       }
       else
       {
@@ -150,24 +157,19 @@ static int handle_user_input( void )
 
   if( OPEND_LL_GPIO_BUTTON_PRESSED == openD_ll_gpio_readButton( &button01, OPEND_LL_GPIO_PIN_USER_BUTTON_01, OPEND_LL_GPIO_BUTTON_DEBOUNCE ) ) {
 
-#if defined PROFILE_SIMPLE_LIGHT
-    openD_hanfunApi_devMgmtReq_t hMgmtRequest;
-    hMgmtRequest.service=OPEND_HANFUNAPI_DEVICE_MANAGEMENT_REGISTER_DEVICE;
-    /* Send a device management register request to the concentrator. */
-    if( openD_hanfunApi_pp_devMgmtRequest(&hMgmtRequest) == OPEND_STATUS_OK ) {
-
-    }
-#elif defined PROFILE_SIMPLE_SWITCH
-    if(deviceRegistered == false)
-    {
+    if( powerOn && initSuccessful ) {
       openD_hanfunApi_devMgmtReq_t hMgmtRequest;
       hMgmtRequest.service=OPEND_HANFUNAPI_DEVICE_MANAGEMENT_REGISTER_DEVICE;
       /* Send a device management register request to the concentrator. */
       if( openD_hanfunApi_pp_devMgmtRequest(&hMgmtRequest) == OPEND_STATUS_OK ) {
-
+        openD_ll_gpio_write( OPEND_LL_GPIO_PIN_USER_LED_01, OPEND_LL_GPIO_PIN_SET );
       }
-    }
-    else
+      powerOn = false;
+
+    } else {
+
+#if defined PROFILE_SIMPLE_SWITCH
+    if(deviceRegistered == true)
     {
       openD_hanfunApi_profileReq_t hProfileRequest;
       hProfileRequest.profile=OPEND_HANFUNAPI_SIMPLE_ONOFF_SWITCH;
@@ -178,7 +180,16 @@ static int handle_user_input( void )
       }
     }
 #endif
+    }
   }
+
+  if( powerOn ) {
+    if( OPEND_LL_GPIO_BUTTON_PRESSED != openD_ll_gpio_readButton( &button01, OPEND_LL_GPIO_PIN_USER_BUTTON_01, OPEND_LL_GPIO_BUTTON_NOT_DEBOUNCE ) )
+    {
+      powerOn = false;
+    }
+  }
+
   return 1;
 }
 
