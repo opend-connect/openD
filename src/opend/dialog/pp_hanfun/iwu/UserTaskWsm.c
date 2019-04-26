@@ -266,7 +266,7 @@ void UserTask(const RosMailType* p_mail) {
 			break;
 		}
 
-		//ColaMail(HANFUN_CONNECT);
+		ColaMail(HANFUN_CONNECT);
 
 		break;
 	}
@@ -389,8 +389,8 @@ void UserTask(const RosMailType* p_mail) {
 	case API_PP_MM_ACC_RIGHTS_TERM_IND: {
 		Enable_Registration(ACCESS_CODE);
 		// SetLED3(1);
-		// ColaMailPtr(HANFUN_NVS_SET, 0);
-		// ColaMail(HANFUN_NVS_SAVE);
+		ColaMailPtr(HANFUN_NVS_SET, 0);
+		ColaMail(HANFUN_NVS_SAVE);
 
 		break;
 	}

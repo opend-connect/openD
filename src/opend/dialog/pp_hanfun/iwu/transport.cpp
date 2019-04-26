@@ -161,6 +161,7 @@ void HF::ULE::Transport::initialize()
 
 	/* Soft reset after hdlc is up */
 	mmi_SoftResetModule();
+	mmi_SetModuleDectModeEU();
 
 	mmiRosTimerEmu_Init();
 }
