@@ -33,6 +33,7 @@
 #include "opend.h"
 #include "CmndMsg_KeepAlive.h"
 #include "CmndMsg_OnOff.h"
+#include "CmndMsg_System.h"
 #include "ule.h"
 
 
@@ -42,6 +43,7 @@ static t_stReceiveData g_ParserContext;   /* Parser context for serial communica
 static int             g_Registered;      /* Registered flag. */
 static int             g_DeviceId;        /* Device id. */
 static uint8_t         g_SendResult;      /* Send result. */
+static bool            g_timerRunning = false; /* Timer flag. */
 
 
 /**
@@ -219,6 +221,20 @@ void rxByteReceived(uint8_t *data, uint16_t len)
                 g_DeviceId = st_IeGenStatus.u16_DeviceID;
             }
           }
+        } else if (g_st_Msg.messageId == CMND_MSG_GENERAL_LINK_CFM)
+        {
+          t_st(CMND_IE_RESPONSE) st_IeResponse;
+          /* Extract device id if registered, store into global g_DeviceId. */
+          if ( p_CmndMsg_IeGet(&g_st_Msg, p_CMND_IE_GETTER(CMND_IE_RESPONSE), &st_IeResponse, sizeof(st_IeResponse) ) )
+          {
+            if( (CMND_RC_OK == st_IeResponse.u8_Result) && (false == g_timerRunning) && (g_Registered) ) {
+              g_timerRunning = true;
+              hDevMgmtConfirm.service = OPEND_HANFUNAPI_DEVICE_MANAGEMENT_REGISTER_DEVICE;
+              hDevMgmtConfirm.status = OPEND_STATUS_OK;
+              openD_hanfun_devMgmtCfm(&hDevMgmtConfirm);
+              keepAliveTimerStart();
+            }
+          }
         }
         break;
       case CMND_SERVICE_ID_ON_OFF:
@@ -258,14 +274,7 @@ void rxByteReceived(uint8_t *data, uint16_t len)
 	        if ( p_CmndMsg_IeGet(&g_st_Msg, p_CMND_IE_GETTER(CMND_IE_RESPONSE), &st_IeResponse, sizeof(st_IeResponse) ) )
           {
             g_SendResult = st_IeResponse.u8_Result;
-            if( g_SendResult == 0 )
-            {
-              printf("Register success");
-              hDevMgmtConfirm.status = OPEND_STATUS_OK;
-              openD_hanfun_devMgmtCfm(&hDevMgmtConfirm);
-              keepAliveTimerStart();
-            }
-            else
+            if( g_SendResult != 0 )
             {
               hDevMgmtConfirm.status = OPEND_STATUS_FAIL;
               openD_hanfun_devMgmtCfm(&hDevMgmtConfirm);
@@ -289,6 +298,10 @@ void rxByteReceived(uint8_t *data, uint16_t len)
             if (g_SendResult == 0)
             {
               g_Registered = 1;
+              hDevMgmtConfirm.service = OPEND_HANFUNAPI_DEVICE_MANAGEMENT_REGISTER_DEVICE;
+              hDevMgmtConfirm.status = OPEND_STATUS_OK;
+              openD_hanfun_devMgmtCfm(&hDevMgmtConfirm);
+              keepAliveTimerStart();
             }
             else
             {
