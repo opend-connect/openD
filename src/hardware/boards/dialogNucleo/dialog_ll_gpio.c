@@ -165,28 +165,32 @@ openD_ll_gpio_pin_state_t openD_ll_gpio_read( openD_ll_gpio_pin_t pin ) {
 }
 
 openD_ll_gpio_buttonState_t openD_ll_gpio_readButton( openD_ll_gpio_button_ctxt_t *buttonCtxt,
-                                                      openD_ll_gpio_pin_t pin ) {
+                                                      openD_ll_gpio_pin_t pin,
+                                                      openD_ll_gpio_button_debounce_t debounce ) {
 
   openD_ll_gpio_buttonState_t state = OPEND_LL_GPIO_BUTTON_NOT_PRESSED;
   uint32_t currentTicks = (uint32_t) HAL_GetTick();
 
   if( OPEND_LL_GPIO_PIN_SET == openD_ll_gpio_read( pin ) ) {
-
-    if( BUTTON_INIT == buttonCtxt->status ) {
-      buttonCtxt->buttonPressTime = currentTicks;
-      buttonCtxt->status = BUTTON_PENDING;
-    }
-
-    if( BUTTON_PENDING == buttonCtxt->status ) {
-      if( ( currentTicks - buttonCtxt->buttonPressTime ) > 10U ) {
-        state = OPEND_LL_GPIO_BUTTON_PRESSED;
-        buttonCtxt->status = BUTTON_PRESSED;
+    if( debounce ) {
+      if( BUTTON_INIT == buttonCtxt->status ) {
+        buttonCtxt->buttonPressTime = currentTicks;
+        buttonCtxt->status = BUTTON_PENDING;
       }
-    }
-    else if ( BUTTON_PRESSED == buttonCtxt->status ) {
-      if( ( currentTicks - buttonCtxt->buttonPressTime ) > 1000U ) {
-        buttonCtxt->status = BUTTON_INIT;
+
+      if( BUTTON_PENDING == buttonCtxt->status ) {
+        if( ( currentTicks - buttonCtxt->buttonPressTime ) > 10U ) {
+          state = OPEND_LL_GPIO_BUTTON_PRESSED;
+          buttonCtxt->status = BUTTON_PRESSED;
+        }
       }
+      else if ( BUTTON_PRESSED == buttonCtxt->status ) {
+        if( ( currentTicks - buttonCtxt->buttonPressTime ) > 1000U ) {
+          buttonCtxt->status = BUTTON_INIT;
+        }
+      }
+    } else {
+      state = OPEND_LL_GPIO_BUTTON_PRESSED;
     }
   } else {
     if( ( currentTicks - buttonCtxt->buttonPressTime ) > 1000U ) {

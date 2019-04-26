@@ -412,7 +412,7 @@ bool app_state_connected( void *param ) {
 static int handle_user_input( void )
 {
 
-  if( OPEND_LL_GPIO_BUTTON_PRESSED == openD_ll_gpio_readButton( &button01, OPEND_LL_GPIO_PIN_USER_BUTTON_01 ) ) {
+  if( OPEND_LL_GPIO_BUTTON_PRESSED == openD_ll_gpio_readButton( &button01, OPEND_LL_GPIO_PIN_USER_BUTTON_01, OPEND_LL_GPIO_BUTTON_DEBOUNCE ) ) {
 
       msManager_message_t appMessage;
       appMessage.primitive = MESSAGE_PRIMITIVE_USER;

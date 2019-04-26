@@ -148,7 +148,7 @@ void profileConfirmCallback(openD_hanfunApi_profileCfm_t *hProfileConfirm)
 static int handle_user_input( void )
 {
 
-  if( OPEND_LL_GPIO_BUTTON_PRESSED == openD_ll_gpio_readButton( &button01, OPEND_LL_GPIO_PIN_USER_BUTTON_01 ) ) {
+  if( OPEND_LL_GPIO_BUTTON_PRESSED == openD_ll_gpio_readButton( &button01, OPEND_LL_GPIO_PIN_USER_BUTTON_01, OPEND_LL_GPIO_BUTTON_DEBOUNCE ) ) {
 
 #if defined PROFILE_SIMPLE_LIGHT
     openD_hanfunApi_devMgmtReq_t hMgmtRequest;

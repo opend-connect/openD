@@ -54,6 +54,11 @@ typedef struct {
 } openD_ll_gpio_button_ctxt_t;
 
 typedef enum {
+  OPEND_LL_GPIO_BUTTON_NOT_DEBOUNCE = 0,
+  OPEND_LL_GPIO_BUTTON_DEBOUNCE
+} openD_ll_gpio_button_debounce_t;
+
+typedef enum {
   OPEND_LL_GPIO_BUTTON_NOT_PRESSED = 0,
   OPEND_LL_GPIO_BUTTON_PRESSED
 } openD_ll_gpio_buttonState_t;
@@ -108,7 +113,8 @@ openD_ll_gpio_pin_state_t openD_ll_gpio_read( openD_ll_gpio_pin_t pin );
 
 
 openD_ll_gpio_buttonState_t openD_ll_gpio_readButton( openD_ll_gpio_button_ctxt_t *buttonCtxt,
-                                                      openD_ll_gpio_pin_t pin );
+                                                      openD_ll_gpio_pin_t pin,
+                                                      openD_ll_gpio_button_debounce_t debounce );
 
 /*! @} defgroup OPEND_LOW_LEVEL_GPIO_API */
 

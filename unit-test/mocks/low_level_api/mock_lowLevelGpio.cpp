@@ -42,9 +42,9 @@ openD_ll_gpio_pin_state_t openD_ll_gpio_read( openD_ll_gpio_pin_t pin ) {
    return g_lowLevelGpio->openD_ll_gpio_read( pin);
 } /* openD_ll_gpio_read */
 
-openD_ll_gpio_buttonState_t openD_ll_gpio_readButton( openD_ll_gpio_button_ctxt_t *buttonCtxt, openD_ll_gpio_pin_t pin ) {
+openD_ll_gpio_buttonState_t openD_ll_gpio_readButton( openD_ll_gpio_button_ctxt_t *buttonCtxt, openD_ll_gpio_pin_t pin, openD_ll_gpio_button_debounce_t debounce ) {
    assert(g_lowLevelGpio != NULL);
-   return g_lowLevelGpio->openD_ll_gpio_readButton( buttonCtxt, pin);
+   return g_lowLevelGpio->openD_ll_gpio_readButton( buttonCtxt, pin, debounce);
 } /* openD_ll_gpio_readButton */
 
 void openD_ll_gpio_write( openD_ll_gpio_pin_t pin, openD_ll_gpio_pin_state_t state) {
