@@ -63,15 +63,29 @@ void rxByteReceived(uint8_t *data, uint16_t len);
 
 openD_status_t openD_hanfunApi_pp_init()
 {
+  t_st_hanCmndApiMsg st_hanCmndApiMsg;
+  t_st_Packet        st_Packet = { 0 };
+
   /* Initialize Parser Context. */
   memset(&g_ParserContext, 0, sizeof(t_stReceiveData));
 
-  if(initIwu(sendKeepLive, rxByteReceived) == true)
+  if(initIwu(sendKeepLive, rxByteReceived) != true)
   {
-    return OPEND_STATUS_OK;
+    return OPEND_STATUS_FAIL;
   }
 
-  return OPEND_STATUS_FAIL;
+  /* Send reset request. */
+  p_CmndMsg_System_CreateResetReq( &st_hanCmndApiMsg );
+  st_Packet.length = p_CmndApiPacket_CreateFromCmndApiMsg(st_Packet.buffer, &st_hanCmndApiMsg);
+
+  if(sendFctPtr)
+  {
+    sendFctPtr(st_Packet.buffer, st_Packet.length);
+  } else {
+    return OPEND_STATUS_FAIL;
+  }
+
+  return OPEND_STATUS_OK;
 }
 
 openD_status_t openD_hanfunApi_pp_devMgmtRequest( openD_hanfunApi_devMgmtReq_t *hMgmtRequest, uint16_t address )
