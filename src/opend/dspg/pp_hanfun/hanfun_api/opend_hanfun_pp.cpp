@@ -104,7 +104,6 @@ openD_status_t openD_hanfunApi_pp_devMgmtRequest( openD_hanfunApi_devMgmtReq_t *
 
       p_Cmnd_DeviceManagement_CreateRegisterDeviceReq( &st_hanCmndApiMsg, NULL );
       st_Packet.length = p_CmndApiPacket_CreateFromCmndApiMsg(st_Packet.buffer, &st_hanCmndApiMsg);
-      p_CmndMsgLog_PrintTxBuffer(st_Packet.length, st_Packet.buffer);
 
       if(sendFctPtr)
       {
@@ -134,7 +133,6 @@ void sendKeepLive()
 
   p_CmndMsg_KeepAlive_CreateImAliveReq( &st_hanCmndApiMsg );
   st_Packet.length = p_CmndApiPacket_CreateFromCmndApiMsg(st_Packet.buffer, &st_hanCmndApiMsg);
-  p_CmndMsgLog_PrintTxBuffer(st_Packet.length, st_Packet.buffer);
 
   sendFctPtr(st_Packet.buffer, st_Packet.length);
 }
@@ -162,7 +160,6 @@ openD_status_t openD_hanfunApi_pp_profileRequest( openD_hanfunApi_profileReq_t *
 
           p_CmndMsg_OnOff_CreateToggleReq( &st_hanCmndApiMsg, 0 );
           st_Packet.length = p_CmndApiPacket_CreateFromCmndApiMsg(st_Packet.buffer, &st_hanCmndApiMsg);
-          p_CmndMsgLog_PrintTxBuffer(st_Packet.length, st_Packet.buffer);
           if(sendFctPtr)
           {
             sendFctPtr(st_Packet.buffer, st_Packet.length);
@@ -254,7 +251,6 @@ void rxByteReceived(uint8_t *data, uint16_t len)
 			  if ( g_st_Msg.messageId == CMND_MSG_DEV_MGNT_REGISTER_DEVICE_CFM )
 			  {
           /* Handle confirmation to Registration request and extract the confirmation result. */
-          printf("REGISTER_CONF");
           t_st(CMND_IE_RESPONSE) st_IeResponse;
           hDevMgmtConfirm.service = OPEND_HANFUNAPI_DEVICE_MANAGEMENT_REGISTER_DEVICE;
 
@@ -271,7 +267,6 @@ void rxByteReceived(uint8_t *data, uint16_t len)
             }
             else
             {
-              printf("Register fail");
               hDevMgmtConfirm.status = OPEND_STATUS_FAIL;
               openD_hanfun_devMgmtCfm(&hDevMgmtConfirm);
             }
@@ -280,7 +275,6 @@ void rxByteReceived(uint8_t *data, uint16_t len)
 			  else if ( g_st_Msg.messageId == CMND_MSG_DEV_MGNT_REGISTER_DEVICE_IND )
 			  {
           /* Handle answer to "Registration" request and extract the registration result. */
-          printf("REGISTER_IND");
           t_st_hanCmndIeRegistrationResponse  ieResponse = {0};
 
           /*
