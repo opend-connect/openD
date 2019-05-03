@@ -62,7 +62,12 @@ int main (int argc, char **argv)
   /* HAN-FUN Transport Layer over ULE Stack. */
   HF::ULE::Transport * transport = HF::ULE::Transport::instance();
 
-  HF::Application::Initialize(*transport, argc, argv);
+  if( HF::Application::Initialize(*transport, argc, argv) < 0 )
+  {
+    transport->destroy();
+
+    return EXIT_FAILURE;
+  }
 
   while( !HF::Application::Handle(input) )
   {
@@ -94,5 +99,5 @@ int main (int argc, char **argv)
 
   transport->destroy();
 
-  exit(0);
+  return EXIT_SUCCESS;
 }
