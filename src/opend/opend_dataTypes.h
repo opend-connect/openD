@@ -74,7 +74,7 @@ typedef enum
    */
   OPEND_STATUS_BUSY,
   /**
-   * openD fail status.
+   * openD generic fail status.
    */
   OPEND_STATUS_FAIL,
   /**
@@ -85,6 +85,11 @@ typedef enum
    * openD invalid argument status.
    */
   OPEND_STATUS_ARGUMENT_INVALID,
+  /**
+   * openD status: Initialization of the serial interface failed.
+   */
+  OPEND_STATUS_SERIAL_INIT_FAIL,
+
 } openD_status_t;
 
 
