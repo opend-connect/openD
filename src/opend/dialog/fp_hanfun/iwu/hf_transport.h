@@ -48,9 +48,6 @@
 // Should be disabled for pure HanFun testing/verification
 //#define DISABLE_VERIFICATION_CONFLICTS
 
-void setBaseComport(int8_t comport);
-
-void setBaseHdlcPortStr(std::string portname);
 
 /*!
  * Set the concentrator dect mode.

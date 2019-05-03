@@ -70,20 +70,6 @@ static void ule_disable_registration_timeout_clb( void );
 // Helper Functions
 // =============================================================================
 
-static int8_t com_port_global = NO_COMPORT_USE;
-static std::string global_port_name;
-
-void setBaseComport(int8_t comport)
-{
-	com_port_global = comport;
-}
-
-void setBaseHdlcPortStr(std::string portname)
-{
-	global_port_name = portname;
-}
-
-
 std::string rfpiToHex( uint8_t data[5] )
 {
 	std::ostringstream oss;
@@ -163,19 +149,9 @@ HF::ULE::Transport * HF::ULE::Transport::instance ()
 // =============================================================================
 void HF::ULE::Transport::initialize ()
 {
-   int8_t comport;
-   std::string website_location("../ULE_ReferenceDesign/legacy_apps/ApplicationData/website");
+   int8_t comport = ULE_INIT_CONNECT_ON_LINUX_HOST;
+   std::string website_location("");
    std::string target_ip(TARGET_IPADDR);
-
-   if ( com_port_global != NO_COMPORT_USE && com_port_global != ULE_INIT_CONNECT_ON_LINUX_HOST) {
-	   comport = com_port_global;
-   }
-
-   if ( com_port_global == ULE_INIT_CONNECT_ON_LINUX_HOST ) {
-	   if ( global_port_name.length() > 0 )
-	   ULE_Configure_Hdlc_Port(global_port_name.c_str());
-   }
-
 
    if (ULE_Init(ACCESSCODE, 200, 0, (char*)website_location.c_str(), 8020, (char *)target_ip.c_str(), TRUE, FALSE, FALSE, comport) != ULE_Success)
    {
@@ -514,16 +490,8 @@ extern "C" void mail_switch(unsigned short Length, unsigned char *MailPtr)
    }
 }
 
-void initUleApp(int argc, char **argv)
+extern "C" openD_status_t initUleApp( void )
 {
-  int8_t comport = ULE_INIT_CONNECT_ON_LINUX_HOST;
-
-  setBaseComport(comport);
-  if ( comport == ULE_INIT_CONNECT_ON_LINUX_HOST && argc >=2) {
-     std::string port_ipnut (argv[1]);
-     setBaseHdlcPortStr(port_ipnut);
-  }
-
   std::string baseRFPIstr = getBaseRfpiString();
   LOG(DEBUG) << "BASE RFPI: " << baseRFPIstr << NL;
 

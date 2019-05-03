@@ -1,7 +1,3 @@
-#ifdef __cplusplus
-extern "C"
-{
-#endif
 /**
  * @code
  *  ___ _____ _   ___ _  _____ ___  ___  ___ ___
@@ -11,10 +7,10 @@ extern "C"
  * embedded.connectivity.solutions.==============
  * @endcode
  *
- * @file       opend.c
+ * @file       uleApp.h
  * @copyright  STACKFORCE GmbH, Heitersheim, Germany, www.stackforce.de
- * @author     Patrick Weber
- * @brief      openD API.
+ * @author     Heiko Berger
+ * @brief      ULE application api.
  * @details
  *
  * This work is dual-licensed under Apache 2.0 and GPL 2.0. You can choose between one of them if you use this work.
@@ -22,36 +18,28 @@ extern "C"
  *
  * SPDX-License-Identifier: Apache-2.0 OR GPL-2.0-only
  *
+ * @defgroup   HANFUN ULE APP
+ *             This file specifies the ULE api for the application.
+ * @{
  */
 
-#include "opend_ll.h"
-#include "opend_ll_serial.h"
-
-#include "hdlc.h"
-
-#include "uleApp.h"
+#ifndef ULE_APP_H
+#define ULE_APP_H
 
 #include "opend_dataTypes.h"
-#include "opend_api.h"
 
-void serialPort_rxCallback( uint8_t* data, uint16_t length ) {
+/**
+ * @brief   Initialize ule app.
+ *
+ * @details Initialization of the ule application.
+ */
+openD_status_t initUleApp( void );
 
-  hdlc_packetParseBytewise( data );
-  return;
-}
+/**
+ * @brief   De-Initialize ule app.
+ *
+ * @details De-Initialization of the ule application.
+ */
+openD_status_t deInitUleApp( void );
 
-openD_status_t openD_init( void *port )
-{
-
-    initUleApp();
-
-    if( openD_ll_serial_init( (char *) port, 115200U, serialPort_rxCallback ) < 0 ) {
-      return OPEND_STATUS_SERIAL_INIT_FAIL;
-    }
-
-    return OPEND_STATUS_OK;
-}
-
-#ifdef __cplusplus
-}
-#endif
+#endif /* ULE_APP_H */
