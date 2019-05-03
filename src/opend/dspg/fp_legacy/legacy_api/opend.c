@@ -32,9 +32,15 @@ extern "C"
 
 openD_status_t openD_init(void *port)
 {
-  /* Init DSPG iwu and serial */
-  transport_init();
+  openD_status_t ret;
 
+  /* Init DSPG iwu and serial */
+  ret = transport_init();
+
+  if( ret != OPEND_STATUS_OK )
+  {
+    transport_deInit();
+  }
   return OPEND_STATUS_OK;
 }
 

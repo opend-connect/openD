@@ -26,6 +26,20 @@
 #ifndef TRANSPORT_H
 #define TRANSPORT_H
 
-void transport_init();
+#include "opend_dataTypes.h"
+
+/**
+ * @brief   Initialize the transport.
+ *
+ * @details Initialization of the transport.
+ */
+openD_status_t transport_init( void );
+
+/**
+ * @brief   De-Initialize the transport.
+ *
+ * @details De-Initialization of the transport.
+ */
+openD_status_t transport_deInit( void );
 
 #endif /* TRANSPORT_H */
