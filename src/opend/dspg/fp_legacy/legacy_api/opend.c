@@ -41,7 +41,7 @@ openD_status_t openD_init(void *port)
   {
     transport_deInit();
   }
-  return OPEND_STATUS_OK;
+  return ret;
 }
 
 

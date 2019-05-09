@@ -134,6 +134,7 @@ openD_status_t transport_init( )
   if ( appcmbs_Initialize(NULL, &g_st_DevCtl, &g_st_DevMedia, &pfn_log_buffer_Cb) != CMBS_RC_OK )
   {
     CFR_DBG_ERROR("TCX ERROR: !!! Host could not be started up!\n");
+    return OPEND_STATUS_FAIL;
   }
 
   AppCallRouter_Init ();
