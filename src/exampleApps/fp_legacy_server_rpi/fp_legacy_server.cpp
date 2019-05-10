@@ -418,6 +418,8 @@ bool app_state_unregistered( void *param ) {
 
   msManager_message_t *message = (msManager_message_t *) param;
   openD_subApiReq_t subApiReq;
+  std::istringstream iss;
+  uint16_t pinCode;
 
   switch( message->primitive )
   {
@@ -431,6 +433,48 @@ bool app_state_unregistered( void *param ) {
           /* Key 'w' KEY_REG */
           subApiReq.service = OPEND_SUBAPI_SUBSCRIBE_ENABLE;
           openD_subApi_request( &subApiReq );
+          break;
+
+        case 0x70:
+          /* Key 'p' KEY_SET_PIN_CODE */
+          if( 4 == handsetOrCallId.size())
+          {
+            iss.str(handsetOrCallId.c_str());
+            /* Check if the string is a number and convert it. */
+            if (!(iss >> std::hex >> pinCode).fail()) {
+              /* Call the corresponding request. */
+              subApiReq.service = OPEND_SUBAPI_SET_AC;
+              subApiReq.param.setAc.ac[0] = 0xFF;
+              subApiReq.param.setAc.ac[1] = 0xFF;
+              subApiReq.param.setAc.ac[2] = (uint8_t) (pinCode >> 8U);
+              subApiReq.param.setAc.ac[3] = (uint8_t) pinCode;
+              openD_subApi_request( &subApiReq );
+            } else {
+              printf("Can not convert the string to an interger!\n");
+              j["version"] = "1.0.0";
+              j["module"] = "legacy";
+              j["primitive"] = "confirmation";
+              j["service"] = "OPEND_SUBAPI_SET_AC";
+              j["status"] = "FAIL";
+              j["param1"] = "0";
+              j["param2"] = "0";
+              j["param3"] = "0";
+              size_t len = strlen((j.dump()).c_str())+1;
+              udp_send((j.dump()).c_str(), len);
+            }
+          } else {
+            printf("Pin length not correct!\n");
+            j["version"] = "1.0.0";
+            j["module"] = "legacy";
+            j["primitive"] = "confirmation";
+            j["service"] = "OPEND_SUBAPI_SET_AC";
+            j["status"] = "FAIL";
+            j["param1"] = "0";
+            j["param2"] = "0";
+            j["param3"] = "0";
+            size_t len = strlen((j.dump()).c_str())+1;
+            udp_send((j.dump()).c_str(), len);
+          }
           break;
 
         default:
