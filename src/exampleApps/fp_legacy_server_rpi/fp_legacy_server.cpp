@@ -224,6 +224,9 @@ static void openD_mgmtApiInd_callback( openD_mgmtApiInd_t *mIndication ) {
     return;
   }
     switch( mIndication->service ) {
+      case OPEND_MGMTAPI_TIMEOUT:
+        printf("DECT module communication timeout!\n");
+        break;
 
     default:
       break;

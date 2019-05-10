@@ -85,7 +85,16 @@ void ColaTask(const RosMailType* Mail)
   if(INITTASK == Mail->Primitive) {
     /* INITTASK */
     LedCtrlInit();
+  } else if (TIMEOUT ==  Mail->Primitive) {
+
+    messageManager_t message;
+    message.primitive = MESSAGE_PRIMITIVE_TIMEOUT;
+    message.param = (void*) Mail;
+    msManager_handleService( &opendStateCtxt, &message );
+
   } else {
+
+    rsx_StopTimer(0);
 
     messageManager_t message;
     message.primitive = MESSAGE_PRIMITIVE_CFM_IND;
