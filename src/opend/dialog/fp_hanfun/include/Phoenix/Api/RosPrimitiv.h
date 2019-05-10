@@ -50,7 +50,7 @@ typedef enum
   KEY_MESSAGE=0x0001,                                                //Phoenix
   KEY_RELEASE=0x0002,                                                //Phoenix
   KEY_PRESS=0x0003,                                                  //Phoenix
-//  TIMEOUT=0x0004,                                                    //Phoenix
+  TIMEOUT=0x0004,                                                    //Phoenix
   HELLO_STATE_ind=0x0005,                                            //Phoenix
   GOODBYE_STATE_ind=0x0006,                                          //Phoenix
   INITTASK=0x0007,                                                   //Phoenix

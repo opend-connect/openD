@@ -481,6 +481,14 @@ extern "C" void mail_switch(unsigned short Length, unsigned char *MailPtr)
       case RTX_EAP_TRACE_INPUT_MAIL_IND:
     	  // trace mails, ignore them
     	  break;
+      case TIMEOUT:
+        {
+        openD_hanfunApi_devMgmtInd_t hMgmtInd;
+        hMgmtInd.service = OPEND_HANFUNAPI_DEVICE_MANAGEMENT_TIMEOUT;
+        openD_hanfun_devMgmtInd( &hMgmtInd );
+        }
+        break;
+
       default:
 
          LOG (TRACE) << ">>> " << __PRETTY_FUNCTION__ << " : "

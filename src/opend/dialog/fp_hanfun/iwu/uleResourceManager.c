@@ -129,10 +129,14 @@ rsuint8 deregisterAllUpdateTimer = 0;
 
 static rsbool UseRepsConnection = 0;	// Set this in UleInit to use REPS instead of direct serial connection
 
+bool initTimeout = true;
+pthread_mutex_t semTimeout;
+
 int initLedPorts(void){return 0;}
 int switchLed(ledType_t ledNumber, rsbool on){(void)(ledNumber); (void)(on); return 0;}
 int toggleLed(ledType_t ledNumber, int numberOfTimes){(void)(ledNumber); (void)(numberOfTimes); return 0;}
-
+static void initTimeout_set( void );
+static void initTimeout_reset( void );
 
 /* Helper Functions */
 
@@ -225,9 +229,36 @@ void hdlc_parsedPacket( uint8_t *data, uint16_t length ) {
 
 	ULE_mail_switch( (unsigned short) length, (unsigned char*) &data[2] );
 
+	/* Reset communication timeout. */
+	initTimeout_reset();
+
 	return;
 }
 
+void initTimeout_set( void ) {
+	pthread_mutex_lock( &semTimeout );
+	initTimeout = true;
+	pthread_mutex_unlock( &semTimeout );
+
+	return;
+}
+
+void initTimeout_reset( void ) {
+	pthread_mutex_lock( &semTimeout );
+	initTimeout = false;
+	pthread_mutex_unlock( &semTimeout );
+
+	return;
+}
+
+bool is_initTimeout( void ) {
+	bool ret;
+	pthread_mutex_lock( &semTimeout );
+	ret = initTimeout;
+	pthread_mutex_unlock( &semTimeout );
+
+	return ret;
+}
 
 UleErr_e ULE_Init(rsuint32 AccessCodeDefault, rsuint32 SensorTimeoutDefault, rsuint32 TxTimeoutDefault,
 		char *WebSiteLocation, rsuint32 HTTPport, char *BoardIPaddr,rsuint8 DbgPI,rsuint8 DbgAPI,rsuint8 DbgMUTEX, rsint8 Comport) {
@@ -283,6 +314,7 @@ UleErr_e ULE_Init(rsuint32 AccessCodeDefault, rsuint32 SensorTimeoutDefault, rsu
 	pthread_mutex_init(&semDect_RFPI, 0);
 	pthread_mutex_init(&semDect_SetRegMode, 0);
 	pthread_mutex_init(&semDect_DeReg, 0);
+	pthread_mutex_init(&semTimeout, 0);
 
 #ifndef DECT_FUNCTIONS
 	if (DECT_BRIDGE_MODE==0){
@@ -319,6 +351,8 @@ UleErr_e ULE_Init(rsuint32 AccessCodeDefault, rsuint32 SensorTimeoutDefault, rsu
 		return 1;
 	}
 #endif
+
+	ULE_InitTimer();
 
 	HandleResetIndULE(0);
 
@@ -366,7 +400,7 @@ UleErr_e ULE_Init(rsuint32 AccessCodeDefault, rsuint32 SensorTimeoutDefault, rsu
 		}
 
 	// Initialize all threads
-	ULE_InitTimer();
+	// ULE_InitTimer();
 	ULE_InitRcvRcktThread();
 
 	ULE_Init_Done = 1;
@@ -2724,6 +2758,14 @@ void *ULE_TimerThread(void *x) {
 					}
 				}
 			}
+
+		/* Check connection timeout. */
+		if( is_initTimeout() ) {
+			if ((secondCount % 4) == 0) {
+				uint16_t mailPrimitive = TIMEOUT;
+				ULE_mail_switch( 0x01, (unsigned char*) &mailPrimitive);
+			}
+		}
 
 		if ((secondCount % CHECK_PERIOD) != 0) {
 			continue;

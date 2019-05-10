@@ -229,6 +229,10 @@ void devMgmtIndicationCallback(openD_hanfunApi_devMgmtInd_t *hDevMgmtIndication)
       openD_hanfunApi_fp_devMgmtRequest( &hMgmtRequest, hDevMgmtIndication->param.getAddress.address, 0 );
       break;
 
+    case OPEND_HANFUNAPI_DEVICE_MANAGEMENT_TIMEOUT:
+      printf("DECT module communication timeout!\n");
+      break;
+
     default:
       break;
   }
