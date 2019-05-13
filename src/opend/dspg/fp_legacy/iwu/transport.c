@@ -37,6 +37,7 @@
 #include "appCallRouter.h"
 
 #include "opend_sub.h"
+#include "opend_call.h"
 
 /* Setup TDM interface. */
 ST_TDM_CONFIG g_st_TdmCfg;
@@ -284,6 +285,63 @@ static void cmbs_onRegistrationClose( void* ie_data )
   return;
 }
 
+static void cmbs_callEstablish( void* ie_data )
+{
+  void* ie = NULL;
+  uint16_t ieType = 0U;
+  ST_APPCMBS_IEINFO ieInfo;
+  uint8_t callId = '0';
+
+  if( ie_data ) {
+    cmbs_api_ie_GetFirst(ie_data, &ie, &ieType);
+
+    while(ie != NULL) {
+      appcmbs_IEInfoGet(ie, ieType, &ieInfo);
+
+      if( CMBS_IE_CALLERPARTY == ieType ) {
+        memcpy( &callId, ieInfo.Info.st_CallerParty.pu8_Address, 1);
+      }
+      cmbs_api_ie_GetNext(ie_data, &ie, &ieType);
+    }
+  }
+
+  openD_callApiInd_t openD_callApiInd;
+  openD_callApiInd.service = OPEND_CALLAPI_SETUP;
+  openD_callApiInd.param.setup.pmid[0] = callId - '0';
+  openD_call_indication( &openD_callApiInd );
+
+  return;
+}
+
+static void cmbs_callAnswer( void* ie_data )
+{
+  void* ie = NULL;
+  uint16_t ieType = 0U;
+  ST_APPCMBS_IEINFO ieInfo;
+  uint8_t callId = '0';
+
+  if( ie_data ) {
+    cmbs_api_ie_GetFirst(ie_data, &ie, &ieType);
+
+    while(ie != NULL) {
+      appcmbs_IEInfoGet(ie, ieType, &ieInfo);
+
+      if( CMBS_IE_CALLEDPARTY == ieType ) {
+        memcpy( &callId, ieInfo.Info.st_CallerParty.pu8_Address, 1);
+      }
+      cmbs_api_ie_GetNext(ie_data, &ie, &ieType);
+    }
+  }
+
+  openD_callApiCfm_t openD_callApiCfm;
+  openD_callApiCfm.service = OPEND_CALLAPI_SETUP;
+  openD_callApiCfm.param.setup.pmid[0] = callId - '0';
+  openD_callApiCfm.status = OPEND_STATUS_OK;
+  openD_call_confirmation(&openD_callApiCfm);
+
+  return;
+}
+
 int appcmbs_opend_callback(void *pv_AppRef, E_CMBS_EVENT_ID eventId, void *ie_data)
 {
   openD_subApiCfm_t sConfirm;
@@ -322,6 +380,14 @@ int appcmbs_opend_callback(void *pv_AppRef, E_CMBS_EVENT_ID eventId, void *ie_da
 
     case CMBS_EV_DSR_CORD_CLOSEREG:
       cmbs_onRegistrationClose( ie_data );
+      break;
+
+    case CMBS_EV_DEE_CALL_ESTABLISH:
+      cmbs_callEstablish( ie_data );
+      break;
+
+    case CMBS_EV_DEE_CALL_ANSWER:
+      cmbs_callAnswer( ie_data );
       break;
 
     default:

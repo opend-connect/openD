@@ -64,12 +64,6 @@ openD_status_t openD_callApi_init( openD_callApiPrimitives_t *cPrimitives )
 
 static void opend_call_setup_cllb(uint8_t callId)
 {
-  openD_callApiCfm_t openD_callApiCfm;
-  openD_callApiCfm.service = OPEND_CALLAPI_SETUP;
-  openD_callApiCfm.param.setup.pmid[0] = callId;
-  openD_callApiCfm.status = OPEND_STATUS_OK;
-
-  _cPrimitives.openD_callApiCfm(&openD_callApiCfm);
 }
 
 static void opend_call_terminated_cllb()
@@ -229,6 +223,14 @@ void openD_call_confirmation( openD_callApiCfm_t *cConfirm ) {
 
     if( _cPrimitives.openD_callApiCfm ) {
         _cPrimitives.openD_callApiCfm( cConfirm );
+    }
+    return;
+}
+
+void openD_call_indication( openD_callApiInd_t *cIndication ) {
+
+    if( _cPrimitives.openD_callApiInd ) {
+        _cPrimitives.openD_callApiInd( cIndication );
     }
     return;
 }
