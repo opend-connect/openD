@@ -342,6 +342,25 @@ static void cmbs_callAnswer( void* ie_data )
   return;
 }
 
+static void cmbs_callRelease( void* ie_data )
+{
+  openD_callApiInd_t openD_callApiInd;
+  openD_callApiInd.service = OPEND_CALLAPI_RELEASE;
+  openD_call_indication(&openD_callApiInd);
+
+  return;
+}
+
+static void cmbs_callReleaseComplete( void* ie_data )
+{
+  openD_callApiCfm_t openD_callApiCfm;
+  openD_callApiCfm.service = OPEND_CALLAPI_RELEASE;
+  openD_callApiCfm.status = OPEND_STATUS_OK;
+  openD_call_confirmation(&openD_callApiCfm);
+
+  return;
+}
+
 int appcmbs_opend_callback(void *pv_AppRef, E_CMBS_EVENT_ID eventId, void *ie_data)
 {
   openD_subApiCfm_t sConfirm;
@@ -388,6 +407,14 @@ int appcmbs_opend_callback(void *pv_AppRef, E_CMBS_EVENT_ID eventId, void *ie_da
 
     case CMBS_EV_DEE_CALL_ANSWER:
       cmbs_callAnswer( ie_data );
+      break;
+
+    case CMBS_EV_DEE_CALL_RELEASE:
+      cmbs_callRelease( ie_data );
+      break;
+
+    case CMBS_EV_DEE_CALL_RELEASECOMPLETE:
+      cmbs_callReleaseComplete( ie_data );
       break;
 
     default:
