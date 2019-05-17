@@ -55,6 +55,12 @@ E_CMBS_RC app_DsrHanDeleteDevice( u16 u16_DeviceId, bool b_BlackList )
     return ObjTestlib->app_DsrHanDeleteDevice( u16_DeviceId, b_BlackList );
 }
 
+E_CMBS_RC app_DsrHanDeviceReadTable( u16 u16_NumOfEntries, u16 u16_IndexOfFirstEntry, u8 isBrief )
+{
+    assert( ObjTestlib != NULL );
+    return ObjTestlib->app_DsrHanDeviceReadTable( u16_NumOfEntries, u16_IndexOfFirstEntry, isBrief );
+}
+
 E_CMBS_RC	cmbs_dsr_cord_OpenRegistrationExt(void * pv_AppRefHandle, u32 u32_timeout, E_CMBS_HS_REGISTER_ENABLE e_RegEnable){
     assert(ObjTestlib!=NULL);
     ObjTestlib->cmbs_dsr_cord_OpenRegistrationExt( pv_AppRefHandle, u32_timeout, e_RegEnable);

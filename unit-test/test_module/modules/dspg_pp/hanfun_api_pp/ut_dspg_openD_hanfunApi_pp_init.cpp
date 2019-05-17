@@ -73,8 +73,18 @@ class ut_opend_hanfunapi_pp_init: public testing::Test
  */
 TEST_F( ut_opend_hanfunapi_pp_init, ut_opend_hanfunapi_pp_init_valid_init )
 {
+    sendFctPtr = &sendFunction;
+
     // Setup mock
     EXPECT_CALL( ObjMockIwu, initIwu( _, _ ) )
+    .Times( 1 )
+    .WillOnce( Return( true ) );
+
+    EXPECT_CALL( ObjMockCmndlib, p_CmndMsg_System_CreateResetReq( _ ) )
+    .Times( 1 )
+    .WillOnce( Return( true ) );
+
+    EXPECT_CALL( ObjMockCmndlib, p_CmndApiPacket_CreateFromCmndApiMsg( _, _ ) )
     .Times( 1 )
     .WillOnce( Return( true ) );
 

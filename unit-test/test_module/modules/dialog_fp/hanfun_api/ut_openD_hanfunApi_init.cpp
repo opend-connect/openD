@@ -25,12 +25,27 @@
 #include <stdio.h>
 #include <string.h>
 
+extern "C"
+{
+#include <uleDectAPI.h>
+#include <Phoenix/Api/Api.h>
+#include <Phoenix/Api/FpUle/ApiFpUle.h>
+#include <uleResourceManager.h>
+
+#undef max
+#undef min
+}
+
 /** Resource under test */
 #include "test_hf_transport.cpp"
 #include "opend_hanfun.cpp"
 #include "opend_hanfun_fp.cpp"
 
 #include "dialog_fp_hanfun_api_stubs.h"
+
+/** Mocks */
+#include "mock_uleResourceManager.h"
+#include "mock_fp_hanfun_app.h"
 
 /** Namespaces */
 using ::testing::_;
