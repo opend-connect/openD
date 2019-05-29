@@ -4,7 +4,7 @@
  * @endcode
  *
  * @file       fp_hanfun_alarm.cpp
- * @copyright  Schuler Development, Oberdorf 90, 66687 Wadern, andreas@schulerdev.de
+ * @copyright  Schuler Development, Oberdorf 90, 66687 Wadern, andreas (at) schulerdev.de
  * @author     Andreas Schuler
  * @brief      Example application for the usage of the openD framework
  * @details
