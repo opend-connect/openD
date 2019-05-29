@@ -1,0 +1,23 @@
+Readme FP_HANFUN_ALARM & FP_HANFUN_POWERSWITCH
+==============================================
+
+How to use FP_HANFUN_ALARM:
+ * copy the fp_hanfun_alarm_rpi binary to your raspberry pi
+ * execute the binary with "./fp_hanfun_alarm_rpi /dev/ttyS0" for Dialog FP OR "./fp_hanfun_alarm_rpi" for DSPG FP
+ * 1st register your Telekom Magenta SmartHome Sirene (HANFUN-profile: Simplelight)
+ * 2nd register your Nucleo SimpleSwitch (see PP_HANFUN_SWITCH example App)
+ * After registration, you can activate your alarm sirene via pressing button on Nucleo.
+ * Alarm Sirene will start making noise, a short message with the timestamp of the alarm will be displayed on the Raspberry console.
+ * Press 'x' or 'X' key + ENTER on Raspberry console to stopp the alarm. 
+ 
+ 
+FP_HANFUN_POWERSWITCH:
+ * copy the fp_hanfun_socket_rpi binary to your raspberry pi
+ * execute the binary with "./fp_hanfun_socket_rpi /dev/ttyS0" for Dialog FP OR "./fp_hanfun_socket_rpi" for DSPG FP
+ * 1st register your Telekom Magenta SmartHome SocketSwitch (HANFUN-profile: Simplelight)
+ * 2nd register your Nucleo SimpleSwitch (see PP_HANFUN_SWITCH example App)
+ * After registration, you can activate your socket switch via pressing button on Nucleo.
+ * Socket Switch will be toggled each time you press the button on the Nucleo SimpleSwitch application.
+
+
+Once you have registered your devices, you don't need to re-register the devices next time you start fp_hanfun_alarm_rpi or fp_hanfun_socket_rpi application on the raspberry pi.

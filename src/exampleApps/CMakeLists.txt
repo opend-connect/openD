@@ -49,6 +49,14 @@ elseif(APPLICATION STREQUAL PP_LEGACY_INTERCOM AND (BOARD STREQUAL DialogMmiNucl
 
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/pp_legacy_intercom_nucleo)
 
+elseif(APPLICATION STREQUAL FP_HANFUN_ALARM AND (BOARD STREQUAL DialogMmiRpi OR BOARD STREQUAL DspgDectRpi))
+
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/fp_hanfun_alarm_rpi)
+
+elseif(APPLICATION STREQUAL FP_HANFUN_SOCKET AND (BOARD STREQUAL DialogMmiRpi OR BOARD STREQUAL DspgDectRpi))
+
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/fp_hanfun_socket_rpi)
+
 else()
 
     message(FATAL_ERROR "The application, board or the combination of both is not supported!")

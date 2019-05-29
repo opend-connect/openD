@@ -428,10 +428,13 @@ According to step 4, the project provides several options to define which demons
 | PP_HANFUN_SIMPLELIGHT | Application option to build the HAN FUN Simple Light for the portable part |
 | PP_HANFUN_SIMPLESWITCH | Application option to build the HAN FUN Simple Switch for the portable part |
 | FP_HANFUN_CLIENT | Application option to build the HAN FUN UDP client |
+| FP_HANFUN_ALARM | Application option to build a basic HANFUN alarm system |
+| FP_HANFUN_SOCKET | Application option to build a basic remote controlled socket switch |
 | PP_LEGACY_BASICCALL | Application option to build the legacy demo for the portable part |
 | FP_LEGACY_SERVER | Application option to build the legacy demo for the fixed part server |
 | PP_LEGACY_INTERCOM | Application option to build the legacy demo for the portable part with intercom call |
 | FP_LEGACY_CLIENT | Application option to build the legacy UDP client |
+
 
 **Examples**
 
