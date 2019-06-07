@@ -157,10 +157,10 @@ static bool _message_primitive_user_call( void *param ) {
   switch(((openD_callApiReq_t *)param)->service)
   {
     case OPEND_CALLAPI_SETUP:
-      terminalId = asciiToHex(((openD_callApiReq_t *)param)->param.setup.pmid[0]);
+      handsetId = asciiToHex(((openD_callApiReq_t *)param)->param.setup.pmid[0]);
       CallReference.Instance.Fp = 0;
-      CallReference.Instance.Host = terminalId;
-      ApiFpCcSetupReq( CallReference, terminalId );
+      CallReference.Instance.Host = handsetId;
+      ApiFpCcSetupReq( CallReference, handsetId );
 
       break;
 

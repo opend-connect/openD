@@ -50,7 +50,7 @@ add_executable(ut_dialog_fp_openD_hanfunApi_init ut_openD_hanfunApi_init.cpp)
 ##
 ## Link targets
 ##
-target_link_libraries(ut_dialog_fp_openD_hanfunApi_init libgmock pthread libApp libTestHanFun mockLowLevelApi libMockDialogIwu)
+target_link_libraries(ut_dialog_fp_openD_hanfunApi_init libgmock pthread libApp libTestHanFun mockLowLevelApi libMockDialogIwu mockUleResourceManager_dialog mockFpHanfunApp)
 target_compile_definitions(ut_dialog_fp_openD_hanfunApi_init PUBLIC -DHF_APP_EXT_REG -DPAYLOADDATASIZE=496)
 
 ##

@@ -26,8 +26,23 @@
 #ifndef H_TRANSPORT_H
 #define H_TRANSPORT_H
 
+extern "C"
+{
+#include "cmbs_han.h"
+}
+
+
 #include <hanfun.h>
 
+/*!
+ * Semaphore read module table functionality.
+ */
+extern pthread_mutex_t sem_hanfun_readTable;
+#define SEM_INIT_READTABLE pthread_mutex_unlock( &sem_hanfun_readTable ); pthread_mutex_lock( &sem_hanfun_readTable );
+#define SEM_WAIT_READTABLE pthread_mutex_lock( &sem_hanfun_readTable );
+#define SEM_POST_READTABLE pthread_mutex_unlock( &sem_hanfun_readTable );
+
+void set_deviceEntryList( ST_IE_HAN_EXTENDED_DEVICE_ENTRIES *pst_HANExtendedDeviceEntry );
 
 namespace HF
 {

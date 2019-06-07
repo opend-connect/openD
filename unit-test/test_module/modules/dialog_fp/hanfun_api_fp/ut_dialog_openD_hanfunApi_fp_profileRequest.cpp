@@ -31,6 +31,16 @@
 #include "hf_transport.h"
 
 
+extern "C"
+{
+#include <uleDectAPI.h>
+#include <Phoenix/Api/Api.h>
+#include <Phoenix/Api/FpUle/ApiFpUle.h>
+#include <uleResourceManager.h>
+
+#undef max
+#undef min
+}
 
 /** Resource under test */
 #include "test_hf_transport.cpp"
@@ -41,6 +51,8 @@
 /** Stubs */
 #include "dialog_fp_hanfun_api_stubs.h"
 
+/** Mocks */
+#include "mock_fp_hanfun_app.h"
 
 /** Namespaces */
 using ::testing::_;

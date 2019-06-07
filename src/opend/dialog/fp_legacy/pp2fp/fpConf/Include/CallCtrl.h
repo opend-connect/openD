@@ -75,7 +75,7 @@ extern void StopDelayAudioOpenTimer(rsuint8 LineId);
 
 extern void CallCtrlMailHandler( RosMailType* p_Mail);
 
-extern void ApiFpCcSetupReq( ApiCallReferenceType CallReference, ApiTerminalIdType terminalId );
+extern void ApiFpCcSetupReq( ApiCallReferenceType CallReference, rsuint8 handsetId );
 extern void SendHsLocator(void);
 extern void StopHsLocating(void);
 extern rsbool CheckPagingMode(void);

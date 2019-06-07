@@ -33,6 +33,7 @@
 #include "opend.h"
 #include "CmndMsg_KeepAlive.h"
 #include "CmndMsg_OnOff.h"
+#include "CmndMsg_System.h"
 #include "ule.h"
 
 
@@ -42,6 +43,7 @@ static t_stReceiveData g_ParserContext;   /* Parser context for serial communica
 static int             g_Registered;      /* Registered flag. */
 static int             g_DeviceId;        /* Device id. */
 static uint8_t         g_SendResult;      /* Send result. */
+static bool            g_timerRunning = false; /* Timer flag. */
 
 
 /**
@@ -63,15 +65,29 @@ void rxByteReceived(uint8_t *data, uint16_t len);
 
 openD_status_t openD_hanfunApi_pp_init()
 {
+  t_st_hanCmndApiMsg st_hanCmndApiMsg;
+  t_st_Packet        st_Packet = { 0 };
+
   /* Initialize Parser Context. */
   memset(&g_ParserContext, 0, sizeof(t_stReceiveData));
 
-  if(initIwu(sendKeepLive, rxByteReceived) == true)
+  if(initIwu(sendKeepLive, rxByteReceived) != true)
   {
-    return OPEND_STATUS_OK;
+    return OPEND_STATUS_FAIL;
   }
 
-  return OPEND_STATUS_FAIL;
+  /* Send reset request. */
+  p_CmndMsg_System_CreateResetReq( &st_hanCmndApiMsg );
+  st_Packet.length = p_CmndApiPacket_CreateFromCmndApiMsg(st_Packet.buffer, &st_hanCmndApiMsg);
+
+  if(sendFctPtr)
+  {
+    sendFctPtr(st_Packet.buffer, st_Packet.length);
+  } else {
+    return OPEND_STATUS_FAIL;
+  }
+
+  return OPEND_STATUS_OK;
 }
 
 openD_status_t openD_hanfunApi_pp_devMgmtRequest( openD_hanfunApi_devMgmtReq_t *hMgmtRequest, uint16_t address )
@@ -90,7 +106,6 @@ openD_status_t openD_hanfunApi_pp_devMgmtRequest( openD_hanfunApi_devMgmtReq_t *
 
       p_Cmnd_DeviceManagement_CreateRegisterDeviceReq( &st_hanCmndApiMsg, NULL );
       st_Packet.length = p_CmndApiPacket_CreateFromCmndApiMsg(st_Packet.buffer, &st_hanCmndApiMsg);
-      p_CmndMsgLog_PrintTxBuffer(st_Packet.length, st_Packet.buffer);
 
       if(sendFctPtr)
       {
@@ -120,7 +135,6 @@ void sendKeepLive()
 
   p_CmndMsg_KeepAlive_CreateImAliveReq( &st_hanCmndApiMsg );
   st_Packet.length = p_CmndApiPacket_CreateFromCmndApiMsg(st_Packet.buffer, &st_hanCmndApiMsg);
-  p_CmndMsgLog_PrintTxBuffer(st_Packet.length, st_Packet.buffer);
 
   sendFctPtr(st_Packet.buffer, st_Packet.length);
 }
@@ -148,7 +162,6 @@ openD_status_t openD_hanfunApi_pp_profileRequest( openD_hanfunApi_profileReq_t *
 
           p_CmndMsg_OnOff_CreateToggleReq( &st_hanCmndApiMsg, 0 );
           st_Packet.length = p_CmndApiPacket_CreateFromCmndApiMsg(st_Packet.buffer, &st_hanCmndApiMsg);
-          p_CmndMsgLog_PrintTxBuffer(st_Packet.length, st_Packet.buffer);
           if(sendFctPtr)
           {
             sendFctPtr(st_Packet.buffer, st_Packet.length);
@@ -207,6 +220,24 @@ void rxByteReceived(uint8_t *data, uint16_t len)
             {
                 g_DeviceId = st_IeGenStatus.u16_DeviceID;
             }
+
+            hDevMgmtConfirm.service = OPEND_HANFUNAPI_DEVICE_MANAGEMENT_DEVICE_READY;
+            hDevMgmtConfirm.status = OPEND_STATUS_OK;
+            openD_hanfun_devMgmtCfm(&hDevMgmtConfirm);
+          }
+        } else if (g_st_Msg.messageId == CMND_MSG_GENERAL_LINK_CFM)
+        {
+          t_st(CMND_IE_RESPONSE) st_IeResponse;
+          /* Extract device id if registered, store into global g_DeviceId. */
+          if ( p_CmndMsg_IeGet(&g_st_Msg, p_CMND_IE_GETTER(CMND_IE_RESPONSE), &st_IeResponse, sizeof(st_IeResponse) ) )
+          {
+            if( (CMND_RC_OK == st_IeResponse.u8_Result) && (false == g_timerRunning) && (g_Registered) ) {
+              g_timerRunning = true;
+              hDevMgmtConfirm.service = OPEND_HANFUNAPI_DEVICE_MANAGEMENT_REGISTER_DEVICE;
+              hDevMgmtConfirm.status = OPEND_STATUS_OK;
+              openD_hanfun_devMgmtCfm(&hDevMgmtConfirm);
+              keepAliveTimerStart();
+            }
           }
         }
         break;
@@ -240,7 +271,6 @@ void rxByteReceived(uint8_t *data, uint16_t len)
 			  if ( g_st_Msg.messageId == CMND_MSG_DEV_MGNT_REGISTER_DEVICE_CFM )
 			  {
           /* Handle confirmation to Registration request and extract the confirmation result. */
-          printf("REGISTER_CONF");
           t_st(CMND_IE_RESPONSE) st_IeResponse;
           hDevMgmtConfirm.service = OPEND_HANFUNAPI_DEVICE_MANAGEMENT_REGISTER_DEVICE;
 
@@ -248,16 +278,8 @@ void rxByteReceived(uint8_t *data, uint16_t len)
 	        if ( p_CmndMsg_IeGet(&g_st_Msg, p_CMND_IE_GETTER(CMND_IE_RESPONSE), &st_IeResponse, sizeof(st_IeResponse) ) )
           {
             g_SendResult = st_IeResponse.u8_Result;
-            if( g_SendResult == 0 )
+            if( g_SendResult != 0 )
             {
-              printf("Register success");
-              hDevMgmtConfirm.status = OPEND_STATUS_OK;
-              openD_hanfun_devMgmtCfm(&hDevMgmtConfirm);
-              keepAliveTimerStart();
-            }
-            else
-            {
-              printf("Register fail");
               hDevMgmtConfirm.status = OPEND_STATUS_FAIL;
               openD_hanfun_devMgmtCfm(&hDevMgmtConfirm);
             }
@@ -266,7 +288,6 @@ void rxByteReceived(uint8_t *data, uint16_t len)
 			  else if ( g_st_Msg.messageId == CMND_MSG_DEV_MGNT_REGISTER_DEVICE_IND )
 			  {
           /* Handle answer to "Registration" request and extract the registration result. */
-          printf("REGISTER_IND");
           t_st_hanCmndIeRegistrationResponse  ieResponse = {0};
 
           /*
@@ -281,6 +302,10 @@ void rxByteReceived(uint8_t *data, uint16_t len)
             if (g_SendResult == 0)
             {
               g_Registered = 1;
+              hDevMgmtConfirm.service = OPEND_HANFUNAPI_DEVICE_MANAGEMENT_REGISTER_DEVICE;
+              hDevMgmtConfirm.status = OPEND_STATUS_OK;
+              openD_hanfun_devMgmtCfm(&hDevMgmtConfirm);
+              keepAliveTimerStart();
             }
             else
             {

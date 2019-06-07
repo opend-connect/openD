@@ -47,6 +47,30 @@ add_library(mockDspgTransportLegacyPp ${MOCK_DIR}/transport_dspg_pp_legacy/mock_
 target_link_libraries(mockDspgTransportLegacyPp libgmock pthread)
 target_include_directories(mockDspgTransportLegacyPp PUBLIC ${MOCK_DIR}/transport_dspg_pp_legacy ${CMAKE_SOURCE_DIR}/../src/opend/dspg/pp_legacy/iwu)
 
+
+
+add_library(mockDspgTransportHanfunFp ${MOCK_DIR}/transport_dspg_fp_hanfun/mock_transport.cpp)
+target_link_libraries(mockDspgTransportHanfunFp libgmock libTestHanFun)
+target_include_directories(mockDspgTransportHanfunFp PUBLIC ${MOCK_DIR}/transport_dspg_fp_hanfun ${CMAKE_SOURCE_DIR}/../src/opend/dspg/fp_hanfun/iwu
+                                                                                    ${CMAKE_SOURCE_DIR}/../src/opend
+                                                                                    ${CMAKE_SOURCE_DIR}/../src/opend/dspg/cmbs/test/appcmbs
+                                                                                    ${CMAKE_SOURCE_DIR}/../src/opend/dspg/cmbs
+                                                                                    ${CMAKE_SOURCE_DIR}/../src/opend/dspg/cmbs/cmbs/
+                                                                                    ${CMAKE_SOURCE_DIR}/../src/opend/dspg/cmbs/frame
+                                                                                    ${CMAKE_SOURCE_DIR}/../src/opend/dspg/cmbs/include)
+target_compile_definitions(mockDspgTransportHanfunFp PUBLIC -DCMBS_BUF_SIZE=2560)
+
+add_library(mockFpHanfunApp ${MOCK_DIR}/fp_hanfun_app/mock_fp_hanfun_app.cpp)
+target_link_libraries(mockFpHanfunApp libgmock libTestHanFun)
+target_include_directories(mockFpHanfunApp PUBLIC ${MOCK_DIR}/fp_hanfun_app ${CMAKE_SOURCE_DIR}/../src/opend/dspg/fp_hanfun/iwu)
+
+add_library(mockUleResourceManager_dialog ${MOCK_DIR}/uleResourceManager_dialog/mock_uleResourceManager.cpp)
+target_link_libraries(mockUleResourceManager_dialog libgmock)
+target_include_directories(mockUleResourceManager_dialog PUBLIC ${MOCK_DIR}/uleResourceManager_dialog ${CMAKE_SOURCE_DIR}/../src/opend/dialog/fp_hanfun/iwu
+                                                                                    ${CMAKE_SOURCE_DIR}/../src/opend/dialog/fp_hanfun
+                                                                                    ${CMAKE_SOURCE_DIR}/../src/opend/dialog/fp_hanfun/include
+                                                                                    ${CMAKE_SOURCE_DIR}/../src/opend/dialog/fp_hanfun/include/Stack/Include)
+
 add_library(mockDspgTransportLegacyFp ${MOCK_DIR}/transport_dspg_fp_legacy/mock_transport.cpp)
 target_link_libraries(mockDspgTransportLegacyFp libgmock pthread)
 target_include_directories(mockDspgTransportLegacyFp PUBLIC ${MOCK_DIR}/transport_dspg_fp_legacy ${CMAKE_SOURCE_DIR}/../src/opend/dspg/fp_legacy/iwu)
@@ -144,6 +168,7 @@ target_link_libraries(mockOpend libgmock pthread)
 target_include_directories(mockOpend PUBLIC ${MOCK_DIR}/opend
                                             ${CMAKE_SOURCE_DIR}/../src/opend/
                                             ${CMAKE_SOURCE_DIR}/../src/opend/prv)
+target_compile_definitions(mockOpend PUBLIC -DCMBS_BUF_SIZE=2560)
 
 file(GLOB HAN_FUN_SOURES
     # HAN-FUN Lib

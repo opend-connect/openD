@@ -25,9 +25,11 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- */#ifndef DECT_DRV_H
+ */
+#ifndef DECT_DRV_H
 #define DECT_DRV_H
 /*========================== Include files ==================================*/
+#include <stdint.h>
 
 char ULE_mail_switch(unsigned short Length, unsigned char *MailPtr);
 void Dect_bridge_main();
@@ -52,5 +54,7 @@ typedef struct ApiProdTestCfmType
 } ApiProdTestCfmType;
 
 void TxBuff_Send( void );
+
+void request_device_core_info( uint8_t dev_legacy_id );
 
 #endif //__DECT_DRV_H__

@@ -71,18 +71,25 @@ int main (int argc, char **argv)
     udp_receive(buffer);
     printf("%s\n", buffer);
 
-    j = json::parse(buffer);
+    try
+    {
+      j = json::parse(buffer);
 
-    string version = j.at("version").get<std::string>();
-    string module = j.at("module").get<std::string>();
-    string primitive = j.at("primitive").get<std::string>();
-    string service = j.at("service").get<std::string>();
-    string status = j.at("status").get<std::string>();
-    string param1 = j.at("param1").get<std::string>();
-    string param2 = j.at("param2").get<std::string>();
-    string param3 = j.at("param3").get<std::string>();
+      string version = j.at("version").get<std::string>();
+      string module = j.at("module").get<std::string>();
+      string primitive = j.at("primitive").get<std::string>();
+      string service = j.at("service").get<std::string>();
+      string status = j.at("status").get<std::string>();
+      string param1 = j.at("param1").get<std::string>();
+      string param2 = j.at("param2").get<std::string>();
+      string param3 = j.at("param3").get<std::string>();
 
-    input = param1 + " " + param2 + " " + param3;
+      input = param1 + " " + param2 + " " + param3;
+    }
+    catch (json::exception& e)
+    {
+      std::cout.clear (); std::cout << "Received UDP data error!" << e.what() <<std::endl; std::cout.clear (); std::cerr.clear ();
+    }
   }
 
   transport->destroy();

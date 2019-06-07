@@ -127,6 +127,19 @@ void handleConfirmationAndIndication(char *buffer)
       << "FAIL" << " !" << std::endl; std::cout.clear (); std::cerr.clear ();
     }
   }
+  if(service.compare("deviceManagementRegisterDevice") == 0)
+  {
+    if(status.compare("OK") == 0)
+    {
+      std::cout.clear (); std::cout << "[INFO ] " << "Device " << param1 << " registration: "
+      << "SUCCESS" << " !" << std::endl; std::cout.clear (); std::cerr.clear ();
+    }
+    if(status.compare("ERR") == 0)
+    {
+      std::cout.clear (); std::cout << "[INFO ] " << "Device " << param1 << " registration: "
+      << "FAIL" << " !" << std::endl; std::cout.clear (); std::cerr.clear ();
+    }
+  }
   if(service.compare("IOnOffClientToggle") == 0)
   {
     if(status.compare("OK") == 0)

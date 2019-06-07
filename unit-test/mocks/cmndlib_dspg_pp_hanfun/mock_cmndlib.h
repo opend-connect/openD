@@ -25,6 +25,7 @@ extern "C"{
 #include "CmndLib.h"
 #include "CmndMsg_DeviceManagement.h"
 #include "CmndMsg_KeepAlive.h"
+#include "CmndMsg_System.h"
 #include "CmndMsg_OnOff.h"
 }
 
@@ -40,6 +41,7 @@ class Cmndlib
         virtual bool p_hanCmndApi_HandleByte( t_stReceiveData* context, u8 byte, OUT t_st_Msg* msg ) = 0;
         virtual bool p_CmndMsg_IeGet( IN const t_st_hanCmndApiMsg* pst_Msg, tpf_CmndIeGetter pf_Getter, OUT void* pv_IeValue, u16 u16_IeSize ) = 0;
         virtual void keepAliveTimerStart( void ) = 0;
+        virtual bool p_CmndMsg_System_CreateResetReq( OUT t_st_hanCmndApiMsg* pst_hanCmndApiMsg ) = 0;
         virtual t_en_hanCmndInfoElemType p_CMND_IE_GETTER_CMND_IE_GENERAL_STATUS( t_st_StreamBuffer* pst_Stream, void* pv_Ie ) = 0;
         virtual t_en_hanCmndInfoElemType p_CMND_IE_GETTER_CMND_IE_RESPONSE( t_st_StreamBuffer* pst_Stream, void* pv_Ie ) = 0;
         virtual t_en_hanCmndInfoElemType p_CMND_IE_GETTER_CMND_IE_REGISTRATION_RESPONSE( t_st_StreamBuffer* pst_Stream, void* pv_Ie ) = 0;
@@ -56,6 +58,7 @@ class MockCmndlib : public Cmndlib
         MOCK_METHOD3( p_hanCmndApi_HandleByte, bool( t_stReceiveData* context, u8 byte, OUT t_st_Msg* msg ) );
         MOCK_METHOD4( p_CmndMsg_IeGet, bool( IN const t_st_hanCmndApiMsg* pst_Msg, tpf_CmndIeGetter pf_Getter, OUT void* pv_IeValue, u16 u16_IeSize ) );
         MOCK_METHOD0( keepAliveTimerStart, void( void ) );
+        MOCK_METHOD1( p_CmndMsg_System_CreateResetReq, bool( OUT t_st_hanCmndApiMsg* pst_hanCmndApiMsg ) );
         MOCK_METHOD2( p_CMND_IE_GETTER_CMND_IE_GENERAL_STATUS, t_en_hanCmndInfoElemType( t_st_StreamBuffer* pst_Stream, void* pv_Ie ) );
         MOCK_METHOD2( p_CMND_IE_GETTER_CMND_IE_RESPONSE, t_en_hanCmndInfoElemType( t_st_StreamBuffer* pst_Stream, void* pv_Ie ) );
         MOCK_METHOD2( p_CMND_IE_GETTER_CMND_IE_REGISTRATION_RESPONSE, t_en_hanCmndInfoElemType( t_st_StreamBuffer* pst_Stream, void* pv_Ie ) );

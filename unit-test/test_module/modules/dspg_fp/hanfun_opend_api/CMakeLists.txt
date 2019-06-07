@@ -32,6 +32,7 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/
     ${CMAKE_CURRENT_SOURCE_DIR}/../
     ${MOCKED_MODULES_SOURCE_DIR}/opend/dspg/fp_hanfun/hanfun_api
+    ${MOCKED_MODULES_SOURCE_DIR}/opend/dspg/fp_hanfun/iwu
     ${MOCKED_MODULES_SOURCE_DIR}/opend/dspg/cmbs/test/appcmbs
     ${MOCKED_MODULES_SOURCE_DIR}/opend/dspg/cmbs/cmbs
     ${MOCKED_MODULES_SOURCE_DIR}/opend/dspg/cmbs/frame
@@ -54,7 +55,7 @@ add_executable(ut_dspg_hanfun_fp_openD_init ut_opend_init.cpp)
 ##
 ## Link targets
 ##
-target_link_libraries(ut_dspg_hanfun_fp_openD_init libgmock pthread libApp mockLowLevelApi)
+target_link_libraries(ut_dspg_hanfun_fp_openD_init libgmock pthread libApp mockLowLevelApi mockDspgTransportHanfunFp)
 
 ##
 ## Definitions

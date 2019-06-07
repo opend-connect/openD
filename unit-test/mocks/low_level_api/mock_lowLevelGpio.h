@@ -30,7 +30,7 @@ public:
    virtual int8_t openD_ll_gpio_deInit( openD_ll_gpio_pin_t pin ) = 0;
    virtual int8_t openD_ll_gpio_init( openD_ll_gpio_pin_t pin, openD_ll_gpio_irqCallback_t ll_gpio_irqCallback ) = 0;
    virtual openD_ll_gpio_pin_state_t openD_ll_gpio_read( openD_ll_gpio_pin_t pin ) = 0;
-   virtual openD_ll_gpio_buttonState_t openD_ll_gpio_readButton( openD_ll_gpio_button_ctxt_t *buttonCtxt, openD_ll_gpio_pin_t pin ) = 0;
+   virtual openD_ll_gpio_buttonState_t openD_ll_gpio_readButton( openD_ll_gpio_button_ctxt_t *buttonCtxt, openD_ll_gpio_pin_t pin, openD_ll_gpio_button_debounce_t debounce ) = 0;
    virtual void openD_ll_gpio_write( openD_ll_gpio_pin_t pin, openD_ll_gpio_pin_state_t state) = 0;
 };
 
@@ -42,7 +42,7 @@ public:
    MOCK_METHOD1(openD_ll_gpio_deInit ,  int8_t( openD_ll_gpio_pin_t pin ));
    MOCK_METHOD2(openD_ll_gpio_init ,  int8_t( openD_ll_gpio_pin_t pin, openD_ll_gpio_irqCallback_t ll_gpio_irqCallback ));
    MOCK_METHOD1(openD_ll_gpio_read ,  openD_ll_gpio_pin_state_t( openD_ll_gpio_pin_t pin ));
-   MOCK_METHOD2(openD_ll_gpio_readButton ,  openD_ll_gpio_buttonState_t( openD_ll_gpio_button_ctxt_t *buttonCtxt, openD_ll_gpio_pin_t pin ));
+   MOCK_METHOD3(openD_ll_gpio_readButton ,  openD_ll_gpio_buttonState_t( openD_ll_gpio_button_ctxt_t *buttonCtxt, openD_ll_gpio_pin_t pin, openD_ll_gpio_button_debounce_t debounce ));
    MOCK_METHOD2(openD_ll_gpio_write ,  void( openD_ll_gpio_pin_t pin, openD_ll_gpio_pin_state_t state));
 };
 

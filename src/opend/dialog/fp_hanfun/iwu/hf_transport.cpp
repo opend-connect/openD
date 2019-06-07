@@ -52,6 +52,10 @@ extern "C"
 #include <include/uleAppAPI.h>
 }
 
+#include "opend_hanfun_api.h"
+
+bool restoreRunning = false;
+
 // =============================================================================
 // Defines
 // =============================================================================
@@ -124,6 +128,13 @@ void resetConcentratorDectModule()
 }
 
 
+extern "C" void request_device_core_info( uint8_t dev_legacy_id )
+{
+   openD_hanfunApi_devMgmtInd_t hMgmtInd;
+   hMgmtInd.service = OPEND_HANFUNAPI_DEVICE_MANAGEMENT_GET_DEVICE_CORE_INFORMATION;
+   hMgmtInd.param.getAddress.address = (uint16_t) dev_legacy_id;
+   openD_hanfun_devMgmtInd( &hMgmtInd );
+}
 
 // =============================================================================
 // API
@@ -449,16 +460,14 @@ extern "C" void mail_switch(unsigned short Length, unsigned char *MailPtr)
 
          LOG (TRACE) << ">>> ID :" << std::hex << GET_ID(p_ipui) << std::dec << " <<<" << NL;
 
-         auto link = transport->find_by_id(GET_ID(p_ipui));
+         if( !restoreRunning ) {
+            auto link = transport->find_by_id(GET_ID(p_ipui));
 
-         if (link == nullptr)
-         {
-            transport->connected (GET_ID(p_ipui), p_ipui->IPUI);
-         }
-         else	// already registered
-         {
-            //LOG(DEBUG) <<  "IN HANDSET_PR" << NL;
-            // base.web_interface.handle_handset_present_ind(link);
+            if (link == nullptr)
+            {
+               transport->connected (GET_ID(p_ipui), p_ipui->IPUI);
+            }
+            // already registered
          }
          break;
       }

@@ -74,6 +74,12 @@ void keepAliveTimerStart( void )
     ObjCmndlib->keepAliveTimerStart( );
 }
 
+bool p_CmndMsg_System_CreateResetReq( OUT t_st_hanCmndApiMsg* pst_hanCmndApiMsg )
+{
+    assert( ObjCmndlib != NULL );
+    return ObjCmndlib->p_CmndMsg_System_CreateResetReq( pst_hanCmndApiMsg );
+}
+
 t_en_hanCmndInfoElemType p_CMND_IE_GETTER_CMND_IE_GENERAL_STATUS( t_st_StreamBuffer* pst_Stream, void* pv_Ie )
 {
     assert( ObjCmndlib != NULL );

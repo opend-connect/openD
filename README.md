@@ -149,6 +149,54 @@ In general, the purpose of the demonstration applications is to provide an overv
   pactl load-module module-loopback source="nameOfSource" sink="nameOfSink"
   ```
 
+**Device management example on the PP to change the volume for audio**
+
+  This is an example which shows how to use the device management services of the openD framework to change the volume of an active audio connection.
+
+  1. Run the legacy demo applications on the Raspberry PI 3 and also the legacy demo application on the Nucleo hardware.
+
+  2. Open the registration window with the client demo application.<br/>
+  The terminal input to open the registration window is the key "w".
+
+  3. Press the blue button on the Nucleo hardware to send a registration request.<br/>
+  Wait until the successful registration confirmation terminal output on the client demo application.
+
+  4. Setup a call with the handset id shown in the successful registration confirmation output on the client demo application.<br/>
+  The terminal input to setup a call with the handset id h is "r h". To setup a call with the Nucleo hardware press the blue button.<br/>
+  Wait until the successful call setup confirmation terminal output on the client demo application.
+
+  5. Volume up the audio on the client demo application.<br/>
+  The terminal input to mute the audio is "i".<br/>
+  Wait until the successful volume up the audio confirmation terminal output on the client demo application.
+
+  6. Volume down the audio on the client demo application.<br/>
+  The terminal input to mute the audio is "o".<br/>
+  Wait until the successful volume down the audio confirmation terminal output on the client demo application.
+
+**Device management example on the PP to mute audio**
+
+  This example demonstrates how to mute the volume on the PP for an active audio connection with the openD framework. The implementation uses the device management services.
+
+  1. Run the legacy demo applications on the Raspberry PI 3 and also the legacy demo application on the Nucleo hardware.
+
+  2. Open the registration window with the client demo application.<br/>
+  The terminal input to open the registration window is the key "w".
+
+  3. Press the blue button on the Nucleo hardware to send a registration request.<br/>
+  Wait until the successful registration confirmation terminal output on the client demo application.
+
+  4. Setup a call with the handset id shown in the successful registration confirmation output on the client demo application.<br/>
+  The terminal input to setup a call with the handset id h is "r h". To setup a call with the Nucleo hardware press the blue button.<br/>
+  Wait until the successful call setup confirmation terminal output on the client demo application.
+
+  5. Mute the audio on the client demo application.<br/>
+  The terminal input to mute the audio is "z".<br/>
+  Wait until the successful mute audio confirmation terminal output on the client demo application.
+
+  6. Un-mute the audio on the client demo application.<br/>
+  The terminal input to un-mute the audio is "u".<br/>
+  Wait until the successful un-mute audio confirmation terminal output on the client demo application.
+
 **Simple light with the HAN FUN 'Simple Switch' profile**
 
   This example utilizes the 'Simple Switch' profile from the HAN FUN specification. The PP implements this profile provides the possibility to switch a light on the hardware platforms.
@@ -174,7 +222,8 @@ In general, the purpose of the demonstration applications is to provide an overv
   2. Open the registration window with the client demo application.<br/>
   The terminal input to open the registration window and register a device is "r 1 x". Whit "x" you can assign a device address. For example "r 1 1", in this case the next registered device will have the address 1.
 
-  3. Press the blue button on the Nucleo hardware to send a registration request.
+  3. Press the registration button on the Nucleo hardware during power on the Nucleo to send a registration request.<br/>
+  The registration button is at the DSPG hardware the blue button on the Nucleo board. On the Dialog hardware it is `SW1` at the MMI board.
 
   4. List the registered devices to check if the portable part has been registered successfully with the client demo application.<br/>
   The terminal input to list the registered devices is "lr".
@@ -216,7 +265,8 @@ In general, the purpose of the demonstration applications is to provide an overv
   2. Open the registration window with the client demo application.<br/>
   The terminal input to open the registration window and register a device is "r 1 x". Whit "x" you can assign a device address. For example "r 1 1", in this case the next registered device will have the address 1.
 
-  3. Press the blue button on the Nucleo hardware to send a registration request.
+  3. Press the registration button on the Nucleo hardware during power on the Nucleo to send a registration request.<br/>
+  The registration button is at the DSPG hardware the blue button on the Nucleo board. On the Dialog hardware it is `SW1` at the MMI board.
 
   4. List the registered devices to check if the portable part has been registered successfully with the client demo application.<br/>
   The terminal input to list the registered devices is "lr".
@@ -226,53 +276,8 @@ In general, the purpose of the demonstration applications is to provide an overv
   1. De-register the device with the client demo application.<br/>
   The terminal input to de-register a device (device address = x) is "d x".
 
-**Device management example on the PP to mute audio**
-
-  This example demonstrates how to mute the volume on the PP for an active audio connection with the openD framework. The implementation uses the device management services.
-
-  1. Run the legacy demo applications on the Raspberry PI 3 and also the legacy demo application on the Nucleo hardware.
-
-  2. Open the registration window with the client demo application.<br/>
-  The terminal input to open the registration window is the key "w".
-
-  3. Press the blue button on the Nucleo hardware to send a registration request.<br/>
-  Wait until the successful registration confirmation terminal output on the client demo application.
-
-  4. Setup a call with the handset id shown in the successful registration confirmation output on the client demo application.<br/>
-  The terminal input to setup a call with the handset id h is "r h". To setup a call with the Nucleo hardware press the blue button.<br/>
-  Wait until the successful call setup confirmation terminal output on the client demo application.
-
-  5. Mute the audio on the client demo application.<br/>
-  The terminal input to mute the audio is "z".<br/>
-  Wait until the successful mute audio confirmation terminal output on the client demo application.
-
-  6. Un-mute the audio on the client demo application.<br/>
-  The terminal input to un-mute the audio is "u".<br/>
-  Wait until the successful un-mute audio confirmation terminal output on the client demo application.
-
-**Device management example on the PP to change the volume for audio**
-
-  This is an example which shows how to use the device management services of the openD framework to change the volume of an active audio connection.
-
-  1. Run the legacy demo applications on the Raspberry PI 3 and also the legacy demo application on the Nucleo hardware.
-
-  2. Open the registration window with the client demo application.<br/>
-  The terminal input to open the registration window is the key "w".
-
-  3. Press the blue button on the Nucleo hardware to send a registration request.<br/>
-  Wait until the successful registration confirmation terminal output on the client demo application.
-
-  4. Setup a call with the handset id shown in the successful registration confirmation output on the client demo application.<br/>
-  The terminal input to setup a call with the handset id h is "r h". To setup a call with the Nucleo hardware press the blue button.<br/>
-  Wait until the successful call setup confirmation terminal output on the client demo application.
-
-  5. Volume up the audio on the client demo application.<br/>
-  The terminal input to mute the audio is "i".<br/>
-  Wait until the successful volume up the audio confirmation terminal output on the client demo application.
-
-  6. Volume down the audio on the client demo application.<br/>
-  The terminal input to mute the audio is "o".<br/>
-  Wait until the successful volume down the audio confirmation terminal output on the client demo application.
+**Note HAN-FUN:**
+The HAN-FUN server application on the FP saves the registered devices (PP) in a JSON file ('hanfun.json'). At application start, the server compares the device list (JSON file) with the registered devices at the DECT module. The devices will be removed if they are no longer registered at the DECT module or not available in the device list.
 
 <a name="hardware_platforms"/>
 

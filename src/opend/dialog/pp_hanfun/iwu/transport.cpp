@@ -56,6 +56,13 @@ extern "C" void hanfun_state_machine(const RosMailType* p_mail)
 
   switch (p_mail->Primitive)
   {
+    case API_PP_ULE_INIT_CFM:
+      openD_hanfunApi_devMgmtCfm_t hDevMgmtConfirm;
+      hDevMgmtConfirm.service = OPEND_HANFUNAPI_DEVICE_MANAGEMENT_DEVICE_READY;
+      hDevMgmtConfirm.status = OPEND_STATUS_OK;
+      openD_hanfun_devMgmtCfm(&hDevMgmtConfirm);
+      break;
+
   	case API_PP_ULE_DATA_IND:
     {
 	  if (MmiCtrl.FWS.Enabled)
@@ -161,6 +168,7 @@ void HF::ULE::Transport::initialize()
 
 	/* Soft reset after hdlc is up */
 	mmi_SoftResetModule();
+	mmi_SetModuleDectModeEU();
 
 	mmiRosTimerEmu_Init();
 }

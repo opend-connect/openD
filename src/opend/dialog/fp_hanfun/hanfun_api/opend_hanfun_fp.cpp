@@ -35,6 +35,16 @@
 #include "application.h"
 #include "dialog/fp_hanfun/iwu/hf_transport.h"
 
+extern "C"
+{
+#include <uleDectAPI.h>
+#include <Phoenix/Api/Api.h>
+#include <Phoenix/Api/FpUle/ApiFpUle.h>
+}
+
+extern PpItem_t PP_Array[];
+extern bool restoreRunning;
+
 /*!
  * Copy macro of HANFUN address.
  */
@@ -53,6 +63,15 @@ static SimpleLight * g_simple_light = nullptr;
  * Static and global SimpleOnOffSwitchable profile object.
  */
 static SimpleSwitch * g_simple_switch = nullptr;
+
+/*!
+ * HAN-FUN devices vector.
+ */
+std::vector<openD_hanfunDevice_t> _hanfunDevices;
+/*!
+ * HAN-FUN device units vector.
+ */
+std::vector<openD_hanfunDevice_unit_t> hanfunDevice_units;
 
 /**
  * @brief   Handle device information.
@@ -75,6 +94,14 @@ static void handle_device_infomation (HF::Common::ByteArray &payload, uint16_t o
  * @retval  Status of the operation.
  */
 static openD_status_t simpleOnOffSwitchService( openD_hanfunApi_profileReq_t *hProfileRequest, HF::Protocol::Address device );
+
+static uint16_t port_to_dev_id(uint8_t port_id) {
+
+  HF::ULE::Link* a_link = HF::ULE::Transport::instance()->find_by_id(port_id);
+
+  if (a_link == nullptr) return 0;
+  else return (uint16_t) a_link->address();
+}
 
 void SimpleLight::on (HF::Protocol::Address &source)
 {
@@ -115,12 +142,178 @@ void SimpleLight::toggle (HF::Protocol::Address &source)
   openD_hanfun_profileInd(&hProfileInd);
 }
 
+uint16_t openD_hanfunApi_fp_devMgmt_get( openD_hanfunDevice_t **hanfunDevices )
+{
+  uint16_t size = 0;
+
+  _hanfunDevices.clear();
+  hanfunDevice_units.clear();
+
+  FP * fp = FP::instance();
+  size = fp->unit0()->device_management()->save( hanfunDevices );
+
+  return size;
+}
+
+uint16_t DeviceManagement::Server::save ( openD_hanfunDevice_t **hanfunDevice )
+{
+   LOG (INFO) << "Saving registration entries..." << NL;
+
+  unsigned i = 0;
+
+  /* *INDENT-OFF* */
+  for_each( entries ().begin (), entries ().end (),
+            [&i](HF::Core::DeviceManagement::Device &device)
+  {
+
+    openD_hanfunDevice_t hanfunDevice;
+
+    /* Address */
+    hanfunDevice.address = device.address;
+    /* EMC */
+    hanfunDevice.emc = device.emc;
+    /* Units */
+    for( unsigned j = 0; j < device.units.size(); j++ )
+    {
+      openD_hanfunDevice_unit_t openD_hanfunDevice_unit;
+      hanfunDevice_units.push_back( openD_hanfunDevice_unit );
+
+      /* Save the first reference to the current HANFUN device. */
+      if( 0U == j) {
+        hanfunDevice.units = &hanfunDevice_units[0];
+      }
+
+      hanfunDevice_units[j].id = device.units[j].id;
+      hanfunDevice_units[j].profile = device.units[j].profile;
+    }
+    hanfunDevice.units_length = device.units.size();
+
+    /* IPUI */
+    const HF::UID::DECT *dect = static_cast <const HF::UID::DECT *>(device.uid.raw ());
+    for( uint8_t j = 0; j < HF::UID::DECT::length (); j++ )
+    {
+      hanfunDevice.ipui[j] = (int) (*dect)[j];
+    }
+
+    _hanfunDevices.push_back( hanfunDevice );
+    i++;
+  });
+  /* *INDENT-ON* */
+
+  *hanfunDevice = &_hanfunDevices[0];
+
+  return _hanfunDevices.size();
+}
+
+void openD_hanfunApi_fp_devMgmt_set( openD_hanfunDevice_t *hanfunDevice, uint16_t size )
+{
+  FP * fp = FP::instance();
+  fp->unit0()->device_management()->restore( hanfunDevice, size );
+
+  return;
+}
+
+void DeviceManagement::Server::restore( openD_hanfunDevice_t *hanfunDevice, uint16_t size )
+{
+  LOG (INFO) << "Restoring registration entries..." << NL;
+
+  HF::ULE::Transport * transport = HF::ULE::Transport::instance();
+
+  restoreRunning = true;
+
+  /* Check registered devices. */
+  for( unsigned deviceId = 0; deviceId < PP_COUNT_MAX; deviceId++ )
+  {
+    if( PP_Array[deviceId].State.State != S_PP_NOT_REGISTERED )
+    {
+      bool isInDeviceList = false;
+
+      if( hanfunDevice )
+      {
+        uint8_t IPUIval[5];
+        ULE_GetIPUI( deviceId, IPUIval );
+
+        /* Compare device with the device list. */
+        for( uint16_t i = 0; i < size; i++ )
+        {
+          if( 0U == memcmp( IPUIval, hanfunDevice[i].ipui, 5U) )
+          {
+            HF::Core::DeviceManagement::Device device;
+
+            isInDeviceList = true;
+
+            device.address = hanfunDevice[i].address;
+            device.emc = hanfunDevice[i].emc;
+
+            HF::UID::DECT *dect = new HF::UID::DECT;
+            (*dect)[0] = hanfunDevice[i].ipui[0];
+            (*dect)[1] = hanfunDevice[i].ipui[1];
+            (*dect)[2] = hanfunDevice[i].ipui[2];
+            (*dect)[3] = hanfunDevice[i].ipui[3];
+            (*dect)[4] = hanfunDevice[i].ipui[4];
+            device.uid = dect;
+
+            for (unsigned j = 0; j <  hanfunDevice[i].units_length; j++)
+            {
+              device.units.push_back(0);
+              device.units[j].id = hanfunDevice[i].units[j].id;
+              device.units[j].profile = hanfunDevice[i].units[j].profile;
+            }
+
+
+            /* Add the device to the device management. */
+            HF::Core::DeviceManagement::Server <Entries>::entries().insert(device);
+
+            /* Connect the device at the transport instance. */
+            HF::ULE::Transport * transport = HF::ULE::Transport::instance();
+            transport->connected(deviceId, hanfunDevice[i].ipui);
+
+            break;
+          }
+        }
+      }
+
+      /* Device is not available in device list. */
+      if( !isInDeviceList ) {
+        /* Deregister device from module. */
+        ULE_DeRegister( deviceId );
+
+        PP_Array[deviceId].State.State = S_PP_NOT_REGISTERED;
+      }
+    }
+  }
+
+  restoreRunning = false;
+
+  return;
+}
+
+
 /* DeviceManagement::Entries::save. */
 HF::Common::Result DeviceManagement::Entries::save (const HF::Core::DeviceManagement::Device &device)
 {
   /* Save the entry for the register request. */
   auto res = HF::Core::DeviceManagement::Entries::save (device);
+  HF::Application::Save();
   return res;
+}
+
+void DeviceManagement::Entries::insert (const Device &device)
+{
+   HF::Core::DeviceManagement::Entries::save (device);
+}
+
+void  DeviceManagement::Server::registered (HF::Core::DeviceManagement::DevicePtr &device)
+{
+  openD_hanfunApi_devMgmtInd_t hDevMgmtIndication;
+
+  if( device == nullptr ) {
+    return;
+  }
+
+  hDevMgmtIndication.param.getAddress.address = device->address;
+  hDevMgmtIndication.service = OPEND_HANFUNAPI_DEVICE_MANAGEMENT_REGISTER_DEVICE;
+  openD_hanfun_devMgmtInd( &hDevMgmtIndication );
 }
 
 /* DeviceManagement::Entries::destroy. */
@@ -128,6 +321,7 @@ HF::Common::Result DeviceManagement::Entries::destroy (const HF::Core::DeviceMan
 {
   /* Destroy the entry for the deregister request. */
   auto res = HF::Core::DeviceManagement::Entries::destroy (device);
+  HF::Application::Save();
   return res;
 }
 
@@ -662,6 +856,20 @@ openD_status_t openD_hanfunApi_fp_devMgmtRequest( openD_hanfunApi_devMgmtReq_t *
       ret = OPEND_STATUS_OK;
       }
       break;
+    case OPEND_HANFUNAPI_DEVICE_MANAGEMENT_GET_DEVICE_CORE_INFORMATION:
+    {
+      uint16_t dev_hanfun_id = port_to_dev_id(address);
+
+      if (dev_hanfun_id == 0) return ret;
+      LOG (DEBUG) << "Sending keep alive request to device: " << dev_hanfun_id << NL;
+
+      HF::Protocol::Address addr (dev_hanfun_id, 0);
+      auto message = HF::Core::DeviceInformation::get (HF::Core::DeviceInformation::CORE_VERSION_ATTR);
+
+      fp->unit0()->send (addr, *message, nullptr);
+
+      break;
+    }
     default:
       hDevMgmtConfirm.status = OPEND_STATUS_ARGUMENT_INVALID;
       openD_hanfun_devMgmtCfm( &hDevMgmtConfirm );
@@ -808,6 +1016,14 @@ openD_status_t openD_hanfunApi_fp_profileRequest( openD_hanfunApi_profileReq_t *
   openD_hanfunApi_profileCfm_t hProfileConfirm;
 
   if(hProfileRequest == NULL)
+  {
+    return OPEND_STATUS_ARGUMENT_INVALID;
+  }
+
+  /* Check if device is registered. */
+  FP * fp = FP::instance();
+  auto _entry = fp->unit0 ()->device_management ()->entry ( address );
+  if(_entry == nullptr)
   {
     return OPEND_STATUS_ARGUMENT_INVALID;
   }

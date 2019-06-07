@@ -2744,7 +2744,7 @@ void *ULE_TimerThread(void *x) {
 			keepAliveCheckTimer = 0;
 			for (i = 0; i < PP_COUNT_MAX; i++) {
 				if (PP_Array[i].State.State != S_PP_NOT_REGISTERED) {
-					// WebInterface_request_device_core_info(i);
+					request_device_core_info(i);
 				}
 			}
 		}

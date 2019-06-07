@@ -141,7 +141,6 @@ typedef struct{
   rsuint8 bMacLockRequested;  // used location
   rsuint8 bMacSubNo;
   rsuint8 bMacLockActive;     // used for location
-  ApiCcConEiType MmiConEi;
   rsuint8 DestHsId;
   PpMmiParaType PpMmiPara;
   ApiPpAudioModeType AudioMode;

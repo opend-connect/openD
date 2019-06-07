@@ -26,6 +26,7 @@
 #include <cstdint>
 #include <iostream>
 #include <sstream>
+#include <fstream>
 #include "application.h"
 #include "fp_hanfun_app.h"
 #include "opend_hanfun_api_fp.h"
@@ -36,6 +37,11 @@ extern "C"
 {
 #include "opend_api.h"
 }
+
+/* JSON HAN-FUN device file. */
+#ifndef HF_APP_CONFIG_FILE
+   #define HF_APP_CONFIG_FILE   "./hanfun.json"
+#endif
 
 using json = nlohmann::json;
 
@@ -198,6 +204,29 @@ void devMgmtIndicationCallback(openD_hanfunApi_devMgmtInd_t *hDevMgmtIndication)
       j["param2"] = "0";
       j["param3"] = "0";
       udp_send((j.dump()).c_str(), strlen((j.dump()).c_str())+1);
+      break;
+
+    case OPEND_HANFUNAPI_DEVICE_MANAGEMENT_REGISTER_DEVICE:
+      {
+        std::string address = std::to_string(hDevMgmtIndication->param.getAddress.address);
+        std::cout.clear (); std::cout << "[INFO ] " << "Device with ID " << address << " registered" <<
+        std::endl; std::cout.clear (); std::cerr.clear ();
+        j["version"] = "1.0.0";
+        j["module"] = "hanfun";
+        j["primitive"] = "indication";
+        j["service"] = "deviceManagementRegisterDevice";
+        j["status"] = "OK";
+        j["param1"] = address;
+        j["param2"] = "0";
+        j["param3"] = "0";
+        udp_send((j.dump()).c_str(), strlen((j.dump()).c_str())+1);
+      }
+      break;
+
+    case OPEND_HANFUNAPI_DEVICE_MANAGEMENT_GET_DEVICE_CORE_INFORMATION:
+      openD_hanfunApi_devMgmtReq_t hMgmtRequest;
+      hMgmtRequest.service = OPEND_HANFUNAPI_DEVICE_MANAGEMENT_GET_DEVICE_CORE_INFORMATION;
+      openD_hanfunApi_fp_devMgmtRequest( &hMgmtRequest, hDevMgmtIndication->param.getAddress.address, 0 );
       break;
 
     default:
@@ -592,7 +621,22 @@ void Command_On::run (std::vector <std::string> &args)
   uint16_t arg1 = strtol (args[0].c_str (), NULL, 10);
   uint16_t arg2 = strtol (args[1].c_str (), NULL, 10);
 
-  openD_hanfunApi_fp_profileRequest(&hProfileRequest, arg1, arg2);
+  if( OPEND_STATUS_OK != openD_hanfunApi_fp_profileRequest(&hProfileRequest, arg1, arg2) )
+  {
+    std::cerr.clear (); std::cerr << "[WARN ] " << "[HANFUN] Simple on/off switch request: FAIL" <<
+    std::endl; std::cout.clear (); std::cerr.clear ();
+
+    j["version"] = "1.0.0";
+    j["module"] = "hanfun";
+    j["primitive"] = "confirmation";
+    j["service"] = "IOnOffClientOn";
+    j["status"] = "ERR";
+    j["param1"] = "0";
+    j["param2"] = "0";
+    j["param3"] = "0";
+    size_t len = strlen((j.dump()).c_str())+1;
+    udp_send((j.dump()).c_str(), len);
+  }
 }
 
 void Command_Off::run (std::vector <std::string> &args)
@@ -611,7 +655,22 @@ void Command_Off::run (std::vector <std::string> &args)
   uint16_t arg1 = strtol (args[0].c_str (), NULL, 10);
   uint16_t arg2 = strtol (args[1].c_str (), NULL, 10);
 
-  openD_hanfunApi_fp_profileRequest(&hProfileRequest, arg1, arg2);
+  if( OPEND_STATUS_OK != openD_hanfunApi_fp_profileRequest(&hProfileRequest, arg1, arg2) )
+  {
+    std::cerr.clear (); std::cerr << "[WARN ] " << "[HANFUN] Simple on/off switch request: FAIL" <<
+    std::endl; std::cout.clear (); std::cerr.clear ();
+
+    j["version"] = "1.0.0";
+    j["module"] = "hanfun";
+    j["primitive"] = "confirmation";
+    j["service"] = "IOnOffClientOff";
+    j["status"] = "ERR";
+    j["param1"] = "0";
+    j["param2"] = "0";
+    j["param3"] = "0";
+    size_t len = strlen((j.dump()).c_str())+1;
+    udp_send((j.dump()).c_str(), len);
+  }
 }
 
 void Command_Toggle::run (std::vector <std::string> &args)
@@ -630,7 +689,152 @@ void Command_Toggle::run (std::vector <std::string> &args)
   uint16_t arg1 = strtol (args[0].c_str (), NULL, 10);
   uint16_t arg2 = strtol (args[1].c_str (), NULL, 10);
 
-  openD_hanfunApi_fp_profileRequest(&hProfileRequest, arg1, arg2);
+  if( OPEND_STATUS_OK != openD_hanfunApi_fp_profileRequest(&hProfileRequest, arg1, arg2) )
+  {
+    std::cerr.clear (); std::cerr << "[WARN ] " << "[HANFUN] Simple on/off switch request: FAIL" <<
+    std::endl; std::cout.clear (); std::cerr.clear ();
+
+    j["version"] = "1.0.0";
+    j["module"] = "hanfun";
+    j["primitive"] = "confirmation";
+    j["service"] = "IOnOffClientToggle";
+    j["status"] = "ERR";
+    j["param1"] = "0";
+    j["param2"] = "0";
+    j["param3"] = "0";
+    size_t len = strlen((j.dump()).c_str())+1;
+    udp_send((j.dump()).c_str(), len);
+  }
+}
+
+static std::string json_uid( uint16_t uid )
+{
+  std::ostringstream convert;
+
+  convert << "0x" << std::setfill ('0') << std::setw (sizeof(uint16_t) * 2) << std::hex << uid;
+
+  return convert.str ();
+}
+
+static uint16_t json_uid( std::string uid )
+{
+   return strtol( uid.substr (2).c_str (), NULL, 16 );
+}
+
+void HF::Application::Save ()
+{
+  std::cout.clear (); std::cout << "Application configuration save !" << std::endl; std::cout.clear (); std::cerr.clear ();
+
+  json j;
+  openD_hanfunDevice_t *hanfunDevices = NULL;
+  uint16_t hanfunDevices_size;
+
+  std::ofstream ofs (HF_APP_CONFIG_FILE);
+
+  /* Get the available devices. */
+  hanfunDevices_size = openD_hanfunApi_fp_devMgmt_get( &hanfunDevices );
+
+  json root;
+
+  for( unsigned i = 0; i < hanfunDevices_size; i++ )
+  {
+    /* Address */
+    root[i]["address"] = hanfunDevices[i].address;
+    /* EMC */
+    root[i]["emc"] = json_uid( hanfunDevices[i].emc );
+    /* Units */
+    for (unsigned k = 0; k < hanfunDevices[i].units_length; k++)
+    {
+      json &units = root[i]["units"][k];
+      units["id"] = hanfunDevices[i].units[k].id;
+      units["profile"] = json_uid( hanfunDevices[i].units[k].profile );
+    }
+    /* IPUI */
+    root[i]["uid"] = { {"type", "dect"} };
+    for (unsigned k = 0U; k < 5U; ++k)
+    {
+      root[i]["uid"]["value"][k] = hanfunDevices[i].ipui[k];
+    }
+  }
+
+  if (ofs.is_open ())
+  {
+    j["core"]["device_management"] = root;
+    ofs << std::setw(4) << j << std::endl;
+    ofs.close ();
+  }
+
+  Saved ();
+}
+
+void HF::Application::Restore ()
+{
+  json j;
+  std::vector<openD_hanfunDevice_t> hanfunDevices;
+  std::vector<openD_hanfunDevice_unit_t> hanfunDevice_units;
+
+  std::ifstream ifs (HF_APP_CONFIG_FILE);
+
+  /* Check if file exists. */
+  if( ifs.good() )
+  {
+    try
+    {
+      /* Stream to JSON object. */
+      ifs >> j;
+
+      json root = j["core"]["device_management"];
+
+      /* JSON object to device list. */
+      for( unsigned i = 0; i < root.size (); i++ )
+      {
+        openD_hanfunDevice_t hanfunDevice;
+
+        /* Address */
+        hanfunDevice.address = (uint16_t) root[i].at("address").get<std::uint16_t>();
+        /* EMC */
+        hanfunDevice.emc = json_uid (root[i].at("emc").get<std::string>());
+        /* Units */
+        for (unsigned j = 0U; j <  root[i]["units"].size(); j++)
+        {
+          openD_hanfunDevice_unit_t openD_hanfunDevice_unit;
+          hanfunDevice_units.push_back( openD_hanfunDevice_unit );
+
+          /* Save the first reference to the current HANFUN device. */
+          if( 0U == j) {
+            hanfunDevice.units = &hanfunDevice_units[0];
+          }
+
+          /* Convert units from JSON. */
+          hanfunDevice_units[j].id = (uint8_t) root[i]["units"][j].at("id").get<std::uint8_t>();
+          hanfunDevice_units[j].profile = json_uid (root[i]["units"][j].at("profile").get<std::string>());
+        }
+        hanfunDevice.units_length = root[i]["units"].size();
+
+        /* IPUI */
+        for (unsigned j = 0U; j < 5U; ++j)
+        {
+            hanfunDevice.ipui[j] = (uint8_t) root[i]["uid"]["value"][j];
+        }
+
+        hanfunDevices.push_back( hanfunDevice );
+      }
+
+    }
+    catch (json::exception& e)
+    {
+      LOG(WARN) << "Reading configuration file error!" << e.what() << NL;
+    }
+  } else {
+    LOG(INFO) << "No HAN-FUN device file exists." << NL;
+  }
+
+  /* Restore device list. */
+  openD_hanfunApi_fp_devMgmt_set( &hanfunDevices[0], hanfunDevices.size() );
+
+  ifs.close ();
+
+  Restored ();
 }
 
 /* HF::Application::Initialize */
@@ -671,6 +875,8 @@ void HF::Application::Initialize (HF::Transport::Layer &transport, int argc, cha
   Command::add(&command_Off);
   Command::add(&command_On);
   Command::add(&command_Toggle);
+
+  Restore();
 }
 
 /* Command::add */

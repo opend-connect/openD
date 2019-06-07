@@ -40,6 +40,8 @@
 int sockfd;
 /* Socket address of the udp server/client. */
 static struct sockaddr_in servaddr, cliaddr;
+int cliaddr_len = sizeof(cliaddr);
+
 /* Number of received bytes. */
 int  n;
 /* Socket address length. */
@@ -72,14 +74,14 @@ void udp_init()
 
 void udp_receive(char *buffer)
 {
-  recvfrom(sockfd, (char *)buffer, 1024,
+  recvfrom(sockfd, (char *)buffer, MAXLINE,
            MSG_WAITALL, ( struct sockaddr *) &cliaddr,
-           &len);
+           &cliaddr_len);
 }
 
 void udp_send(const char *data, size_t len)
 {
   sendto(sockfd, (const char *)data, len,
          MSG_NOSIGNAL, (const struct sockaddr *) &cliaddr,
-         sizeof(cliaddr));
+         cliaddr_len);
 }

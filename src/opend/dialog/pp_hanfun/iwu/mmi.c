@@ -420,7 +420,7 @@ static void s_mmi_default(const RosMailType* p_mail)
           case API_PP_ULE_WAKEUP_EVENT_NON_ULP:
             case API_PP_ULE_WAKEUP_EVENT_UNDEF:
           default:
-            // SendApiPpUleSubsStatusReq(COLA_TASK);
+            SendApiPpUleSubsStatusReq(COLA_TASK);
             break;
         }
 		}
@@ -445,7 +445,7 @@ static void s_mmi_default(const RosMailType* p_mail)
 		  MmiCtrl.isRegistered=0;
 		} else {
 			// registered!
-			//MmiCtrl.isRegistered=1;
+			MmiCtrl.isRegistered=1;
 			if(MmiCtrl.wakeup_event == API_PP_ULE_WAKEUP_EVENT_NON_ULP) {
             // Start PVC configuration
 			MmiCtrl.pvc = 1;
@@ -664,7 +664,7 @@ static void s_mmi_default(const RosMailType* p_mail)
                                   API_ULE_MTU_LIFETIME_DEFAULT, API_ULE_WINDOW_SIZE_DEFAULT,
                                   API_ULE_PP_INITIATOR);
         RosTimerStart(LOCK_TIMER, T_MMI_WAIT_LOCK, &LockTimeoutTimerConfig);
-		//MmiCtrl.isRegistered=1;
+		MmiCtrl.isRegistered=1;
 		MmiCtrl.RegistrationMode = false;
 		break;
 

@@ -13,13 +13,15 @@
 #
 # SPDX-License-Identifier: Apache-2.0 OR GPL-2.0-only
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+
 cmake_minimum_required(VERSION 3.6)
 
 #---------------------------------------------------------------------------------------
 # Project version
 #---------------------------------------------------------------------------------------
 
-project(openD VERSION 1.0.6)
+project(openD VERSION 1.0.7)
 set(PROJECT_PRODUCT_NAME "openD HANFUN Legacy")
 
 #---------------------------------------------------------------------------------------
