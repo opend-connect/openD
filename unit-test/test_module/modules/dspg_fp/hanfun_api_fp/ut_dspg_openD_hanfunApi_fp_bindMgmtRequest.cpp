@@ -41,6 +41,7 @@
 /** Mocks */
 #include "mock_testlib.h"
 #include "mock_appmsgparser.h"
+#include "mock_fp_hanfun_app.h"
 
 #include "dspg_fp_hanfun_api_stubs.h"
 
@@ -61,11 +62,13 @@ class ut_dspg_openD_hanfunApi_fp_bindMgmtRequest: public testing::Test
 
         MockTestlib ObjMockTestLib;
         MockAppMsgParser ObjAppMsgParser;
+        MockFp_hanfun_app ObjFp_hanfun_app;
 
         void SetUp()
         {
             setMockTestlibReference(&ObjMockTestLib);
             setMockAppMsgParserReference(&ObjAppMsgParser);
+            // setMockFp_hanfun_appReference(&ObjFp_hanfun_app);
         }
         void TearDown()
         {

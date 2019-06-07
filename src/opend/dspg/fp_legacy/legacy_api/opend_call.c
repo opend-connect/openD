@@ -44,10 +44,6 @@ openD_callApiPrimitives_t _cPrimitives;
 extern void keyb_ReleaseNotify(u16 u16_CallId);
 extern u16 _keyb_CallIdInput(void);
 
-static void opend_call_setup_cllb(uint8_t callId);
-
-static void opend_call_terminated_cllb();
-
 openD_status_t openD_callApi_init( openD_callApiPrimitives_t *cPrimitives )
 {
   if( !cPrimitives )
@@ -57,28 +53,8 @@ openD_status_t openD_callApi_init( openD_callApiPrimitives_t *cPrimitives )
 
   _cPrimitives.openD_callApiCfm = cPrimitives->openD_callApiCfm;
   _cPrimitives.openD_callApiInd = cPrimitives->openD_callApiInd;
-  initMsgParserCall(opend_call_setup_cllb, opend_call_terminated_cllb);
 
   return OPEND_STATUS_OK;
-}
-
-static void opend_call_setup_cllb(uint8_t callId)
-{
-  openD_callApiCfm_t openD_callApiCfm;
-  openD_callApiCfm.service = OPEND_CALLAPI_SETUP;
-  openD_callApiCfm.param.setup.pmid[0] = callId;
-  openD_callApiCfm.status = OPEND_STATUS_OK;
-
-  _cPrimitives.openD_callApiCfm(&openD_callApiCfm);
-}
-
-static void opend_call_terminated_cllb()
-{
-  openD_callApiCfm_t openD_callApiCfm;
-  openD_callApiCfm.service = OPEND_CALLAPI_RELEASE;
-  openD_callApiCfm.status = OPEND_STATUS_OK;
-
-  _cPrimitives.openD_callApiCfm(&openD_callApiCfm);
 }
 
 openD_status_t openD_callApi_request( openD_callApiReq_t *cRequest )
@@ -229,6 +205,14 @@ void openD_call_confirmation( openD_callApiCfm_t *cConfirm ) {
 
     if( _cPrimitives.openD_callApiCfm ) {
         _cPrimitives.openD_callApiCfm( cConfirm );
+    }
+    return;
+}
+
+void openD_call_indication( openD_callApiInd_t *cIndication ) {
+
+    if( _cPrimitives.openD_callApiInd ) {
+        _cPrimitives.openD_callApiInd( cIndication );
     }
     return;
 }

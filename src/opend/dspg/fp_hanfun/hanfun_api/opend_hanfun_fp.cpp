@@ -185,11 +185,11 @@ uint16_t DeviceManagement::Server::save ( openD_hanfunDevice_t **hanfunDevice )
 
       /* Save the first reference to the current HANFUN device. */
       if( 0U == j) {
-        hanfunDevice.units = &hanfunDevice_units.back();
+        hanfunDevice.units = &hanfunDevice_units[0];
       }
 
-      hanfunDevice.units[j].id = device.units[j].id;
-      hanfunDevice.units[j].profile = device.units[j].profile;
+      hanfunDevice_units[j].id = device.units[j].id;
+      hanfunDevice_units[j].profile = device.units[j].profile;
     }
     hanfunDevice.units_length = device.units.size();
 

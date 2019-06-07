@@ -30,10 +30,10 @@
  * @param   buffer Pointer to the buffer to send.
  * @param   len    Length of the buffer.
  */
-void sendFunction(uint8_t *buffer, uint16_t len )
+int8_t sendFunction(uint8_t *buffer, uint16_t len )
 {
   /* Function only need as function pointer param, so just return. */
-  return;
+  return 0;
 }
 
 /**

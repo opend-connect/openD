@@ -802,12 +802,12 @@ void HF::Application::Restore ()
 
           /* Save the first reference to the current HANFUN device. */
           if( 0U == j) {
-            hanfunDevice.units = &hanfunDevice_units.back();
+            hanfunDevice.units = &hanfunDevice_units[0];
           }
 
           /* Convert units from JSON. */
-          hanfunDevice.units[j].id = (uint8_t) root[i]["units"][j].at("id").get<std::uint8_t>();
-          hanfunDevice.units[j].profile = json_uid (root[i]["units"][j].at("profile").get<std::string>());
+          hanfunDevice_units[j].id = (uint8_t) root[i]["units"][j].at("id").get<std::uint8_t>();
+          hanfunDevice_units[j].profile = json_uid (root[i]["units"][j].at("profile").get<std::string>());
         }
         hanfunDevice.units_length = root[i]["units"].size();
 
