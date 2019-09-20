@@ -79,13 +79,12 @@ static void cmbs_onRegistrationClose( void* ie_data );
 static void cmbs_onHandsetRegistered( void* ie_data );
 static bool cmbs_checkResponse( void* ie_data );
 
-void transport_init( )
+openD_status_t transport_init( )
 {
   char *psz_ComDevName = NULL;
   u8 u8_Port = 0;
   ST_IE_SYPO_SPECIFICATION SYPOParameters;
   bool SYPO_enabled = FALSE;
-  int menu = 1;
   u16 u16_TargetVersion;
 
   appcmbs_opend_setCallbackFct( &appcmbs_opend_callback );
@@ -111,12 +110,12 @@ void transport_init( )
 
   if ( tcx_LogOutputCreate() != CMBS_RC_OK )
   {
-    exit(1);
+    return OPEND_STATUS_FAIL;
   }
 
   if ( tcx_HostLogOutputCreate() != CMBS_RC_OK )
   {
-    exit(1);
+    return OPEND_STATUS_FAIL;
   }
 
   /* Configurate the usb port. */
@@ -136,58 +135,48 @@ void transport_init( )
   if ( appcmbs_Initialize(NULL, &g_st_DevCtl, &g_st_DevMedia, &pfn_log_buffer_Cb) != CMBS_RC_OK )
   {
     CFR_DBG_ERROR("TCX ERROR: !!! Host could not be started up!\n");
+    return OPEND_STATUS_FAIL;
+  }
+
+  AppCallRouter_Init ();
+
+  u16_TargetVersion = cmbs_api_ModuleVersionGet();
+
+  /* Try to get HW Chip version. */
+  if ( (u16_TargetVersion & 0xFF00) != 0x0000 &&   // Bootloader
+        (u16_TargetVersion & 0xF000) != 0x2000 &&   // CMBS 2xxx version (e.g. 2.99.9) - Old IE Header structure
+        (u16_TargetVersion & 0xFF00) != 0x0200 )    // CMBS 02xx version (e.g. 2.99) - Old IE Header structure
+  {
+    app_SrvHWVersionGet(TRUE);
+  }
+  if((u16_TargetVersion & 0xFF00) != 0x0000) //Booter does not support this event
+  {
+    printf("Getting MAX Buffer size...\n");
+    appcmbs_MaxTransferSizeGet();
+  }
+
+  printf("Start Cordless Stack\n");
+  if ( SYPO_enabled )
+  {
+    appcmbs_CordlessStart(&SYPOParameters);
   }
   else
   {
-    AppCallRouter_Init ();
-
-    u16_TargetVersion = cmbs_api_ModuleVersionGet();
-
-    /* Try to get HW Chip version. */
-    if ( (u16_TargetVersion & 0xFF00) != 0x0000 &&   // Bootloader
-         (u16_TargetVersion & 0xF000) != 0x2000 &&   // CMBS 2xxx version (e.g. 2.99.9) - Old IE Header structure
-         (u16_TargetVersion & 0xFF00) != 0x0200 )    // CMBS 02xx version (e.g. 2.99) - Old IE Header structure
-    {
-      app_SrvHWVersionGet(TRUE);
-    }
-    if((u16_TargetVersion & 0xFF00) != 0x0000) //Booter does not support this event
-    {
-      printf("Getting MAX Buffer size...\n");
-      appcmbs_MaxTransferSizeGet();
-    }
-
-    printf("Start Cordless Stack\n");
-    if ( SYPO_enabled )
-    {
-      appcmbs_CordlessStart(&SYPOParameters);
-    }
-    else
-    {
-      appcmbs_CordlessStart(NULL);
-    }
-
-    if ( menu )
-    {
-      return;
-    }
-    else
-    {
-      while ( 1 )
-      {
-        SleepMs(3000);
-      }
-    }
+    appcmbs_CordlessStart(NULL);
   }
 
+  return OPEND_STATUS_OK;
+}
+
+openD_status_t transport_deInit( void )
+{
   appcmbs_Cleanup();
   tcx_EepClose();
   tcx_LogCloseLogfile();
   tcx_HostLogCloseLogfile();
   tcx_LogCloseTracefile();
-  tcx_HostLogOutputDestroy();
-  tcx_LogOutputDestroy();
-  printf("Press ENTER to exit...");
-  exit(1);
+
+  return OPEND_STATUS_OK;
 }
 
 static bool cmbs_checkResponse( void* ie_data )

@@ -44,7 +44,7 @@ namespace HF
        * @param argc Holds the number of parameters.
        * @param argv Pointer of the pointer parameters.
        */
-      void Initialize (HF::Transport::Layer &transport, int argc, char **argv);
+      int Initialize (HF::Transport::Layer &transport, int argc, char **argv);
 
       /**
        * @brief   Handle command.
@@ -107,25 +107,6 @@ namespace HF
 
    }
 }
-
-/**
- * @brief   Initialize ule app.
- *
- * @details Initialization of the ule application.
- *
- * @param   argc Holds the number of parameters.
- * @param   argv Pointer of the pointer parameters.
- */
-void initUleApp(int argc, char **argv);
-
-/**
- * @brief   Get address.
- *
- * @details Get the address of the node device in the application.
- *
- * @retval  Pointer to the addresses.
- */
-uint16_t *getAddress();
 
 #endif /* HF_APP_H */
 

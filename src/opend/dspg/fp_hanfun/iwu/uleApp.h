@@ -1,7 +1,3 @@
-#ifdef __cplusplus
-extern "C"
-{
-#endif
 /**
  * @code
  *  ___ _____ _   ___ _  _____ ___  ___  ___ ___
@@ -11,10 +7,10 @@ extern "C"
  * embedded.connectivity.solutions.==============
  * @endcode
  *
- * @file       opend.c
+ * @file       uleApp.h
  * @copyright  STACKFORCE GmbH, Heitersheim, Germany, www.stackforce.de
- * @author     Patrick Weber, Heiko Berger
- * @brief      openD API.
+ * @author     Heiko Berger
+ * @brief      ULE application api.
  * @details
  *
  * This work is dual-licensed under Apache 2.0 and GPL 2.0. You can choose between one of them if you use this work.
@@ -22,29 +18,28 @@ extern "C"
  *
  * SPDX-License-Identifier: Apache-2.0 OR GPL-2.0-only
  *
+ * @defgroup   HANFUN ULE APP
+ *             This file specifies the ULE api for the application.
+ * @{
  */
 
+#ifndef ULE_APP_H
+#define ULE_APP_H
+
 #include "opend_dataTypes.h"
-#include "opend.h"
-#include "opend_api.h"
-#include "transport.h"
 
+/**
+ * @brief   Initialize ule app.
+ *
+ * @details Initialization of the ule application.
+ */
+openD_status_t initUleApp( void );
 
-openD_status_t openD_init(void *port)
-{
-  openD_status_t ret;
+/**
+ * @brief   De-Initialize ule app.
+ *
+ * @details De-Initialization of the ule application.
+ */
+openD_status_t deInitUleApp( void );
 
-  /* Init DSPG iwu and serial */
-  ret = transport_init();
-
-  if( ret != OPEND_STATUS_OK )
-  {
-    transport_deInit();
-  }
-  return ret;
-}
-
-
-#ifdef __cplusplus
-}
-#endif
+#endif /* ULE_APP_H */

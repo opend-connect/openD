@@ -24,13 +24,24 @@ extern "C"
  *
  */
 
+#include "uleApp.h"
+
 #include "opend_dataTypes.h"
 #include "opend_api.h"
 #include "opend.h"
 
 openD_status_t openD_init( void* port )
 {
-  return OPEND_STATUS_OK;
+  openD_status_t ret;
+
+  ret = initUleApp();
+
+  if( ret != OPEND_STATUS_OK )
+  {
+    deInitUleApp();
+  }
+
+  return ret;
 }
 
 #ifdef __cplusplus

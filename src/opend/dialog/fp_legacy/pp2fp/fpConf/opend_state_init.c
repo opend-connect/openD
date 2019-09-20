@@ -286,6 +286,7 @@ static bool _message_primitive_cfm_ind( void *param ) {
 
 bool opend_state_init( void *param ) {
   bool ret = true;
+  openD_mgmtApiInd_t mIndication;
 
   if( !param ) {
     return false;
@@ -303,6 +304,12 @@ bool opend_state_init( void *param ) {
       SendApiFpAudioUnmuteReq(COLA_TASK, 1, API_FP_MUTE_BOTH);
       SendApiFpAudioUnmuteReq(COLA_TASK, 2, API_FP_MUTE_BOTH);
       SendApiFpAudioUnmuteReq(COLA_TASK, 3, API_FP_MUTE_BOTH);
+      break;
+
+    case MESSAGE_PRIMITIVE_TIMEOUT:
+      /* Send timeout indication to the application. */
+      mIndication.service = OPEND_MGMTAPI_TIMEOUT;
+      openD_mgmt_indication( &mIndication );
       break;
 
     case MESSAGE_PRIMITIVE_USER:

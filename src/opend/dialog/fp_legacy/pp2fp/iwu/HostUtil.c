@@ -342,8 +342,6 @@ void LocalMainAppTask(RosMailType *MailPtr)
       //Printf("RX: LOCAL_TIMEOUT (internal pc hostapp timer)\n");
       DynMmiTimerTick();
       rsx_StartTimer(1, API_TASK, TIMEOUT, 0 );
-
-      return;
   }
 
   HandleCvmConOptions(MailPtr);
@@ -403,7 +401,7 @@ void MyThreadTimerFunction( void )
 {
 	RosMailEmptyType* pMail;
 	while(TimerThreadRunning){
-		usleep(10000); //Sleep(10);
+		sleep(4);
 		if(timer_tmout){
 #if 1
 				pMail = (RosMailEmptyType*)RosMailAllocate(API_TASK, API_TASK, sizeof(RosMailEmptyType));

@@ -29,6 +29,8 @@ extern "C"
 
 #include "hdlc.h"
 
+#include "uleApp.h"
+
 #include "opend_dataTypes.h"
 #include "opend_api.h"
 
@@ -41,7 +43,11 @@ void serialPort_rxCallback( uint8_t* data, uint16_t length ) {
 openD_status_t openD_init( void *port )
 {
 
-    openD_ll_serial_init( (char *) port, 115200U, serialPort_rxCallback );
+    initUleApp();
+
+    if( openD_ll_serial_init( (char *) port, 115200U, serialPort_rxCallback ) < 0 ) {
+      return OPEND_STATUS_SERIAL_INIT_FAIL;
+    }
 
     return OPEND_STATUS_OK;
 }

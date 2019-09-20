@@ -275,6 +275,10 @@ typedef enum openD_hanfunApi_devMgmt_service {
    * HAN-FUN device management change concentrator dect mode.
    */
   OPEND_HANFUNAPI_DEVICE_MANAGEMENT_CHANGE_CONCENTRATOR_DECT_MODE,
+  /**
+   * HAN-FUN device management timeout.
+   */
+  OPEND_HANFUNAPI_DEVICE_MANAGEMENT_TIMEOUT,
 } openD_hanfunApi_devMgmt_service_t;
 
 /**
