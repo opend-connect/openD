@@ -276,6 +276,55 @@ In general, the purpose of the demonstration applications is to provide an overv
   1. De-register the device with the client demo application.<br/>
   The terminal input to de-register a device (device address = x) is "d x".
 
+**Simple HAN FUN alarm system example**
+
+This example is using Telekom Magenta DECT SmartHome Sirene. It demonstrates how two openD devices (Sirene as an actor and nucleo board as a sensor) can be connected via a raspberry pi gateway and form a simple alarm system.
+
+How to use `FP_HANFUN_ALARM`:
+  1. Copy the `fp_hanfun_alarm_rpi` binary to your raspberry pi.
+  2. Execute the binary with:
+        - Dialog FP: Application needs the correct serial port provided as argument.
+          ```sh
+          $ ./fp_hanfun_alarm_rpi <SERIAL PORT>
+
+          Example:
+          $ ./fp_hanfun_alarm_rpi /dev/ttyS0
+          ```
+        - DSPG FP: no arguments needed here.
+          ```sh
+          $ ./fp_hanfun_alarm_rpi
+          ```
+
+  3. 1st register your Telekom Magenta DECT SmartHome Sirene (HANFUN-profile: Simplelight)
+  4. 2nd register your Nucleo SimpleSwitch (see `PP_HANFUN_SWITCH` example App)
+  5. After registration, you can activate your alarm sirene via pressing button on Nucleo.
+  6. Alarm Sirene will start making noise, a short message with the timestamp of the alarm will be displayed on the Raspberry console.
+  7. Press 'x' or 'X' key + ENTER on Raspberry console to stopp the alarm.
+
+**Simple HAN FUM socket switch example**
+
+This example is using Telekom Magenta DECT SmartHome Socketswitch. It demonstrates how two openD devices (SocketSwitch as an actor and nucleo board as a sensor) can be connected via a raspberry pi gateway and form a simple remote controlled socket switch.
+
+How to use `FP_HANFUN_SOCKET`:
+  1. Copy the `fp_hanfun_socket_rpi` binary to your raspberry pi.
+  2. Execute the binary with:
+        - Dialog FP: Application needs the correct serial port provided as argument.
+          ```sh
+          $ ./fp_hanfun_socket_rpi <SERIAL PORT>
+
+          Example:
+          $ ./fp_hanfun_socket_rpi /dev/ttyS0
+          ```
+        - DSPG FP: no arguments needed here.
+          ```sh
+          $ ./fp_hanfun_socket_rpi
+          ```
+
+  3. 1st register your Telekom Magenta DECT SmartHome SocketSwitch (HANFUN-profile: Simplelight)
+  4. 2nd register your Nucleo SimpleSwitch (see `PP_HANFUN_SWITCH` example App)
+  5. After registration, you can activate your socket switch via pressing button on Nucleo.
+  6. Socket Switch will be toggled each time you press the button on the Nucleo SimpleSwitch application.
+
 **Note HAN-FUN:**
 The HAN-FUN server application on the FP saves the registered devices (PP) in a JSON file ('hanfun.json'). At application start, the server compares the device list (JSON file) with the registered devices at the DECT module. The devices will be removed if they are no longer registered at the DECT module or not available in the device list.
 
