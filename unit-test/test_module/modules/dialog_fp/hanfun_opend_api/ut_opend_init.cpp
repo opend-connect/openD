@@ -26,14 +26,9 @@
 #include <string.h>
 
 
-extern "C"
-{
-/** Resource under test */
-#include "opend.c"
-}
-
 /** Mocks */
 #include "mock_lowLevelSerial.h"
+#include "mock_opend.h"
 
 /** Namespaces */
 using ::testing::_;
@@ -49,11 +44,13 @@ class ut_dialog_hanfun_fp_openD_init: public testing::Test
     public:
         // Mock objects
         MockLowLevelSerial ObjLowLevelSerial;
+        MockOpend ObjOpend;
 
 
         void SetUp()
         {
             setMockLowLevelSerialReference(&ObjLowLevelSerial);
+            setMockOpendReference(&ObjOpend);
         }
         void TearDown()
         {

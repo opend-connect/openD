@@ -20,7 +20,6 @@
 
 
 extern "C"{
-  #include "opend.h"
   #include "opend_api.h"
 }
 
@@ -30,7 +29,7 @@ class Opend
 public:
    virtual ~Opend() {}
    virtual openD_status_t openD_init( void* ) = 0;
-   virtual openD_status_t openD_api_getStatus( void ) = 0;
+  //  virtual openD_status_t openD_api_getStatus( void ) = 0;
    virtual void openD_setStatusBusy( void ) = 0;
    virtual void openD_setStatusIdle( void ) = 0;
 };
@@ -41,7 +40,7 @@ class MockOpend : public Opend
 {
 public:
   MOCK_METHOD1(openD_init, openD_status_t( void* ));
-  MOCK_METHOD0(openD_getStatus, openD_status_t( void ));
+  // MOCK_METHOD0(openD_getStatus, openD_status_t( void ));
   MOCK_METHOD0(openD_setStatusBusy, void( void ));
   MOCK_METHOD0(openD_setStatusIdle, void( void ));
 };

@@ -7,7 +7,7 @@
  * embedded.connectivity.solutions.==============
  * @endcode
  *
- * @file       mock_transport.cpp
+ * @file       mock_opend.cpp
  * @copyright  STACKFORCE GmbH, Heitersheim, Germany, http://www.stackforce.de
  * @author     STACKFORCE
  * @details
@@ -18,25 +18,38 @@
  * SPDX-License-Identifier: Apache-2.0 OR GPL-2.0-only
  */
 
-#include "mock_transport.h"
+#include <gmock/gmock.h>
+
+#include "mock_opend.h"
 
 /* Module pointer. */
-Transport *g_transport;
+Opend *g_Opend;
 
 extern "C"{
 
-openD_status_t transport_init() {
-   assert(g_transport != NULL);
-   g_transport->transport_init();
-} /* transport_init */
+openD_status_t openD_init( void* port ){
+    assert( g_Opend != NULL );
+    return g_Opend->openD_init( port );
+}
 
-openD_status_t transport_deInit() {
-   assert(g_transport != NULL);
-   g_transport->transport_deInit();
-} /* transport_deInit */
+// openD_status_t openD_api_getStatus( void ){
+//     assert( g_Opend != NULL );
+//     return g_Opend->openD_api_getStatus( );
+// }
+
+void openD_setStatusBusy( void ){
+    assert( g_Opend != NULL );
+    g_Opend->openD_setStatusBusy( );
+}
+
+void openD_setStatusIdle( void ){
+    assert( g_Opend != NULL );
+    g_Opend->openD_setStatusIdle( );
+}
 
 } /* extern */
 
-void setMockTransportReference(Transport *transportParam) {
-   g_transport = transportParam;
+void setMockOpendReference(Opend *ref) {
+   g_Opend = ref;
 }
+
