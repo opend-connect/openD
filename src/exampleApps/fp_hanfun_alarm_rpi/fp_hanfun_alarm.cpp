@@ -1,6 +1,6 @@
 /**
  * @code
- * openD Example Application - Alarm Sirene application 
+ * openD Example Application - Alarm Sirene application
  * @endcode
  *
  * @file       fp_hanfun_alarm.cpp
@@ -129,14 +129,14 @@ void profileIndCallback(openD_hanfunApi_profileInd_t* hProfileInd)
       case OPEND_HANFUNAPI_SIMPLE_LIGHT:
          switch(hProfileInd->simpleLight.service)
          {
-            case OPEND_HANFUN_IONOFF_SERVER_TOGGLE_ADDR:	    
+            case OPEND_HANFUN_IONOFF_SERVER_TOGGLE_ADDR:
                time(&t);
                printf("Toggle indication from Nucleo PP with address %u received.\n", hProfileInd->simpleLight.param.toggleAddr.addr.device);
 
                printf("\n\nReceived ALARM signal at %s", ctime(&t));
                printf("\nActivating Sirene!\n");
                SendSimpleSwitchOn(1);
-	     
+
                while ((c = getchar()) != '\n' && c != EOF);
                printf("\nEnter 'x' | 'X' to cut the noise!\n");
 
@@ -328,7 +328,6 @@ int main(int argc, char* argv[])
       printf("Initialization of primitives: FAILED\n");
    }
 
-   initUleApp(argc, argv);
    openD_init(argv[1]);
 
    transport->initialize();

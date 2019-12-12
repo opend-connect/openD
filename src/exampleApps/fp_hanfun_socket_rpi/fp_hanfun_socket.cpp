@@ -315,7 +315,6 @@ int main(int argc, char* argv[])
       printf("Initialization of primitives: FAILED\n");
    }
 
-   initUleApp(argc, argv);
    openD_init(argv[1]);
 
    transport->initialize();
