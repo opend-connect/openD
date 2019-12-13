@@ -74,7 +74,7 @@ openD_status_t openD_init( void *port )
 
     /* Initialize serial port. */
     if( 0 > openD_ll_serial_init( (char*) port, 115200, _uartRxCallback ) ) {
-      return OPEND_STATUS_ARGUMENT_INVALID;
+      return OPEND_STATUS_SERIAL_INIT_FAIL;
     }
 
 

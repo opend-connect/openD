@@ -121,7 +121,12 @@ void HF::Application::Deregister (uint16_t address)
   /* Can be used for deregistration. */
 }
 
-void initUleApp(int argc, char **argv)
+openD_status_t initUleApp(int argc, char **argv)
+{
+
+}
+
+openD_status_t deInitUleApp( void )
 {
 
 }

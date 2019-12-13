@@ -229,6 +229,10 @@ void devMgmtIndicationCallback(openD_hanfunApi_devMgmtInd_t *hDevMgmtIndication)
       openD_hanfunApi_fp_devMgmtRequest( &hMgmtRequest, hDevMgmtIndication->param.getAddress.address, 0 );
       break;
 
+    case OPEND_HANFUNAPI_DEVICE_MANAGEMENT_TIMEOUT:
+      printf("DECT module communication timeout!\n");
+      break;
+
     default:
       break;
   }
@@ -838,8 +842,11 @@ void HF::Application::Restore ()
 }
 
 /* HF::Application::Initialize */
-void HF::Application::Initialize (HF::Transport::Layer &transport, int argc, char **argv)
+int HF::Application::Initialize (HF::Transport::Layer &transport, int argc, char **argv)
 {
+  openD_status_t ret;
+  char *serialPort = NULL;
+
 	/* Variable for the openD primitives. */
 	openD_hanfunApiPrimitives openD_hanfunApiPrimitives;
 
@@ -856,9 +863,25 @@ void HF::Application::Initialize (HF::Transport::Layer &transport, int argc, cha
 	  std::cout.clear (); std::cout << "\nInitialization of primitives: SUCCESS" << std::endl; std::cout.clear (); std::cerr.clear ();
 	}
 
-  initUleApp(argc, argv);
+  if( argc >= 2 ) {
+    serialPort = argv[1];
+  }
 
-  openD_init( argv[1] );
+  ret = openD_init( serialPort );
+  if( ret != OPEND_STATUS_OK )
+  {
+    std::cout.clear (); std::cout << "\nInitialization of openD: FAILED" << std::endl; std::cout.clear (); std::cerr.clear ();
+
+    if( ret == OPEND_STATUS_SERIAL_INIT_FAIL )
+    {
+      if( serialPort ) {
+        std::cout.clear (); std::cout << "\nFailed to initialize serial port: " << serialPort << std::endl; std::cout.clear (); std::cerr.clear ();
+      } else {
+        std::cout.clear (); std::cout << "\nFailed to initialize serial port! " << std::endl; std::cout.clear (); std::cerr.clear ();
+      }
+    }
+    return -1;
+  }
 
   transport.initialize ();
 
@@ -877,6 +900,8 @@ void HF::Application::Initialize (HF::Transport::Layer &transport, int argc, cha
   Command::add(&command_Toggle);
 
   Restore();
+
+  return 0;
 }
 
 /* Command::add */

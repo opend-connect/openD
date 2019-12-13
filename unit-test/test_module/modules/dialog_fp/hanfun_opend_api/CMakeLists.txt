@@ -49,7 +49,7 @@ add_executable(ut_dialog_hanfun_fp_openD_init ut_opend_init.cpp)
 ##
 ## Link targets
 ##
-target_link_libraries(ut_dialog_hanfun_fp_openD_init libgmock pthread libApp mockLowLevelApi mockDialogHdlc)
+target_link_libraries(ut_dialog_hanfun_fp_openD_init libgmock pthread libApp mockLowLevelApi mockOpendHanfun mockDialogHdlc)
 
 ##
 ## Add tests

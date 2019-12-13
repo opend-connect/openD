@@ -55,7 +55,7 @@ add_executable(ut_dspg_hanfun_fp_openD_init ut_opend_init.cpp)
 ##
 ## Link targets
 ##
-target_link_libraries(ut_dspg_hanfun_fp_openD_init libgmock pthread libApp mockLowLevelApi mockDspgTransportHanfunFp)
+target_link_libraries(ut_dspg_hanfun_fp_openD_init libgmock pthread libApp mockLowLevelApi mockOpendHanfun mockDspgTransportHanfunFp)
 
 ##
 ## Definitions

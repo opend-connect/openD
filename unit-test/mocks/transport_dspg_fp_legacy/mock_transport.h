@@ -21,6 +21,7 @@
 
 extern "C"{
 #include "transport.h"
+#include "opend_dataTypes.h"
 }
 
 /* Module class declaration. */
@@ -28,7 +29,8 @@ class Transport
 {
 public:
    virtual ~Transport() {}
-   virtual void transport_init() = 0;
+   virtual openD_status_t transport_init() = 0;
+   virtual openD_status_t transport_deInit() = 0;
 };
 
 
@@ -36,7 +38,8 @@ public:
 class MockTransport : public Transport
 {
 public:
-   MOCK_METHOD0(transport_init ,  void());
+   MOCK_METHOD0(transport_init ,  openD_status_t());
+   MOCK_METHOD0(transport_deInit ,  openD_status_t());
 };
 
 void setMockTransportReference(Transport *transportParam);

@@ -41,6 +41,10 @@ typedef enum openD_mgmtApi_service {
    */
   OPEND_MGMTAPI_INIT,
   /**
+   * Timeout.
+   */
+  OPEND_MGMTAPI_TIMEOUT,
+  /**
    * DectMode.
    */
   OPEND_MGMTAPI_DECTMODE,

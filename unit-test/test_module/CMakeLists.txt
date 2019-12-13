@@ -45,7 +45,7 @@ target_compile_definitions(libMockDspgIwuHanfun PUBLIC -DSTM32L4)
 
 add_library(mockDspgTransportLegacyPp ${MOCK_DIR}/transport_dspg_pp_legacy/mock_transport.cpp)
 target_link_libraries(mockDspgTransportLegacyPp libgmock pthread)
-target_include_directories(mockDspgTransportLegacyPp PUBLIC ${MOCK_DIR}/transport_dspg_pp_legacy ${CMAKE_SOURCE_DIR}/../src/opend/dspg/pp_legacy/iwu)
+target_include_directories(mockDspgTransportLegacyPp PUBLIC ${MOCK_DIR}/transport_dspg_pp_legacy ${CMAKE_SOURCE_DIR}/../src/opend/dspg/pp_legacy/iwu ${CMAKE_SOURCE_DIR}/../src/opend)
 
 
 
@@ -73,7 +73,7 @@ target_include_directories(mockUleResourceManager_dialog PUBLIC ${MOCK_DIR}/uleR
 
 add_library(mockDspgTransportLegacyFp ${MOCK_DIR}/transport_dspg_fp_legacy/mock_transport.cpp)
 target_link_libraries(mockDspgTransportLegacyFp libgmock pthread)
-target_include_directories(mockDspgTransportLegacyFp PUBLIC ${MOCK_DIR}/transport_dspg_fp_legacy ${CMAKE_SOURCE_DIR}/../src/opend/dspg/fp_legacy/iwu)
+target_include_directories(mockDspgTransportLegacyFp PUBLIC ${MOCK_DIR}/transport_dspg_fp_legacy ${CMAKE_SOURCE_DIR}/../src/opend/dspg/fp_legacy/iwu ${CMAKE_SOURCE_DIR}/../src/opend)
 
 add_library(libMockDialogIwu ${MOCK_DIR}/iwu_dialog_pp_hanfun/mock_iwu.cpp)
 target_link_libraries(libMockDialogIwu libgmock pthread)
@@ -169,6 +169,13 @@ target_include_directories(mockOpend PUBLIC ${MOCK_DIR}/opend
                                             ${CMAKE_SOURCE_DIR}/../src/opend/
                                             ${CMAKE_SOURCE_DIR}/../src/opend/prv)
 target_compile_definitions(mockOpend PUBLIC -DCMBS_BUF_SIZE=2560)
+
+add_library(mockOpendHanfun ${MOCK_DIR}/opendHanfun/mock_opend.cpp)
+target_link_libraries(mockOpendHanfun libgmock pthread)
+target_include_directories(mockOpendHanfun PUBLIC ${MOCK_DIR}/opendHanfun
+                                            ${CMAKE_SOURCE_DIR}/../src/opend/
+                                            ${CMAKE_SOURCE_DIR}/../src/opend/prv)
+target_compile_definitions(mockOpendHanfun PUBLIC -DCMBS_BUF_SIZE=2560)
 
 file(GLOB HAN_FUN_SOURES
     # HAN-FUN Lib

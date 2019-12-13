@@ -25,16 +25,9 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "dspg_fp_hanfun_api_stubs.h"
-
-extern "C"
-{
-/** Resource under test */
-#include "opend.c"
-}
-
 /** Mocks */
 #include "mock_lowLevel.h"
+#include "mock_opend.h"
 
 /** Namespaces */
 using ::testing::_;
@@ -50,11 +43,13 @@ class ut_dspg_hanfun_fp_openD_init: public testing::Test
     public:
         // Mock objects
         MockLowLevel ObjLowLevel;
+        MockOpend ObjOpend;
 
 
         void SetUp()
         {
             setMockLowLevelReference(&ObjLowLevel);
+            setMockOpendReference(&ObjOpend);
         }
         void TearDown()
         {
